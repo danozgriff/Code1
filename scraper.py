@@ -71,7 +71,7 @@ if 1==1:
     #scraperwiki.sqlite.execute("create table Signal_History (`TIDM` varchar2(8) NOT NULL, `Date` date NOT NULL, `Price` real NOT NULL, `Signal` varchar2(15) NOT NULL, `Confirmation` char(1) NOT NULL, `GBP 100` real NOT NULL, UNIQUE (`TIDM`, `Date`))")
     
     
-    lselist = scraperwiki.sqlite.execute("select `TIDM` from company where TIDM = WPC.L")
+    lselist = scraperwiki.sqlite.execute("select `TIDM` from company where TIDM = FOUR.L")
     
     for x in lselist["data"]:
         lsecode = str(x)[3:-2] #+ '.L'
