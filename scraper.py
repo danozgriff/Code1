@@ -211,16 +211,16 @@ if 1==1:
            D1PC = (tprice - CalcPrice) / CalcPrice
                
            if timeint == 3:
-               3D = D1PC
+               T3D = D1PC
            elif timeint == 10:
-               10D = D1PC
+               T10D = D1PC
            elif timeint == 30:
-               30D = D1PC
+               T30D = D1PC
            elif timeint == 90:
-               90D = D1PC               
+               T90D = D1PC               
            elif timeint == 180:
-               180D = D1PC
-               scraperwiki.sqlite.execute("insert into Signal_History values (?, ?, ?, ?, ?, ?)",  [tidm, 3D, 10D, 30D, 90D, 180D, tdate]) 
+               T180D = D1PC
+               scraperwiki.sqlite.execute("insert into Signal_History values (?, ?, ?, ?, ?, ?)",  [tidm, T3D, T10D, T30D, T90D, T180D, tdate]) 
                scraperwiki.sqlite.commit()    
            
            #print "Latest - 10: %s: $%s %s" % (d1date, round(CalcPrice,2), round(D1PC*100,1))
