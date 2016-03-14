@@ -12,7 +12,7 @@ import datetime
 #------------------------------------------------------------------------
 #
 
-if 1==1:
+if 1==0:
 
     url = 'http://www.shareprices.com/ftseallshare'
     
@@ -67,11 +67,11 @@ if 1==1:
     url = 'https://www.britishbulls.com/SignalPage.aspx?lang=en&Ticker='
     
     
-    scraperwiki.sqlite.execute("drop table if exists Signal_History")  
-    scraperwiki.sqlite.execute("create table Signal_History (`TIDM` varchar2(8) NOT NULL, `Date` date NOT NULL, `Price` real NOT NULL, `Signal` varchar2(15) NOT NULL, `Confirmation` char(1) NOT NULL, `GBP 100` real NOT NULL, UNIQUE (`TIDM`, `Date`))")
+    #scraperwiki.sqlite.execute("drop table if exists Signal_History")  
+    #scraperwiki.sqlite.execute("create table Signal_History (`TIDM` varchar2(8) NOT NULL, `Date` date NOT NULL, `Price` real NOT NULL, `Signal` varchar2(15) NOT NULL, `Confirmation` char(1) NOT NULL, `GBP 100` real NOT NULL, UNIQUE (`TIDM`, `Date`))")
     
     
-    lselist = scraperwiki.sqlite.execute("select `TIDM` from company")
+    lselist = scraperwiki.sqlite.execute("select `TIDM` from company where TIDM = WPC.L")
     
     for x in lselist["data"]:
         lsecode = str(x)[3:-2] #+ '.L'
@@ -99,18 +99,20 @@ if 1==1:
                     sh_Date = date(int(sh_Date[6:10]),int(sh_Date[3:5]),int(sh_Date[:2]))
                     sh_Price = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
                     sh_Signal = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "")).group(0)
-                    sh_Confirmation = ((re.search("[Unc|C]heck", str(test3.pop(0)).replace(" ", "")).group(0).lower()).replace("uncheck","N")).replace("check", "Y")
+                    sh_Confirmation = ((re.search("[img\/Unc|img\/C]heck", str(test3.pop(0)).replace(" ", "")).group(0).lower()).replace("img/uncheck","N")).replace("img/check", "Y")
                     sh_GBP100 = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
 
-                    scraperwiki.sqlite.execute("insert or ignore into Signal_History values (?, ?, ?, ?, ?, ?)",  [lsecode, sh_Date, sh_Price, sh_Signal, sh_Confirmation, sh_GBP100]) 
+                    print sh_Confirmation
+                    
+                    #scraperwiki.sqlite.execute("insert or ignore into Signal_History values (?, ?, ?, ?, ?, ?)",  [lsecode, sh_Date, sh_Price, sh_Signal, sh_Confirmation, sh_GBP100]) 
     
-                    scraperwiki.sqlite.commit()    
+                    #scraperwiki.sqlite.commit()    
                     
 #--------------------------------------------------
 # Calculate Signal Performance
 #--------------------------------------------------
 
-if 1==1: 
+if 1==0: 
  
    complist = scraperwiki.sqlite.execute("select `TIDM`, `Price`, `Date` from company where TIDM in (select distinct TIDM from Signal_History)")
    #complist = scraperwiki.sqlite.execute("select `TIDM`, `Price`, `Date` from company where tidm = 'SIG.L'")
