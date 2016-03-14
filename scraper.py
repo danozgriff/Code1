@@ -220,8 +220,9 @@ if 1==1:
                T90D = D1PC               
            elif timeint == 180:
                T180D = D1PC
-               scraperwiki.sqlite.execute("insert into Signal_History values (?, ?, ?, ?, ?, ?)",  [tidm, T3D, T10D, T30D, T90D, T180D, tdate]) 
-               scraperwiki.sqlite.commit()    
+               scraperwiki.sqlite.execute("insert into Company_Performance values (?, ?, ?, ?, ?, ?, ?)",  [tidm, T3D, T10D, T30D, T90D, T180D, tdate]) 
+               scraperwiki.sqlite.commit()
+               
            
            #print "Latest - 10: %s: $%s %s" % (d1date, round(CalcPrice,2), round(D1PC*100,1))
            #print " "
