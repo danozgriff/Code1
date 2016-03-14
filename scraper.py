@@ -99,10 +99,11 @@ if 1==1:
                     sh_Date = date(int(sh_Date[6:10]),int(sh_Date[3:5]),int(sh_Date[:2]))
                     sh_Price = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
                     sh_Signal = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "")).group(0)
-                    sh_Confirmation = ((re.search("[img\/Unc|img\/C]heck", str(test3.pop(0)).replace(" ", "")).group(0).lower()).replace("img/uncheck","N")).replace("img/check", "Y")
+                    print str(test3.pop(0)).replace(" ", "")
+                    #sh_Confirmation = ((re.search("[img\/Unc|img\/C]heck", str(test3.pop(0)).replace(" ", "")).group(0).lower()).replace("img/uncheck","N")).replace("img/check", "Y")
                     sh_GBP100 = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
 
-                    print sh_Confirmation
+                    #print sh_Confirmation
                     
                     #scraperwiki.sqlite.execute("insert or ignore into Signal_History values (?, ?, ?, ?, ?, ?)",  [lsecode, sh_Date, sh_Price, sh_Signal, sh_Confirmation, sh_GBP100]) 
     
