@@ -115,6 +115,9 @@ if 1==1:
    complist = scraperwiki.sqlite.execute("select `TIDM`, `Price`, `Date` from company where TIDM in (select distinct TIDM from Signal_History)")
    #complist = scraperwiki.sqlite.execute("select `TIDM`, `Price`, `Date` from company where tidm = 'FOUR.L'")
 
+   scraperwiki.sqlite.execute("drop table if exists Company_Performance")  
+   scraperwiki.sqlite.execute("create table Company_Performance (`TIDM` string, `3D` real, `10D` real, `30D` real, `90D` real, `180D` real, `Date` date)")
+
    for x in complist["data"]:
        tidm=x[0]
        #print tidm
@@ -123,10 +126,6 @@ if 1==1:
        todaydate=datetime.date.today()
        
        Commission=0.994
-       
-       scraperwiki.sqlite.execute("drop table if exists Company_Performance")  
-       scraperwiki.sqlite.execute("create table Company_Performance (`TIDM` string, `3D` real, `10D` real, `30D` real, `90D` real, `180D` real, `Date` date)")
-
 
 # Find Today GDP100
 
@@ -196,9 +195,6 @@ if 1==1:
                             MaxDate = datetime.datetime.strptime(z[0], "%Y-%m-%d").date()
                             MaxPrice = z[1]
                Abovedelta = MaxDate - d1date
-               print tidm
-               print d1date
-               print MinDate
                Belowdelta = d1date - MinDate
                
                MinMaxDelta = MaxDate - MinDate
