@@ -113,7 +113,7 @@ if 1==0:
 if 1==1: 
  
    #complist = scraperwiki.sqlite.execute("select `TIDM`, `Price`, `Date` from company where TIDM in (select distinct TIDM from Signal_History)")
-   complist = scraperwiki.sqlite.execute("select `TIDM`, `Price`, `Date` from company where tidm = 'SIG.L'")
+   complist = scraperwiki.sqlite.execute("select `TIDM`, `Price`, `Date` from company where tidm = 'FOUR.L'")
 
    for x in complist["data"]:
        tidm=x[0]
