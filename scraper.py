@@ -123,6 +123,10 @@ if 1==0:
        todaydate=datetime.date.today()
        
        Commission=0.994
+       
+        scraperwiki.sqlite.execute("drop table if exists Company_Performance")  
+        scraperwiki.sqlite.execute("create table Company_Performance (`TIDM` string, `3D` real, `10D` real, `30D` real, `90D` real, `180D` real, `Date` date NOT NULL)")
+
 
 # Find Today GDP100
 
@@ -157,53 +161,69 @@ if 1==0:
 
 #D-1   
 
-
-       d1date=todaydate - datetime.timedelta(days=10)
-
-       d1list = scraperwiki.sqlite.execute("select `GBP 100` from Signal_History where tidm = '%s' and Date = '%s'" % (tidm, d1date))
+       timeintervals = [3, 10, 30, 90, 180];
        
-       if len(d1list["data"]) != 0:
-           for a in d1list["data"]: 
-               CalcPrice = a[0]
-
-       else:        
-           d1mindate = scraperwiki.sqlite.execute("select `Date`, `GBP 100` from Signal_History where tidm = '%s' and Date in (select max(`Date`) from Signal_History where tidm = '%s' and Date < '%s')" % (tidm, tidm, d1date))
+       for timeint in timeintervals:
+       
+           d1date=todaydate - datetime.timedelta(days=timeint)
+    
+           d1list = scraperwiki.sqlite.execute("select `GBP 100` from Signal_History where tidm = '%s' and Date = '%s'" % (tidm, d1date))
            
-           if len(d1mindate["data"]) == 0:
-               MinDate = '1900-01-01' #datetime.datetime.strptime(y[0], "%Y-%m-%d").date()
-               MinPrice = 0.0
-           else: 
-               for y in d1mindate["data"]:
-                    MinDate = datetime.datetime.strptime(y[0], "%Y-%m-%d").date()
-                    MinPrice = y[1]
-           
-               d1maxdate = scraperwiki.sqlite.execute("select `Date`, `GBP 100` from Signal_History where tidm = '%s' and Date in (select min(`Date`) from Signal_History where tidm = '%s' and Date > '%s')" % (tidm, tidm, d1date))
+           if len(d1list["data"]) != 0:
+               for a in d1list["data"]: 
+                   CalcPrice = a[0]
+    
+           else:        
+               d1mindate = scraperwiki.sqlite.execute("select `Date`, `GBP 100` from Signal_History where tidm = '%s' and Date in (select max(`Date`) from Signal_History where tidm = '%s' and Date < '%s')" % (tidm, tidm, d1date))
                
-               if len(d1maxdate["data"]) == 0:
-                   MaxDate=tdate
-                   MaxPrice=tprice
+               if len(d1mindate["data"]) == 0:
+                   MinDate = '1900-01-01' #datetime.datetime.strptime(y[0], "%Y-%m-%d").date()
+                   MinPrice = 0.0
+               else: 
+                   for y in d1mindate["data"]:
+                        MinDate = datetime.datetime.strptime(y[0], "%Y-%m-%d").date()
+                        MinPrice = y[1]
+               
+                   d1maxdate = scraperwiki.sqlite.execute("select `Date`, `GBP 100` from Signal_History where tidm = '%s' and Date in (select min(`Date`) from Signal_History where tidm = '%s' and Date > '%s')" % (tidm, tidm, d1date))
+                   
+                   if len(d1maxdate["data"]) == 0:
+                       MaxDate=tdate
+                       MaxPrice=tprice
+                   else:
+                       for z in d1maxdate["data"]:
+                            MaxDate = datetime.datetime.strptime(z[0], "%Y-%m-%d").date()
+                            MaxPrice = z[1]
+               Abovedelta = MaxDate - d1date
+               Belowdelta = d1date - MinDate
+               
+               MinMaxDelta = MaxDate - MinDate
+               PriceDelta = MaxPrice - MinPrice
+               if PriceDelta == 0:
+                   PriceInterval=0
                else:
-                   for z in d1maxdate["data"]:
-                        MaxDate = datetime.datetime.strptime(z[0], "%Y-%m-%d").date()
-                        MaxPrice = z[1]
-           Abovedelta = MaxDate - d1date
-           Belowdelta = d1date - MinDate
-           
-           MinMaxDelta = MaxDate - MinDate
-           PriceDelta = MaxPrice - MinPrice
-           if PriceDelta == 0:
-               PriceInterval=0
-           else:
-               PriceInterval = PriceDelta / MinMaxDelta.days
-           
-           if abs(Abovedelta.days) >= Belowdelta.days:
-               CalcPrice = MinPrice+Belowdelta.days*PriceInterval
-           else:
-               CalcPrice = MaxPrice-Abovedelta.days*PriceInterval
+                   PriceInterval = PriceDelta / MinMaxDelta.days
                
-       D1PC = (tprice - CalcPrice) / CalcPrice
+               if abs(Abovedelta.days) >= Belowdelta.days:
+                   CalcPrice = MinPrice+Belowdelta.days*PriceInterval
+               else:
+                   CalcPrice = MaxPrice-Abovedelta.days*PriceInterval
+                   
+           D1PC = (tprice - CalcPrice) / CalcPrice
+               
+           if timeint == 3:
+               3D = D1PC
+           elif timeint == 10:
+               10D = D1PC
+           elif timeint == 30:
+               30D = D1PC
+           elif timeint == 90:
+               90D = D1PC               
+           elif timeint == 180:
+               180D = D1PC
+               scraperwiki.sqlite.execute("insert into Signal_History values (?, ?, ?, ?, ?, ?)",  [tidm, 3D, 10D, 30D, 90D, 180D, tdate]) 
+               scraperwiki.sqlite.commit()    
            
-       print "Latest - 10: %s: $%s %s" % (d1date, round(CalcPrice,2), round(D1PC*100,1))
-       print " "
-
-       
+           #print "Latest - 10: %s: $%s %s" % (d1date, round(CalcPrice,2), round(D1PC*100,1))
+           #print " "
+    
+           
