@@ -112,12 +112,12 @@ if 1==0:
 
 if 1==1: 
  
-   #complist = scraperwiki.sqlite.execute("select `TIDM`, `Price`, `Date` from company where TIDM in (select distinct TIDM from Signal_History)")
-   complist = scraperwiki.sqlite.execute("select `TIDM`, `Price`, `Date` from company where tidm = 'FOUR.L'")
+   complist = scraperwiki.sqlite.execute("select `TIDM`, `Price`, `Date` from company where TIDM in (select distinct TIDM from Signal_History)")
+   #complist = scraperwiki.sqlite.execute("select `TIDM`, `Price`, `Date` from company where tidm = 'FOUR.L'")
 
    for x in complist["data"]:
        tidm=x[0]
-       print tidm
+       #print tidm
        nprice=x[1]
        tdate=datetime.datetime.strptime(x[2], "%Y-%m-%d").date()
        todaydate=datetime.date.today()
@@ -156,7 +156,7 @@ if 1==1:
                    #SELL etc
                    else:
                        tprice = LatestGDP100*.994
-               print "Latest: %s: $%s" % (tdate, round(tprice,2))
+               #print "Latest: %s: $%s" % (tdate, round(tprice,2))
 #------------------------------------------------------------
 
 #D-1   
@@ -165,7 +165,7 @@ if 1==1:
        
        for timeint in timeintervals:
        
-           print "Starting interval: %d" , (timeint)
+          #print "Starting interval: %d" , (timeint)
            d1date=todaydate - datetime.timedelta(days=timeint)
     
            d1list = scraperwiki.sqlite.execute("select `GBP 100` from Signal_History where tidm = '%s' and Date = '%s'" % (tidm, d1date))
@@ -212,20 +212,15 @@ if 1==1:
            D1PC = (tprice - CalcPrice) / CalcPrice
                
            if timeint == 3:
-               print "3 Int"
-               T3D = D1PC
+               T3D = round(D1PC,3)
            elif timeint == 10:
-               print "10 Int"
-               T10D = D1PC
+               T10D = round(D1PC,3)
            elif timeint == 30:
-               print "30 Int"
-               T30D = D1PC
+               T30D = round(D1PC,3)
            elif timeint == 90:
-               print "90 Int"
-               T90D = D1PC               
+               T90D = round(D1PC,3)               
            elif timeint == 180:
-               print "180 Int"
-               T180D = D1PC
+               T180D = round(D1PC,3)
                scraperwiki.sqlite.execute("insert into Company_Performance values (?, ?, ?, ?, ?, ?, ?)",  [tidm, T3D, T10D, T30D, T90D, T180D, tdate]) 
                scraperwiki.sqlite.commit()
                
