@@ -124,8 +124,8 @@ if 1==1:
        
        Commission=0.994
        
-        scraperwiki.sqlite.execute("drop table if exists Company_Performance")  
-        scraperwiki.sqlite.execute("create table Company_Performance (`TIDM` string, `3D` real, `10D` real, `30D` real, `90D` real, `180D` real, `Date` date NOT NULL)")
+       scraperwiki.sqlite.execute("drop table if exists Company_Performance")  
+       scraperwiki.sqlite.execute("create table Company_Performance (`TIDM` string, `3D` real, `10D` real, `30D` real, `90D` real, `180D` real, `Date` date NOT NULL)")
 
 
 # Find Today GDP100
