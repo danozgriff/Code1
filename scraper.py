@@ -125,7 +125,7 @@ if 1==1:
        Commission=0.994
        
        scraperwiki.sqlite.execute("drop table if exists Company_Performance")  
-       scraperwiki.sqlite.execute("create table Company_Performance (`TIDM` string, `3D` real, `10D` real, `30D` real, `90D` real, `180D` real, `Date` date NOT NULL)")
+       scraperwiki.sqlite.execute("create table Company_Performance (`TIDM` string, `3D` real, `10D` real, `30D` real, `90D` real, `180D` real, `Date` date)")
 
 
 # Find Today GDP100
@@ -211,14 +211,19 @@ if 1==1:
            D1PC = (tprice - CalcPrice) / CalcPrice
                
            if timeint == 3:
+               print "3 Int"
                T3D = D1PC
            elif timeint == 10:
+               print "10 Int"
                T10D = D1PC
            elif timeint == 30:
+               print "30 Int"
                T30D = D1PC
            elif timeint == 90:
+               print "90 Int"
                T90D = D1PC               
            elif timeint == 180:
+               print "180 Int"
                T180D = D1PC
                scraperwiki.sqlite.execute("insert into Company_Performance values (?, ?, ?, ?, ?, ?, ?)",  [tidm, T3D, T10D, T30D, T90D, T180D, tdate]) 
                scraperwiki.sqlite.commit()
