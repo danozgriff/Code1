@@ -12,7 +12,7 @@ import datetime
 #------------------------------------------------------------------------
 #
 
-if 1==1:
+if 1==0:
 
     url = 'http://www.shareprices.com/ftseallshare'
     
@@ -62,7 +62,7 @@ if 1==1:
 #Load Signal History from British Bulls
 #------------------------------------------------
 
-if 1==1:
+if 1==0:
 
     url = 'https://www.britishbulls.com/SignalPage.aspx?lang=en&Ticker='
     
@@ -110,10 +110,10 @@ if 1==1:
 # Calculate Signal Performance
 #--------------------------------------------------
 
-if 1==0: 
+if 1==1: 
  
-   complist = scraperwiki.sqlite.execute("select `TIDM`, `Price`, `Date` from company where TIDM in (select distinct TIDM from Signal_History)")
-   #complist = scraperwiki.sqlite.execute("select `TIDM`, `Price`, `Date` from company where tidm = 'SIG.L'")
+   #complist = scraperwiki.sqlite.execute("select `TIDM`, `Price`, `Date` from company where TIDM in (select distinct TIDM from Signal_History)")
+   complist = scraperwiki.sqlite.execute("select `TIDM`, `Price`, `Date` from company where tidm = 'SIG.L'")
 
    for x in complist["data"]:
        tidm=x[0]
