@@ -195,6 +195,7 @@ if 1==1:
                             MaxDate = datetime.datetime.strptime(z[0], "%Y-%m-%d").date()
                             MaxPrice = z[1]
                Abovedelta = MaxDate - d1date
+               print tidm
                print d1date
                print MinDate
                Belowdelta = d1date - MinDate
