@@ -165,6 +165,7 @@ if 1==1:
        
        for timeint in timeintervals:
        
+           print "Starting interval: %d" , (timeint)
            d1date=todaydate - datetime.timedelta(days=timeint)
     
            d1list = scraperwiki.sqlite.execute("select `GBP 100` from Signal_History where tidm = '%s' and Date = '%s'" % (tidm, d1date))
