@@ -76,14 +76,17 @@ def ScrapeSignalHistory():
     lselist = scraperwiki.sqlite.execute("select `TIDM` from company")
     
     for x in lselist["data"]:
-        lsecode = str(x)[3:-2]
+        
+        tidm = str(x)[3:-2]
+        
+        siglist = scraperwiki.sqlite.execute("select count(*) from Signal_History where tidm = '%s' and (Signal IN ('SELL',  'SHORT',  'STAY IN CASH',  'STAY SHORT') OR (Signal IN ('BUY, 'STAY LONG') AND ))" % (tidm, d1date))
 
         br = mechanize.Browser()
     
         # sometimes the server is sensitive to this information
         br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
 
-        response = br.open(url + lsecode)
+        response = br.open(url + tidm)
     
         for pagenum in range(1):
             html = response.read()
@@ -104,7 +107,7 @@ def ScrapeSignalHistory():
                     sh_Confirmation = ((re.search("[Uncheck|Check]", str(test3.pop(0)).replace(" ", "")).group(0).lower()).replace("u","N")).replace("c", "Y")
                     sh_GBP100 = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
                     
-                    scraperwiki.sqlite.execute("insert or ignore into Signal_History values (?, ?, ?, ?, ?, ?)",  [lsecode, sh_Date, sh_Price, sh_Signal, sh_Confirmation, sh_GBP100]) 
+                    scraperwiki.sqlite.execute("insert or ignore into Signal_History values (?, ?, ?, ?, ?, ?)",  [tidm, sh_Date, sh_Price, sh_Signal, sh_Confirmation, sh_GBP100]) 
     
                     scraperwiki.sqlite.commit()
                     
