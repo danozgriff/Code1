@@ -106,7 +106,7 @@ def ScrapeSignalHistory():
                     
                     scraperwiki.sqlite.execute("insert or ignore into Signal_History values (?, ?, ?, ?, ?, ?)",  [lsecode, sh_Date, sh_Price, sh_Signal, sh_Confirmation, sh_GBP100]) 
     
-                    scraperwiki.sqlite.commit()    
+                    scraperwiki.sqlite.commit()
     return;
     
 ########################################################
@@ -228,7 +228,7 @@ def SignalPerformance():
                total = T3D + T10D + T30D + T90D + T180D
                scraperwiki.sqlite.execute("insert into Company_Performance values (?, ?, ?, ?, ?, ?, ?, ?)",  [tidm, T3D, T10D, T30D, T90D, T180D, total, tdate]) 
                scraperwiki.sqlite.commit()
-               
+            
     return;
     
            
