@@ -13,7 +13,7 @@ print "Hello"
 ##################################################
 #
 
-def ScrapeLivePrices
+def ScrapeLivePrices():
 
     url = 'http://www.shareprices.com/ftseallshare'
     
@@ -64,7 +64,7 @@ def ScrapeLivePrices
 #Load Signal History from British Bulls
 ####################################################
 
-def ScrapeSignalHistory
+def ScrapeSignalHistory():
 
     url = 'https://www.britishbulls.com/SignalPage.aspx?lang=en&Ticker='
     
@@ -113,7 +113,7 @@ def ScrapeSignalHistory
 # Calculate Signal Performance
 ########################################################
 
-def SignalPerformance 
+def SignalPerformance(): 
  
    complist = scraperwiki.sqlite.execute("select `TIDM`, `Price`, `Date` from company where TIDM in (select distinct TIDM from Signal_History)")
    #complist = scraperwiki.sqlite.execute("select `TIDM`, `Price`, `Date` from company where tidm = 'FOUR.L'")
