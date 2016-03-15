@@ -6,13 +6,14 @@ import time
 from datetime import datetime, date
 import datetime
 
+print "Hello"
 
-#------------------------------------------------------------------------       
+##################################################      
 #Load Prices from shareprices.com
-#------------------------------------------------------------------------
+##################################################
 #
 
-if 1==0:
+def ScrapeLivePrices
 
     url = 'http://www.shareprices.com/ftseallshare'
     
@@ -57,12 +58,13 @@ if 1==0:
             
         print "%s ftseallshare records were loaded" % (count)
 
+    return;
 
-#------------------------------------------------
+####################################################
 #Load Signal History from British Bulls
-#------------------------------------------------
+####################################################
 
-if 1==0:
+def ScrapeSignalHistory
 
     url = 'https://www.britishbulls.com/SignalPage.aspx?lang=en&Ticker='
     
@@ -105,18 +107,19 @@ if 1==0:
                     scraperwiki.sqlite.execute("insert or ignore into Signal_History values (?, ?, ?, ?, ?, ?)",  [lsecode, sh_Date, sh_Price, sh_Signal, sh_Confirmation, sh_GBP100]) 
     
                     scraperwiki.sqlite.commit()    
-                    
-#--------------------------------------------------
+    return;
+    
+########################################################
 # Calculate Signal Performance
-#--------------------------------------------------
+########################################################
 
-if 1==1: 
+def SignalPerformance 
  
    complist = scraperwiki.sqlite.execute("select `TIDM`, `Price`, `Date` from company where TIDM in (select distinct TIDM from Signal_History)")
    #complist = scraperwiki.sqlite.execute("select `TIDM`, `Price`, `Date` from company where tidm = 'FOUR.L'")
 
    scraperwiki.sqlite.execute("drop table if exists Company_Performance")  
-   scraperwiki.sqlite.execute("create table Company_Performance (`TIDM` string, `3D` real, `10D` real, `30D` real, `90D` real, `180D` real, `Date` date)")
+   scraperwiki.sqlite.execute("create table Company_Performance (`TIDM` string, `3D` real, `10D` real, `30D` real, `90D` real, `180D` real, `Total` real, `Date` date)")
 
    for x in complist["data"]:
        tidm=x[0]
@@ -156,9 +159,10 @@ if 1==1:
                    else:
                        tprice = LatestGDP100*.994
                #print "Latest: %s: $%s" % (tdate, round(tprice,2))
-#------------------------------------------------------------
 
-#D-1   
+
+#Calculate Performance for the various intervals   
+#-----------------------------------------------
 
        timeintervals = [3, 10, 30, 90, 180];
        
@@ -221,11 +225,10 @@ if 1==1:
                T90D = round(D1PC,3)               
            elif timeint == 180:
                T180D = round(D1PC,3)
-               scraperwiki.sqlite.execute("insert into Company_Performance values (?, ?, ?, ?, ?, ?, ?)",  [tidm, T3D, T10D, T30D, T90D, T180D, tdate]) 
+               total = T3D + T10D + T30D + T90D + T180D
+               scraperwiki.sqlite.execute("insert into Company_Performance values (?, ?, ?, ?, ?, ?, ?, ?)",  [tidm, T3D, T10D, T30D, T90D, T180D, total, tdate]) 
                scraperwiki.sqlite.commit()
                
-           
-           #print "Latest - 10: %s: $%s %s" % (d1date, round(CalcPrice,2), round(D1PC*100,1))
-           #print " "
+    return;
     
            
