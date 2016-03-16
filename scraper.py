@@ -250,4 +250,4 @@ class BritishScrape:
 # MAIN
 ########################################################
 
-ScrapeLivePrices()
+ScrapeLivePrices(self)
