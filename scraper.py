@@ -100,14 +100,14 @@ def ScrapeBritishMain():
 
             while len(test3) >= 5:
     
-                print str(test3.pop(0)
-                print str(test3.pop(0)
-                print str(test3.pop(0)
-                print str(test3.pop(0)
-                print str(test3.pop(0)
-                print str(test3.pop(0)
-                print str(test3.pop(0)
-                print str(test3.pop(0)
+                print str(test3.pop(0))
+                print str(test3.pop(0))
+                print str(test3.pop(0))
+                print str(test3.pop(0))
+                print str(test3.pop(0))
+                print str(test3.pop(0))
+                print str(test3.pop(0))
+                print str(test3.pop(0))
                 
                 #sh_Date = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "")).group(0)
                 #sh_Date = date(int(sh_Date[6:10]),int(sh_Date[3:5]),int(sh_Date[:2]))
