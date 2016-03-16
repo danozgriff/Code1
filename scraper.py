@@ -97,6 +97,8 @@ def ScrapeBritishMain():
             test1 = test1.group(0)
 
             test3 = re.findall('(\">|img\/)(.*?)(<\/|\.gif)', test1.replace("\B", ""))
+            
+            print len(test3)
 
             while len(test3) >= 5:
     
