@@ -6,7 +6,7 @@ import time
 from datetime import datetime, date
 import datetime
 
-ScrapeLivePrices
+class BritishScrape:
 
 ##################################################      
 #Load Prices from shareprices.com
@@ -239,5 +239,5 @@ def SignalPerformance():
 # MAIN
 ########################################################
 
-           
-ScrapeLivePrices()
+def main():           
+    ScrapeLivePrices()
