@@ -6,7 +6,7 @@ import time
 from datetime import datetime, date
 import datetime
 
-print "Hello"
+ScrapeLivePrices()
 
 ##################################################      
 #Load Prices from shareprices.com
