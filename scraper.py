@@ -57,7 +57,7 @@ def ScrapeLivePrices():
             
         print "%s ftseallshare records were loaded" % (count)
 
-        return;
+    return;
 
 ####################################################
 #Load Main Page from British Bulls
@@ -122,7 +122,7 @@ def ScrapeBritishMain():
 
                 #scraperwiki.sqlite.commit()
                 
-return;
+    return;
 
 ####################################################
 #Load Signal History from British Bulls
@@ -175,7 +175,7 @@ def ScrapeSignalHistory():
     
                     scraperwiki.sqlite.commit()
                     
-return;
+    return;
 
 ########################################################
 # Calculate Signal Performance
@@ -297,7 +297,7 @@ def SignalPerformance():
                scraperwiki.sqlite.execute("insert into Company_Performance values (?, ?, ?, ?, ?, ?, ?, ?)",  [tidm, T3D, T10D, T30D, T90D, T180D, total, tdate]) 
                scraperwiki.sqlite.commit()
             
-return;
+    return;
 
 ########################################################
 # MAIN
