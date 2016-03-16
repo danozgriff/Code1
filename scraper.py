@@ -6,7 +6,7 @@ import time
 from datetime import datetime, date
 import datetime
 
-class BritishScrape:
+#class BritishScrape:
 
     ##################################################      
     #Load Prices from shareprices.com
