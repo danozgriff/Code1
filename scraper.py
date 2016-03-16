@@ -13,7 +13,7 @@ class BritishScrape:
     ##################################################
     #
     
-    def ScrapeLivePrices(self):
+    def ScrapeLivePrices():
         
         print "ScrapeLivePrices"
         
@@ -67,7 +67,7 @@ class BritishScrape:
     #Load Signal History from British Bulls
     ####################################################
     
-    def ScrapeSignalHistory(self):
+    def ScrapeSignalHistory():
     
         print "ScrapeSignalHistory"
         
@@ -124,7 +124,7 @@ class BritishScrape:
     # Calculate Signal Performance
     ########################################################
     
-    def SignalPerformance(self): 
+    def SignalPerformance(): 
      
         print "SignalPerformance"
         
@@ -249,5 +249,6 @@ class BritishScrape:
 ########################################################
 # MAIN
 ########################################################
-
-ScrapeLivePrices(self)
+if __name__ == "__main__":
+    
+    ScrapeLivePrices()
