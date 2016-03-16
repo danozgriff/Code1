@@ -12,7 +12,7 @@ class BritishScrape:
     # MAIN
     ########################################################
 
-    def __init__
+    def __init__(self):
         print "Main"
         ScrapeLivePrices()
 
@@ -21,7 +21,7 @@ class BritishScrape:
     ##################################################
     #
     
-    def ScrapeLivePrices():
+    def ScrapeLivePrices(self):
     
         url = 'http://www.shareprices.com/ftseallshare'
         
@@ -73,7 +73,7 @@ class BritishScrape:
     #Load Signal History from British Bulls
     ####################################################
     
-    def ScrapeSignalHistory():
+    def ScrapeSignalHistory(self):
     
         url = 'https://www.britishbulls.com/SignalPage.aspx?lang=en&Ticker='
         
@@ -126,7 +126,7 @@ class BritishScrape:
     # Calculate Signal Performance
     ########################################################
     
-    def SignalPerformance(): 
+    def SignalPerformance(self): 
      
        complist = scraperwiki.sqlite.execute("select `TIDM`, `Price`, `Date` from company where TIDM in (select distinct TIDM from Signal_History)")
        #complist = scraperwiki.sqlite.execute("select `TIDM`, `Price`, `Date` from company where tidm = 'FOUR.L'")
