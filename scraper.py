@@ -69,7 +69,7 @@ def ScrapeBritishMain():
     
     
     #scraperwiki.sqlite.execute("drop table if exists Signal_History")  
-    #scraperwiki.sqlite.execute("create table Company_Recommendations (`Date` date NOT NULL, `TIDM` varchar2(8) NOT NULL, `Signal` varchar2(15) NOT NULL, `Avg Price` real NOT NULL, `EOD Signal` varchar2(15) NOT NULL, `EOD Pattern` varchar2(30) NOT NULL, `EOD Last Price` real NOT NULL, `EOD %Change` real NOT NULL, UNIQUE (`TIDM`, `Date`))")
+    #scraperwiki.sqlite.execute("create table Company_Recommendations (`Date` date NOT NULL, `TIDM` varchar2(8) NOT NULL, `Signal` varchar2(15) NOT NULL, `Avg Price` real NOT NULL, `EOD Signal` varchar2(15) NOT NULL, `EOD Pattern` varchar2(30) NOT NULL, `EOD Last Price` real NOT NULL, `EOD %Change` real NOT NULL, `Refresh Date` date, UNIQUE (`TIDM`, `Date`))")
     
     
     #lselist = scraperwiki.sqlite.execute("select `TIDM` from company")
@@ -91,7 +91,7 @@ def ScrapeBritishMain():
     for pagenum in range(1):
         html = response.read()
 
-        tdate = re.search(r'MARKET STATUS REPORT, ((.|\n)+)</span', html).group(0)[22:-6]
+        tdate = re.match(r'MARKET STATUS REPORT, ((.|\n)+)</span', html).group(0)[22:-6]
         print tdate
         test1 = re.search(r'MainContent_SignalListGrid1_DXDataRow0((.|\n)+)MainContent_SignalListGrid1_IADD', html)
 
