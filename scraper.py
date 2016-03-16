@@ -17,6 +17,7 @@ class BritishScrape:
     
         url = 'http://www.shareprices.com/ftseallshare'
         
+        print "Im in"
     
         br = mechanize.Browser()
         
