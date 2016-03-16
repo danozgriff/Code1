@@ -106,7 +106,7 @@ def ScrapeBritishMain():
                 print re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
                 print re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
                 
-                print re.search(r'img title="((.|\n)+)" src=', str(test3.pop(0))).group(0)
+                print re.search(r'"((.|\n)+)"', str(test3.pop(0))).group(0).replace(""", "")
                 
 
                 print re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
