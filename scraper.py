@@ -91,8 +91,8 @@ def ScrapeBritishMain():
     for pagenum in range(1):
         html = response.read()
 
-        tdate = re.match(r'MARKET STATUS REPORT, ((.|\n)+)</span', html).group(1)[22:-6]
-        print tdate
+        print re.match(r'MARKET STATUS REPORT, (..........)', html)
+        #print tdate
         test1 = re.search(r'MainContent_SignalListGrid1_DXDataRow0((.|\n)+)MainContent_SignalListGrid1_IADD', html)
 
         if test1:
