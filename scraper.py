@@ -107,10 +107,7 @@ def ScrapeBritishMain():
                 print re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
                 print re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
                 print re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
-                
                 print re.search(r'title="((.|\n)+)" src=', str(test3.pop(0))).group(0)[7:-6]
-                
-
                 print re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
                 print re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
                 
@@ -125,7 +122,7 @@ def ScrapeBritishMain():
 
                 #scraperwiki.sqlite.commit()
                 
-                return;
+return;
 
 ####################################################
 #Load Signal History from British Bulls
@@ -178,7 +175,7 @@ def ScrapeSignalHistory():
     
                     scraperwiki.sqlite.commit()
                     
-                    return;
+return;
 
 ########################################################
 # Calculate Signal Performance
@@ -300,7 +297,7 @@ def SignalPerformance():
                scraperwiki.sqlite.execute("insert into Company_Performance values (?, ?, ?, ?, ?, ?, ?, ?)",  [tidm, T3D, T10D, T30D, T90D, T180D, total, tdate]) 
                scraperwiki.sqlite.commit()
             
-           return;
+return;
 
 ########################################################
 # MAIN
