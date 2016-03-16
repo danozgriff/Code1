@@ -7,6 +7,14 @@ from datetime import datetime, date
 import datetime
 
 class BritishScrape:
+    
+    ########################################################
+    # MAIN
+    ########################################################
+
+    def __init__
+        print "Main"
+        ScrapeLivePrices()
 
     ##################################################      
     #Load Prices from shareprices.com
@@ -235,11 +243,3 @@ class BritishScrape:
                    scraperwiki.sqlite.commit()
                 
                return;
-        
-########################################################
-# MAIN
-########################################################
-
-def main():
-    print "Main"
-    ScrapeLivePrices()
