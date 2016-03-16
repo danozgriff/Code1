@@ -240,5 +240,6 @@ class BritishScrape:
 # MAIN
 ########################################################
 
-def main():           
+def main():
+    print "Main"
     ScrapeLivePrices()
