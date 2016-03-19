@@ -331,4 +331,4 @@ def SignalPerformance():
 ########################################################
 if __name__ == '__main__':
     
-    #ScrapeBritishMain()
+    ScrapeBritishMain()
