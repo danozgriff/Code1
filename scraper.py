@@ -146,8 +146,13 @@ def CheckForSignalChange():
             currtidm = y[0]
             currsignal = y[1]
             
-            if lasttidm==currtidm:
-                
+            if lasttidm==currtidm and lastsignal!=currsignal:
+                if (lastsignal=='BUY' or lastsignal=='STAY LONG') and (currsignal=='SELL' or currsignal=='STAY SHORT' or currsignal=='STAY SHORT' or currsignal=='STAY IN CASH')
+                    scraperwiki.sqlite.execute("update AllTrades set Position = 'To Close' where tidm = '%s'") % (lasttidm)
+                    scraperwiki.sqlite.commit()
+                elif (lastsignal=='SELL' or lastsignal=='STAY SHORT' or lastsignal=='STAY SHORT' or lastsignal=='STAY IN CASH') and (currsignal=='BUY' or currsignal=='STAY LONG')
+                    scraperwiki.sqlite.execute("update AllTrades set Position = 'To Close' where tidm = '%s'") % (lasttidm)
+                    scraperwiki.sqlite.commit()
            
 
     return;
