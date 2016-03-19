@@ -69,7 +69,7 @@ def ScrapeBritishMain():
     
     
     #scraperwiki.sqlite.execute("drop table if exists Signal_History")  
-    #scraperwiki.sqlite.execute("create table Company_Recommendations (`Date` date NOT NULL, `TIDM` varchar2(8) NOT NULL, `Signal` varchar2(15) NOT NULL, `Avg Price` real NOT NULL, `EOD Signal` varchar2(15) NOT NULL, `EOD Pattern` varchar2(30) NOT NULL, `EOD Last Price` real NOT NULL, `EOD %Change` real NOT NULL, `Refresh Date` date, UNIQUE (`TIDM`, `Date`))")
+    #scraperwiki.sqlite.execute("create table Company_Recommendations (`Date` date NOT NULL, `TIDM` varchar2(8) NOT NULL, `Signal` varchar2(15) NOT NULL, `Avg Price` real NOT NULL, `EOD Signal` varchar2(15) NOT NULL, `EOD Pattern` varchar2(30) NOT NULL, `EOD Last Price` real NOT NULL, `EOD %Change` real NOT NULL, `Refresh Date` date, UNIQUE (`Date`, `TIDM`))")
     
     
     #lselist = scraperwiki.sqlite.execute("select `TIDM` from company")
@@ -130,22 +130,47 @@ def ScrapeBritishMain():
 #Load Signal History from British Bulls
 ####################################################
 
+def CheckForSignalChange():
+    
+    openlist = scraperwiki.sqlite.execute("select `TIDM`, `Signal` from AllTrades where Postion = 'Open'")
+    
+    for x in openlist["data"]:
+        
+        lasttidm = x[0]
+        lastsignal = x[1]
+    
+        siglist = scraperwiki.sqlite.execute("select `TIDM`, `Signal` from Signal_History where tidm = '%s' and Date in (select max(`Date`) from Signal_History where tidm = '%s')" % (tidm, tidm))
+        
+        for y in siglist["data"]:
+            
+            currtidm = y[0]
+            currsignal = y[1]
+            
+            if lasttidm==currtidm:
+                
+           
+
+    return;
+####################################################
+#Load Signal History from British Bulls
+####################################################
+
 def ScrapeSignalHistory():
 
     url = 'https://www.britishbulls.com/SignalPage.aspx?lang=en&Ticker='
     
     
-    scraperwiki.sqlite.execute("drop table if exists Signal_History")  
-    scraperwiki.sqlite.execute("create table Signal_History (`TIDM` varchar2(8) NOT NULL, `Date` date NOT NULL, `Price` real NOT NULL, `Signal` varchar2(15) NOT NULL, `Confirmation` char(1) NOT NULL, `GBP 100` real NOT NULL, UNIQUE (`TIDM`, `Date`))")
+    #scraperwiki.sqlite.execute("drop table if exists Signal_History")  
+    #scraperwiki.sqlite.execute("create table Signal_History (`TIDM` varchar2(8) NOT NULL, `Date` date NOT NULL, `Price` real NOT NULL, `Signal` varchar2(15) NOT NULL, `Confirmation` char(1) NOT NULL, `GBP 100` real NOT NULL, UNIQUE (`TIDM`, `Date`))")
     
     
-    lselist = scraperwiki.sqlite.execute("select `TIDM` from company")
+    lselist = scraperwiki.sqlite.execute("select distinct `TIDM` from AllTrades")
     
     for x in lselist["data"]:
         
         tidm = str(x)[3:-2]
         
-        siglist = scraperwiki.sqlite.execute("select count(*) from Signal_History where tidm = '%s' and (Signal IN ('SELL',  'SHORT',  'STAY IN CASH',  'STAY SHORT') OR (Signal IN ('BUY, 'STAY LONG') AND ))" % (tidm, d1date))
+        ##siglist = scraperwiki.sqlite.execute("select count(*) from Signal_History where tidm = '%s' and (Signal IN ('SELL',  'SHORT',  'STAY IN CASH',  'STAY SHORT') OR (Signal IN ('BUY, 'STAY LONG') AND ))" % (tidm, d1date))
 
         br = mechanize.Browser()
     
