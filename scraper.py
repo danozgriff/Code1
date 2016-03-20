@@ -109,7 +109,7 @@ def ScrapeBritishMain():
                 eodsignal = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(",", "")).group(0)
                 eodpattern = re.search(r'title="((.|\n)+)" src=', str(test3.pop(0))).group(0)[7:-6]
                 eodprice = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
-                eodchange re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
+                eodchange = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
                 
                 scraperwiki.sqlite.execute("insert or ignore into Signal_History values (?, ?, ?, ?, ?, ?, ?, ?, ?)",  [recdate, rectidm, recsignal, recavgprice, eodsignal, eodpattern, eodprice, eodchange, publishdate]) 
                 scraperwiki.sqlite.commit()
