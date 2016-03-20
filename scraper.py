@@ -193,9 +193,9 @@ def UpdateOpenTrades():
                 currprice = z[0]
                 currdate = datetime.datetime.strptime(z[1], "%Y-%m-%d").date()
                 
-                if direction = 'LONG':
+                if direction == 'LONG':
                     lastchange = round((currprice - openprice) / openprice,3)
-                if direction = 'SHORT':
+                if direction == 'SHORT':
                     lastchange = round((openprice - currprice) / openprice,3)
                 scraperwiki.sqlite.execute("update Trades set LastPrice = '%f', LastDate = '%s', LastChange = '%f', LastSignal = '%s' where tidm = '%s'") % (currprice, currdate, lastchange, currsignal, tidm)
                 scraperwiki.sqlite.commit()
@@ -220,9 +220,9 @@ def FindNewTrades():
     for x in opencnt["data"]:
         closecnt = x[0]
     
-    recommlist = scraperwiki.sqlite.execute("select `TIDM` from Company_Recommendations
+    #recommlist = scraperwiki.sqlite.execute("select `TIDM` from Company_Recommendations
     
-
+    return;
 ####################################################
 #Load Signal History from British Bulls
 ####################################################
