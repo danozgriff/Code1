@@ -14,7 +14,7 @@ import datetime
 def NewLivePrices():
 
     print "1"
-    url = 'http://shares.telegraph.co.uk/indices/?index=SMX/'
+    url = 'http://shares.telegraph.co.uk/indices'
     
     br = mechanize.Browser()
     
