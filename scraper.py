@@ -6,7 +6,57 @@ import time
 from datetime import datetime, date
 import datetime
 
-#class BritishScrape:
+
+##################################################      
+#Load Prices from shareprices.com
+##################################################
+
+def NewLivePrices():
+
+    url = 'http://shares.telegraph.co.uk/indices/?index=SMX'
+    
+    br = mechanize.Browser()
+    
+        # sometimes the server is sensitive to this information
+    br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
+    
+    #scraperwiki.sqlite.execute("drop table if exists company")  
+    #scraperwiki.sqlite.execute("create table company (`TIDM` string, `Company` string, `Price` real, `Volume` real, `Date` date NOT NULL)")
+
+    #scraperwiki.sqlite.execute("delete from company")
+    #scraperwiki.sqlite.commit()
+    
+    response = br.open(url)
+    
+    
+    for pagenum in range(1):
+        html = response.read()
+        test1 = re.search(r'&nbsp;(.*?)</tbody>', html).group()
+        tuples = re.findall(r'(">)(.*?)</td>', str(test1)) #.replace(" ", "")).replace("><", "")
+        count = 0
+        tidm = ""
+        company = ""
+        price = 0
+        poscnt = 0
+        for tuple in tuples:
+            print tuple[1]
+            #if poscnt == 1:
+            #    company = tuple[1].replace("amp;", "")
+            #if poscnt == 2:
+            #    price = float(tuple[1].replace(",", "").replace("p", ""))
+            #if poscnt == 4:
+            #    scraperwiki.sqlite.save(["TIDM"], data={"TIDM":tidm+'.L', "Company":company, "Price":price, "Volume":tuple[1].replace(",", ""), "Date":datetime.date.today()}, table_name='company')
+            #    scraperwiki.sqlite.commit()
+            #if len(tuple[1]) <= 4 and tuple[1][-1:].isalpha() and tuple[1][-1:].isupper() and tuple[1]!=tidm and poscnt!=1:
+            #    count = count+1
+            #    tidm = tuple[1]
+            #    poscnt = 1
+            #else:
+            #    poscnt = poscnt + 1    
+            
+        #print "%s ftseallshare records were loaded" % (count)
+
+        return;
 
 ##################################################      
 #Load Prices from shareprices.com
@@ -34,7 +84,7 @@ def ScrapeLivePrices():
     for pagenum in range(1):
         html = response.read()
         test1 = re.search(r'Day\'s Volume(.*?)<br \/><\/div>', html).group()
-        tuples = re.findall(r'(\">|\'>)(.*?)<\/', str(test1.replace(" ", "")).replace("><", ""))
+        tuples = re.findall(r'((\">|\'>)(.*?)<\/)|(<td class='tables(.*?)')', str(test1.replace(" ", "")).replace("><", ""))
         count = 0
         tidm = ""
         company = ""
@@ -44,7 +94,7 @@ def ScrapeLivePrices():
             if poscnt == 1:
                 company = tuple[1].replace("amp;", "")
             if poscnt == 2:
-                price = tuple[1].replace(",", "").replace("p", "")
+                price = float(tuple[1].replace(",", "").replace("p", ""))
             if poscnt == 4:
                 scraperwiki.sqlite.save(["TIDM"], data={"TIDM":tidm+'.L', "Company":company, "Price":price, "Volume":tuple[1].replace(",", ""), "Date":datetime.date.today()}, table_name='company')
                 scraperwiki.sqlite.commit()
@@ -117,35 +167,62 @@ def ScrapeBritishMain():
     return;
 
 ####################################################
-#Load Signal History from British Bulls
+#Update Open Trades
 ####################################################
 
-def CheckForSignalChange():
+def UpdateOpenTrades():
     
-    openlist = scraperwiki.sqlite.execute("select `TIDM`, `Signal` from AllTrades where Postion = 'Open'")
+    openlist = scraperwiki.sqlite.execute("select `TIDM`, `OpenPrice`, `OpenSignal`, `Direction` from Trades where Postion = 'Open'")
     
     for x in openlist["data"]:
         
-        lasttidm = x[0]
-        lastsignal = x[1]
-    
+        tidm = x[0]
+        openprice = x[1]
+        opensignal = x[2]
+        direction = x[3]
+
         siglist = scraperwiki.sqlite.execute("select `TIDM`, `Signal` from Signal_History where tidm = '%s' and Date in (select max(`Date`) from Signal_History where tidm = '%s')" % (tidm, tidm))
         
         for y in siglist["data"]:
-            
             currtidm = y[0]
             currsignal = y[1]
             
-            if lasttidm==currtidm and lastsignal!=currsignal:
-                if (lastsignal=='BUY' or lastsignal=='STAY LONG') and (currsignal=='SELL' or currsignal=='STAY SHORT' or currsignal=='STAY SHORT' or currsignal=='STAY IN CASH'):
-                    scraperwiki.sqlite.execute("update AllTrades set Position = 'To Close' where tidm = '%s'") % (lasttidm)
+            currprices = scraperwiki.sqlite.execute("select `Price`, `Date` from Company where tidm = '%s'") % (tidm)
+            
+            for z in currprices["data"]:
+                currprice = z[0]
+                currdate = datetime.datetime.strptime(z[1], "%Y-%m-%d").date()
+                
+                if direction = 'LONG':
+                    lastchange = round((currprice - openprice) / openprice,3)
+                if direction = 'SHORT':
+                    lastchange = round((openprice - currprice) / openprice,3)
+                scraperwiki.sqlite.execute("update Trades set LastPrice = '%f', LastDate = '%s', LastChange = '%f', LastSignal = '%s' where tidm = '%s'") % (currprice, currdate, lastchange, currsignal, tidm)
+                scraperwiki.sqlite.commit()
+            
+            if tidm==currtidm and opensignal!=currsignal:
+                if (opensignal=='BUY' or opensignal=='STAY LONG') and (currsignal=='SELL' or currsignal=='STAY SHORT' or currsignal=='STAY SHORT' or currsignal=='STAY IN CASH'):
+                    scraperwiki.sqlite.execute("update Trades set Position = 'Closing' where tidm = '%s'") % (tidm)
                     scraperwiki.sqlite.commit()
-                elif (lastsignal=='SELL' or lastsignal=='STAY SHORT' or lastsignal=='STAY SHORT' or lastsignal=='STAY IN CASH') and (currsignal=='BUY' or currsignal=='STAY LONG'):
-                    scraperwiki.sqlite.execute("update AllTrades set Position = 'To Close' where tidm = '%s'") % (lasttidm)
+                elif (opensignal=='SELL' or opensignal=='STAY SHORT' or opensignal=='STAY SHORT' or opensignal=='STAY IN CASH') and (currsignal=='BUY' or currsignal=='STAY LONG'):
+                    scraperwiki.sqlite.execute("update Trades set Position = 'Closing' where tidm = '%s'") % (tidm)
                     scraperwiki.sqlite.commit()
            
-
     return;
+
+####################################################
+#Find New Stocks
+####################################################
+
+def FindNewTrades():
+    
+    opencnt = scraperwiki.sqlite.execute("select count(*) from Trades where Postion = 'Closing'")
+    for x in opencnt["data"]:
+        closecnt = x[0]
+    
+    recommlist = scraperwiki.sqlite.execute("select `TIDM` from Company_Recommendations
+    
+
 ####################################################
 #Load Signal History from British Bulls
 ####################################################
@@ -326,4 +403,5 @@ def SignalPerformance():
 ########################################################
 if __name__ == '__main__':
     
-    ScrapeBritishMain()
+    #ScrapeBritishMain()
+    NewLivePrices()
