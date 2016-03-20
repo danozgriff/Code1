@@ -69,7 +69,7 @@ def ScrapeBritishMain():
     
     
     #scraperwiki.sqlite.execute("drop table if exists Signal_History")  
-    #scraperwiki.sqlite.execute("create table Company_Recommendations (`Date` date NOT NULL, `TIDM` varchar2(8) NOT NULL, `Signal` varchar2(15) NOT NULL, `Avg Price` real NOT NULL, `EOD Signal` varchar2(15) NOT NULL, `EOD Pattern` varchar2(30) NOT NULL, `EOD Last Price` real NOT NULL, `EOD %Change` real NOT NULL, `Refresh Date` date, UNIQUE (`Date`, `TIDM`))")
+    scraperwiki.sqlite.execute("create table Company_Recommendations (`Date` date NOT NULL, `TIDM` varchar2(8) NOT NULL, `Signal` varchar2(15) NOT NULL, `Avg Price` real NOT NULL, `EOD Signal` varchar2(15) NOT NULL, `EOD Pattern` varchar2(30) NOT NULL, `EOD Last Price` real NOT NULL, `EOD %Change` real NOT NULL, `Refresh Date` date, UNIQUE (`Date`, `TIDM`))")
     
     
     #lselist = scraperwiki.sqlite.execute("select `TIDM` from company")
@@ -91,38 +91,28 @@ def ScrapeBritishMain():
     for pagenum in range(1):
         html = response.read()
 
-        print re.search(r'MARKET STATUS REPORT, (..........)', html).group(0)[22:]
-        #print tdate
+        publishdate = re.search(r'MARKET STATUS REPORT, (..........)', html).group(0)[22:]
+
         test1 = re.search(r'MainContent_SignalListGrid1_DXDataRow0((.|\n)+)MainContent_SignalListGrid1_IADD', html)
 
         if test1:
             test1 = test1.group(0)
 
             test3 = re.findall('(\">|img\/)(.*?)(<\/|\.gif)', test1.replace("\B", ""))
-            
-            print len(test3)
 
             while len(test3) >= 5:
     
-                print re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "")).group(0)
-                print re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
-                print re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
-                print re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
-                print re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(",", "")).group(0)
-                print re.search(r'title="((.|\n)+)" src=', str(test3.pop(0))).group(0)[7:-6]
-                print re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
-                print re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
+                recdate = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "")).group(0)
+                rectidm = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
+                recsignal = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
+                recavgprice = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
+                eodsignal = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(",", "")).group(0)
+                eodpattern = re.search(r'title="((.|\n)+)" src=', str(test3.pop(0))).group(0)[7:-6]
+                eodprice = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
+                eodchange re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
                 
-                #sh_Date = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "")).group(0)
-                #sh_Date = date(int(sh_Date[6:10]),int(sh_Date[3:5]),int(sh_Date[:2]))
-                #sh_Price = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
-                #sh_Signal = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "")).group(0)
-                #sh_Confirmation = ((re.search("[Uncheck|Check]", str(test3.pop(0)).replace(" ", "")).group(0).lower()).replace("u","N")).replace("c", "Y")
-                #sh_GBP100 = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
-                
-                #scraperwiki.sqlite.execute("insert or ignore into Signal_History values (?, ?, ?, ?, ?, ?)",  [tidm, sh_Date, sh_Price, sh_Signal, sh_Confirmation, sh_GBP100]) 
-
-                #scraperwiki.sqlite.commit()
+                scraperwiki.sqlite.execute("insert or ignore into Signal_History values (?, ?, ?, ?, ?, ?, ?, ?, ?)",  [recdate, rectidm, recsignal, recavgprice, eodsignal, eodpattern, eodprice, eodchange, publishdate]) 
+                scraperwiki.sqlite.commit()
                 
     return;
 
