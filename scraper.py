@@ -32,6 +32,7 @@ def NewLivePrices():
     for pagenum in range(1):
         html = response.read()
         test1 = re.search(r'&nbsp;(.*?)</tbody>', html).group()
+        print test1
         tuples = re.findall(r'(">)(.*?)</td>', str(test1)) #.replace(" ", "")).replace("><", "")
         count = 0
         tidm = ""
