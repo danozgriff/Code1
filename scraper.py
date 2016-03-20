@@ -35,7 +35,7 @@ def NewLivePrices():
         print "4"
         html = response.read()
         print "5"
-        print html
+        #print html
         test1 = re.search(r'nbsp;(.*?)</tbody>', html).group()
         #print test1
         tuples = re.findall(r'(">)(.*?)</td>', str(test1)) #.replace(" ", "")).replace("><", "")
