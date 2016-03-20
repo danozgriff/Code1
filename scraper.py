@@ -13,6 +13,7 @@ import datetime
 
 def NewLivePrices():
 
+    print "1"
     url = 'http://shares.telegraph.co.uk/indices/?index=SMX'
     
     br = mechanize.Browser()
@@ -26,11 +27,14 @@ def NewLivePrices():
     #scraperwiki.sqlite.execute("delete from company")
     #scraperwiki.sqlite.commit()
     
+    print "2"
     response = br.open(url)
-    
+    print "3"
     
     for pagenum in range(1):
+        print "4"
         html = response.read()
+        print "5"
         print html
         test1 = re.search(r'&nbsp;(.*?)</tbody>', html).group()
         #print test1
