@@ -90,7 +90,8 @@ def ScrapeLivePrices():
     for pagenum in range(1):
         html = response.read()
         test1 = re.search(r'Day\'s Volume(.*?)<br \/><\/div>', html).group()
-        tuples = re.findall(r'((\">|\'>)(.*?)<\/))', str(test1.replace(" ", "")).replace("><", ""))
+        #tuples = re.findall(r'((\">|\'>)(.*?)<\/))', str(test1.replace(" ", "")).replace("><", ""))
+        tuples = re.findall(r'(\">|\'>)(.*?)<\/', str(test1.replace(" ", "")).replace("><", ""))
         count = 0
         tidm = ""
         company = ""
