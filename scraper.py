@@ -411,5 +411,5 @@ def SignalPerformance():
 if __name__ == '__main__':
     
     #ScrapeBritishMain()
-    #NewLivePrices()
-    ScrapeLivePrices()
+    NewLivePrices()
+    #ScrapeLivePrices()
