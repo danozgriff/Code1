@@ -14,6 +14,11 @@ import datetime
 
 def ScrapeLivePrices():
 
+
+    scraperwiki.sqlite.execute("delete from company")  
+    #scraperwiki.sqlite.execute("create table company (`TIDM` string, `Company` string, `Price` real, `Volume` real, `FTSE` string, `Date` date NOT NULL)")
+    
+
     ftses = ['FTSE 100', 'FTSE 250',  'FTSE Small Cap']
     
     for ftse in ftses:        # Second Example
@@ -30,9 +35,6 @@ def ScrapeLivePrices():
             # sometimes the server is sensitive to this information
         br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
         
-        scraperwiki.sqlite.execute("drop table if exists company")  
-        scraperwiki.sqlite.execute("create table company (`TIDM` string, `Company` string, `Price` real, `Volume` real, `FTSE` string, `Date` date NOT NULL)")
-    
         #scraperwiki.sqlite.execute("delete from company")
         #scraperwiki.sqlite.commit()
         
