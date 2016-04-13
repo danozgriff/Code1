@@ -412,5 +412,5 @@ if __name__ == '__main__':
     
     #ScrapeBritishMain()
     #NewLivePrices()
-    #ScrapeLivePrices()
-    SignalPerformance()
+    ScrapeLivePrices()
+    #SignalPerformance()
