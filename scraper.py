@@ -45,7 +45,7 @@ def ScrapeLivePrices():
             html = response.read()
             test1 = re.search(r'Day\'s Volume(.*?)<br \/><\/div>', html).group()
             #tuples = re.findall(r'((\">|\'>)(.*?)<\/))', str(test1.replace(" ", "")).replace("><", ""))
-            tuples = re.findall(r'(\">|\'>)(.*?)<\/', str(test1.replace(" ", "")).replace("><", ""))
+            tuples = re.findall(r'(\"(>|\'>|img\/)(.*?)(<\/|\.gif)', str(test1.replace(" ", "")).replace("><", ""))
             count = 0
             tidm = ""
             company = ""
@@ -56,6 +56,10 @@ def ScrapeLivePrices():
                     company = tuple[1].replace("amp;", "")
                 if poscnt == 2:
                     price = float(tuple[1].replace(",", "").replace("p", ""))
+                if poscnt == 3:
+                    print tidm
+                    print tuple[1]
+                    change = float(tuple[1].replace(",", "").replace("p", ""))
                 if poscnt == 4:
                     scraperwiki.sqlite.save(["TIDM"], data={"TIDM":tidm+'.L', "Company":company, "Price":price, "Volume":tuple[1].replace(",", ""), "FTSE":ftse, "Date":datetime.date.today()}, table_name='company')
                     scraperwiki.sqlite.commit()
