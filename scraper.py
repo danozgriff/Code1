@@ -21,8 +21,8 @@ def NewLivePrices():
         # sometimes the server is sensitive to this information
     #br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
     
-    #scraperwiki.sqlite.execute("drop table if exists company")  
-    #scraperwiki.sqlite.execute("create table company (`TIDM` string, `Company` string, `Price` real, `Volume` real, `Date` date NOT NULL)")
+    scraperwiki.sqlite.execute("drop table if exists company")  
+    scraperwiki.sqlite.execute("create table company (`TIDM` string, `Company` string, `Price` real, `Volume` real, `Date` date NOT NULL)")
 
     #scraperwiki.sqlite.execute("delete from company")
     #scraperwiki.sqlite.commit()
@@ -36,7 +36,7 @@ def NewLivePrices():
         html = response.read()
         print "5"
         #print html
-        test1 = re.search('nbsp;(.*?)</tbody>', html).group(0)
+        test1 = re.search(r'tablesorter full(.*?)</tbody>', html).group(0)
         #print test1
         tuples = re.findall(r'(">)(.*?)</td>', str(test1)) #.replace(" ", "")).replace("><", "")
         count = 0
@@ -411,6 +411,6 @@ def SignalPerformance():
 if __name__ == '__main__':
     
     #ScrapeBritishMain()
-    #NewLivePrices()
-    ScrapeLivePrices()
+    NewLivePrices()
+    #ScrapeLivePrices()
     #SignalPerformance()
