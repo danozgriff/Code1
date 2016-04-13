@@ -20,9 +20,9 @@ def ScrapeLivePrices():
 
         if ftse == 'FTSE 100':
             url = 'http://shareprices.com/ftse100'
-        elsif ftse == 'FTSE 250':
+        elif ftse == 'FTSE 250':
             url = 'http://shareprices.com/ftse250'
-        elsif ftse == 'FTSE Small Cap':
+        elif ftse == 'FTSE Small Cap':
             url = 'http://shareprices.com/ftsesmallcap'
         
         br = mechanize.Browser()
