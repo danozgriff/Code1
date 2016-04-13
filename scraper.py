@@ -59,7 +59,7 @@ def ScrapeLivePrices():
                 if poscnt == 3:
                     print tidm
                     print tuple[1]
-                    change = float(tuple[1].replace(",", "").replace("p", ""))
+                    #change = float(tuple[1].replace(",", "").replace("p", ""))
                 if poscnt == 4:
                     scraperwiki.sqlite.save(["TIDM"], data={"TIDM":tidm+'.L', "Company":company, "Price":price, "Volume":tuple[1].replace(",", ""), "FTSE":ftse, "Date":datetime.date.today()}, table_name='company')
                     scraperwiki.sqlite.commit()
