@@ -16,7 +16,7 @@ def ScrapeLivePrices():
 
 
     scraperwiki.sqlite.execute("delete from company")  
-    #scraperwiki.sqlite.execute("create table company (`TIDM` string, `Company` string, `Price` real, `Volume` real, `FTSE` string, `Date` date NOT NULL)")
+    scraperwiki.sqlite.execute("create table company (`TIDM` string, `Company` string, `Yesterday Price` real, `Volume` real, `FTSE` string, `Date` date NOT NULL)")
     
 
     ftses = ['FTSE 100', 'FTSE 250',  'FTSE Small Cap']
@@ -57,14 +57,11 @@ def ScrapeLivePrices():
                 if poscnt == 2:
                     price = float(tuple[1].replace(",", "").replace("p", ""))
                 if poscnt == 3:
-                    print tidm
                     change = float(tuple[1][:tuple[1].find("&")])
-                    if tuple[1][-4:] == 'down':
+                    if tuple[1][-4:] == 'up':
                         change = change * -1.00
-                    print change
-                    #change = float(tuple[1].replace(",", "").replace("p", ""))
                 if poscnt == 4:
-                    scraperwiki.sqlite.save(["TIDM"], data={"TIDM":tidm+'.L', "Company":company, "Price":price, "Volume":tuple[1].replace(",", ""), "FTSE":ftse, "Date":datetime.date.today()}, table_name='company')
+                    scraperwiki.sqlite.save(["TIDM"], data={"TIDM":tidm+'.L', "Company":company, "Price":price+change, "Volume":tuple[1].replace(",", ""), "FTSE":ftse, "Date":datetime.date.today()}, table_name='company')
                     scraperwiki.sqlite.commit()
                 if len(tuple[1]) <= 4 and tuple[1][-1:].isalpha() and tuple[1][-1:].isupper() and tuple[1]!=tidm and poscnt!=1:
                     count = count+1
