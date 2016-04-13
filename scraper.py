@@ -66,7 +66,7 @@ def ScrapeLivePrices():
                 
             print "%s ftse records were loaded" % (count)
     
-            return;
+    return;
 
 ####################################################
 #Load Main Page from British Bulls
