@@ -14,50 +14,59 @@ import datetime
 
 def ScrapeLivePrices():
 
-    url = 'http://www.shareprices.com/ftseallshare'
+    ftses = ['FTSE 100', 'FTSE 250',  'FTSE Small Cap']
     
-    br = mechanize.Browser()
-    
-        # sometimes the server is sensitive to this information
-    br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
-    
-    scraperwiki.sqlite.execute("drop table if exists company")  
-    scraperwiki.sqlite.execute("create table company (`TIDM` string, `Company` string, `Price` real, `Volume` real, `Date` date NOT NULL)")
+    for ftse in ftses:        # Second Example
 
-    #scraperwiki.sqlite.execute("delete from company")
-    #scraperwiki.sqlite.commit()
+        if ftse == 'FTSE 100':
+        url = 'http://shareprices.com/ftse100'
+        elsif ftse == 'FTSE 250':
+        url = 'http://shareprices.com/ftse250'
+        elsif ftse == 'FTSE Small Cap':
+        url = 'http://shareprices.com/ftsesmallcap'
+        
+        br = mechanize.Browser()
+        
+            # sometimes the server is sensitive to this information
+        br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
+        
+        scraperwiki.sqlite.execute("drop table if exists company")  
+        scraperwiki.sqlite.execute("create table company (`TIDM` string, `Company` string, `Price` real, `Volume` real, `FTSE` string, `Date` date NOT NULL)")
     
-    response = br.open(url)
+        #scraperwiki.sqlite.execute("delete from company")
+        #scraperwiki.sqlite.commit()
+        
+        response = br.open(url)
+        
+        
+        for pagenum in range(1):
+            html = response.read()
+            test1 = re.search(r'Day\'s Volume(.*?)<br \/><\/div>', html).group()
+            #tuples = re.findall(r'((\">|\'>)(.*?)<\/))', str(test1.replace(" ", "")).replace("><", ""))
+            tuples = re.findall(r'(\">|\'>)(.*?)<\/', str(test1.replace(" ", "")).replace("><", ""))
+            count = 0
+            tidm = ""
+            company = ""
+            price = 0
+            poscnt = 0
+            for tuple in tuples:
+                if poscnt == 1:
+                    company = tuple[1].replace("amp;", "")
+                if poscnt == 2:
+                    price = float(tuple[1].replace(",", "").replace("p", ""))
+                if poscnt == 4:
+                    scraperwiki.sqlite.save(["TIDM"], data={"TIDM":tidm+'.L', "Company":company, "Price":price, "Volume":tuple[1].replace(",", ""), "FTSE":ftse, "Date":datetime.date.today()}, table_name='company')
+                    scraperwiki.sqlite.commit()
+                if len(tuple[1]) <= 4 and tuple[1][-1:].isalpha() and tuple[1][-1:].isupper() and tuple[1]!=tidm and poscnt!=1:
+                    count = count+1
+                    tidm = tuple[1]
+                    poscnt = 1
+                else:
+                    poscnt = poscnt + 1    
+                
+            print "%s ftse records were loaded" % (count)
     
-    
-    for pagenum in range(1):
-        html = response.read()
-        test1 = re.search(r'Day\'s Volume(.*?)<br \/><\/div>', html).group()
-        #tuples = re.findall(r'((\">|\'>)(.*?)<\/))', str(test1.replace(" ", "")).replace("><", ""))
-        tuples = re.findall(r'(\">|\'>)(.*?)<\/', str(test1.replace(" ", "")).replace("><", ""))
-        count = 0
-        tidm = ""
-        company = ""
-        price = 0
-        poscnt = 0
-        for tuple in tuples:
-            if poscnt == 1:
-                company = tuple[1].replace("amp;", "")
-            if poscnt == 2:
-                price = float(tuple[1].replace(",", "").replace("p", ""))
-            if poscnt == 4:
-                scraperwiki.sqlite.save(["TIDM"], data={"TIDM":tidm+'.L', "Company":company, "Price":price, "Volume":tuple[1].replace(",", ""), "Date":datetime.date.today()}, table_name='company')
-                scraperwiki.sqlite.commit()
-            if len(tuple[1]) <= 4 and tuple[1][-1:].isalpha() and tuple[1][-1:].isupper() and tuple[1]!=tidm and poscnt!=1:
-                count = count+1
-                tidm = tuple[1]
-                poscnt = 1
-            else:
-                poscnt = poscnt + 1    
-            
-        print "%s ftseallshare records were loaded" % (count)
-
-        return;
+            return;
 
 ####################################################
 #Load Main Page from British Bulls
