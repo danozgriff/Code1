@@ -364,8 +364,5 @@ if __name__ == '__main__':
     
     #ScrapeBritishMain()
     #NewLivePrices()
-    #ScrapeLivePrices()
+    ScrapeLivePrices()
     #SignalPerformance()
-    
-    utc_dt = datetime(2009, 7, 10, 18, 44, 59, 193982, tzinfo=pytz.utc)
-    print(utc_dt.astimezone(get_localzone()))
