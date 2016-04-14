@@ -60,7 +60,10 @@ def ScrapeLivePrices():
                 if poscnt == 3:
                     change = float(tuple[1][:tuple[1].find("&")])
                     if tuple[1][-4:] == 'up':
-                        change = change * -1.00
+                        change = -change
+                    print tidm
+                    print price
+                    print change
                 if poscnt == 4:
                     scraperwiki.sqlite.save(["TIDM"], data={"TIDM":tidm+'.L', "Company":company, "Price":price+change, "Volume":tuple[1].replace(",", ""), "FTSE":ftse, "Date":datetime.date.today()}, table_name='company')
                     scraperwiki.sqlite.commit()
