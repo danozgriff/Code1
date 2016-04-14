@@ -51,6 +51,7 @@ def ScrapeLivePrices():
             tidm = ""
             company = ""
             price = 0
+            change = 0
             poscnt = 0
             overallcnt = 0
             for tuple in tuples:
@@ -60,15 +61,11 @@ def ScrapeLivePrices():
                     price = float(tuple[1].replace(",", "").replace("p", ""))
                 if poscnt == 3:
                     change = float(tuple[1][:tuple[1].find("&")])
-                    if tuple[1][-4:] == 'up':
+                    if tuple[1][-2:] == 'up':
                         change = change * -1
-                    print tidm
-                    print price
-                    print change
                 if poscnt == 4:
-                    scraperwiki.sqlite.save(["TIDM"], data={"TIDM":tidm+'.L', "Company":company, "Price":price+change, "Volume":tuple[1].replace(",", ""), "FTSE":ftse, "Date":datetime.date.today()}, table_name='company')
+                    scraperwiki.sqlite.save(["TIDM"], data={"TIDM":tidm+'.L', "Company":company, "Yesterday Price":round(price+change,2), "Volume":tuple[1].replace(",", ""), "FTSE":ftse, "Date":datetime.date.today()}, table_name='company')
                     scraperwiki.sqlite.commit()
-                    overallcnt = overallcnt + 1
                 if len(tuple[1]) <= 4 and tuple[1][-1:].isalpha() and tuple[1][-1:].isupper() and tuple[1]!=tidm and poscnt!=1:
                     count = count+1
                     tidm = tuple[1]
@@ -76,9 +73,9 @@ def ScrapeLivePrices():
                 else:
                     poscnt = poscnt + 1    
              
-            if overallcnt > 9:
-                 return;
-            #print "%s ftse records were loaded" % (count)
+            #if overallcnt > 9:
+             #    return;
+            print "%s ftse records were loaded" % (count)
     
     return;
 
