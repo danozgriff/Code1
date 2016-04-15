@@ -4,6 +4,7 @@ import re
 import csv
 import time
 from datetime import datetime, date
+from time import gmtime, strftime
 import datetime
 
 
@@ -18,7 +19,13 @@ def ScrapeLivePrices():
     #scraperwiki.sqlite.execute("delete from company")  
     scraperwiki.sqlite.execute("drop table if exists company")
     scraperwiki.sqlite.execute("create table company (`TIDM` string, `Company` string, `Yesterday Price` real, `Volume` real, `FTSE` string, `Date` date NOT NULL)")
-    
+
+    now = datetime.datetime.now()
+    ftseopen = now.replace(hour=8, minute=1, second=0, microsecond=0)
+    if now >= ftseopen:
+       daystarted = "Y"
+    else:
+       daystarted = "N" 
 
     ftses = ['FTSE 100', 'FTSE 250',  'FTSE Small Cap']
     
@@ -54,6 +61,7 @@ def ScrapeLivePrices():
             change = 0
             poscnt = 0
             overallcnt = 0
+
             for tuple in tuples:
                 if poscnt == 1:
                     company = tuple[1].replace("amp;", "")
@@ -64,7 +72,10 @@ def ScrapeLivePrices():
                     if tuple[1][-2:] == 'up':
                         change = change * -1
                 if poscnt == 4:
-                    scraperwiki.sqlite.save(["TIDM"], data={"TIDM":tidm+'.L', "Company":company, "Yesterday Price":round(price+change,2), "Volume":tuple[1].replace(",", ""), "FTSE":ftse, "Date":datetime.date.today()}, table_name='company')
+                    if daystarted == "N":
+                      scraperwiki.sqlite.save(["TIDM"], data={"TIDM":tidm+'.L', "Company":company, "Yesterday Price":round(price,2), "Volume":tuple[1].replace(",", ""), "FTSE":ftse, "Date":datetime.date.today()}, table_name='company')
+                    elif daystarted == "Y":
+                      scraperwiki.sqlite.save(["TIDM"], data={"TIDM":tidm+'.L', "Company":company, "Yesterday Price":round(price+change,2), "Volume":tuple[1].replace(",", ""), "FTSE":ftse, "Date":datetime.date.today()}, table_name='company')
                     scraperwiki.sqlite.commit()
                 if len(tuple[1]) <= 4 and tuple[1][-1:].isalpha() and tuple[1][-1:].isupper() and tuple[1]!=tidm and poscnt!=1:
                     count = count+1
@@ -377,3 +388,6 @@ if __name__ == '__main__':
     #NewLivePrices()
     ScrapeLivePrices()
     #SignalPerformance()
+
+
+
