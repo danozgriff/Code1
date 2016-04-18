@@ -16,9 +16,9 @@ import datetime
 def ScrapeLivePrices():
 
 
-    #scraperwiki.sqlite.execute("delete from company")  
-    scraperwiki.sqlite.execute("drop table if exists company")
-    scraperwiki.sqlite.execute("create table company (`TIDM` string, `Company` string, `Yesterday Price` real, `Volume` real, `FTSE` string, `Date` date NOT NULL)")
+    scraperwiki.sqlite.execute("delete from company1")  
+    #scraperwiki.sqlite.execute("drop table if exists company")
+    #scraperwiki.sqlite.execute("create table company (`TIDM` string, `Company` string, `Yesterday Price` real, `Volume` real, `FTSE` string, `Date` date NOT NULL)")
 
     now = datetime.datetime.now()
     ftseopen = now.replace(hour=8, minute=1, second=0, microsecond=0)
@@ -73,9 +73,9 @@ def ScrapeLivePrices():
                         change = change * -1
                 if poscnt == 4:
                     if daystarted == "N":
-                      scraperwiki.sqlite.save(["TIDM"], data={"TIDM":tidm+'.L', "Company":company, "Yesterday Price":round(price,2), "Volume":tuple[1].replace(",", ""), "FTSE":ftse, "Date":datetime.date.today()}, table_name='company')
+                      scraperwiki.sqlite.save(["TIDM"], data={"TIDM":tidm+'.L', "Company":company, "Yesterday Price":round(price,2), "Volume":tuple[1].replace(",", ""), "FTSE":ftse, "Date":datetime.date.today()}, table_name='company1')
                     elif daystarted == "Y":
-                      scraperwiki.sqlite.save(["TIDM"], data={"TIDM":tidm+'.L', "Company":company, "Yesterday Price":round(price+change,2), "Volume":tuple[1].replace(",", ""), "FTSE":ftse, "Date":datetime.date.today()}, table_name='company')
+                      scraperwiki.sqlite.save(["TIDM"], data={"TIDM":tidm+'.L', "Company":company, "Yesterday Price":round(price+change,2), "Volume":tuple[1].replace(",", ""), "FTSE":ftse, "Date":datetime.date.today()}, table_name='company1')
                     scraperwiki.sqlite.commit()
                 if len(tuple[1]) <= 4 and tuple[1][-1:].isalpha() and tuple[1][-1:].isupper() and tuple[1]!=tidm and poscnt!=1:
                     count = count+1
