@@ -17,8 +17,8 @@ def ScrapeLivePrices():
 
 
     #scraperwiki.sqlite.execute("delete from company")  
-    scraperwiki.sqlite.execute("drop table if exists company")
-    scraperwiki.sqlite.execute("create table company (`TIDM` string, `Company` string, `Yesterday Price` real, `FTSE` string, `Date` date NOT NULL)")
+    #scraperwiki.sqlite.execute("drop table if exists company")
+    #scraperwiki.sqlite.execute("create table company (`TIDM` string, `Company` string, `Yesterday Price` real, `FTSE` string, `Date` date NOT NULL)")
 
     todaydate=datetime.date.today()
     todaydate=todaydate.strftime("%Y-%m-%d") 
@@ -36,7 +36,7 @@ def ScrapeLivePrices():
     if todaydate > tdate:
              
       now = datetime.datetime.utcnow()
-      print now
+      #print now
       ftseopen = now.replace(hour=8, minute=1, second=0, microsecond=0)
       if now >= ftseopen:
          daystarted = "Y"
