@@ -16,9 +16,9 @@ import datetime
 def ScrapeLivePrices():
 
 
-    scraperwiki.sqlite.execute("delete from company")  
-    #scraperwiki.sqlite.execute("drop table if exists company")
-    #scraperwiki.sqlite.execute("create table company (`TIDM` string, `Company` string, `Yesterday Price` real, `FTSE` string, `Date` date NOT NULL)")
+    #scraperwiki.sqlite.execute("delete from company")  
+    scraperwiki.sqlite.execute("drop table if exists company")
+    scraperwiki.sqlite.execute("create table company (`TIDM` string, `Company` string, `Yesterday Price` real, `FTSE` string, `Date` date NOT NULL)")
 
     todaydate=datetime.date.today()
     todaydate=todaydate.strftime("%Y-%m-%d") 
