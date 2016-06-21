@@ -87,7 +87,7 @@ def ScrapeLivePrices():
                   if poscnt == 2:
                       price = float(tuple[1].replace(",", "").replace("p", ""))
                   if poscnt == 3:
-                      change = float(tuple[1][:tuple[1].find("&")])
+                      change = float(tuple[1][:tuple[1].find("&")].replace(",", ""))
                       if tuple[1][-2:] == 'up':
                           change = change * -1
                   if poscnt == 4:
