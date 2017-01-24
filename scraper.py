@@ -65,7 +65,7 @@ def ScrapeLivePrices():
           #scraperwiki.sqlite.execute("delete from company")
           #scraperwiki.sqlite.commit()
         
-          response = br.open(url, timeout=120.0)
+          response = br.open(url, timeout=999.0)
         
         
           for pagenum in range(1):
