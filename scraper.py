@@ -66,7 +66,7 @@ def ScrapeLivePrices():
           #scraperwiki.sqlite.commit()
             
           try:
-              br.open(url, timeout=120)
+              response = br.open(url, timeout=120)
           except mechanize.URLError, exc:
               if isinstance(exc.reason, socket.timeout):
                   print "timeout occurred"
