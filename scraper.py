@@ -64,8 +64,12 @@ def ScrapeLivePrices():
         
           #scraperwiki.sqlite.execute("delete from company")
           #scraperwiki.sqlite.commit()
-        
-          response = br.open(url, timeout=999.0)
+            
+          try:
+              br.open(url, timeout=120)
+          except mechanize.URLError, exc:
+              if isinstance(exc.reason, socket.timeout):
+                  print "timeout occurred"
         
         
           for pagenum in range(1):
