@@ -389,8 +389,8 @@ def ScrapeUserInput():
   
   #scraperwiki.sqlite.execute("create table Trades (`TIDM` string, `3D` real, `10D` real, `30D` real, `90D` real, `180D` real, `6mthProfit` real, `6mthProfit_Rank` integer, `StdDev` real, `StdDev_Rank` integer, `SignalAccuracy` real, `SignalAccuracy_Rank` integer, `Overall_Score` integer, `Overall_Rank` integer, `Date` date) UNIQUE (col_name1, col_name2) ON CONFLICT IGNORE")
 
-  #scraperwiki.sqlite.execute("drop table if exists trades")
-  #scraperwiki.sqlite.execute("create table trades (`TIDM` string, `OpenDate` date, `OpenSignal` string, `OpenPrice` real, `Stake` string, `LastPrice` real, `LastDate` date, `LastChange` real, `LastSignal` string, `Position` string, `CloseDate` Date, `CloseSignal` string, `ClosePrice` real, `Earnings` real, UNIQUE (`TIDM`, `OpenDate`) ON CONFLICT IGNORE)")
+  scraperwiki.sqlite.execute("drop table if exists trades")
+  scraperwiki.sqlite.execute("create table trades (`TXID` integer PRIMARY KEY, `TIDM` string, `OpenDate` date, `OpenSignal` string, `OpenPrice` real, `Stake` string, `LastPrice` real, `LastDate` date, `LastChange` real, `LastSignal` string, `Position` string, `CloseDate` Date, `CloseSignal` string, `ClosePrice` real, `Earnings` real)")
     
 
   br = mechanize.Browser()
@@ -421,25 +421,27 @@ def ScrapeUserInput():
       Earnings=None
       while test3[0] != "":
         if cnt==1:
-          tidm=test3.pop(0)
+          txid=test3.pop(0)
         if cnt==2:
-          OpenDate=test3.pop(0)
+          tidm=test3.pop(0)
         if cnt==3:
-          OpenSignal=test3.pop(0)
+          OpenDate=test3.pop(0)
         if cnt==4:
-          OpenPrice=test3.pop(0)
+          OpenSignal=test3.pop(0)
         if cnt==5:
-          Stake=test3.pop(0)
+          OpenPrice=test3.pop(0)
         if cnt==6:
-          CloseDate=test3.pop(0)
+          Stake=test3.pop(0)
         if cnt==7:
-          CloseSignal=test3.pop(0)
+          CloseDate=test3.pop(0)
         if cnt==8:
-          ClosePrice=test3.pop(0)  
+          CloseSignal=test3.pop(0)
         if cnt==9:
+          ClosePrice=test3.pop(0)  
+        if cnt==10:
           Earnings=test3.pop(0)
         cnt+=1
-      scraperwiki.sqlite.execute("insert or ignore into trades values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",  [tidm, OpenDate, OpenSignal, OpenPrice, Stake, None, None, None, None, None, CloseDate, CloseSignal, ClosePrice, Earnings])  
+      scraperwiki.sqlite.execute("insert or replace into trades values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",  [txid, tidm, OpenDate, OpenSignal, OpenPrice, Stake, None, None, None, None, None, CloseDate, CloseSignal, ClosePrice, Earnings])  
       test3.pop(0)
       cnt=1
     scraperwiki.sqlite.commit()
