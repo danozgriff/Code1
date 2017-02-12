@@ -204,44 +204,63 @@ def gvars():
 def UpdateOpenTrades():
 
     #scraperwiki.sqlite.execute("delete from trades")  
-    scraperwiki.sqlite.execute("drop table if exists trades")
-    scraperwiki.sqlite.execute("create table trades (`TIDM` string, `OpenDate` date, `OpenSignal` string, `OpenPrice` real, `Stake` string, `LastPrice` real, `LastDate` date, `LastChange` real, `LastSignal` string, `Position` string, `CloseDate` Date, `CloseSignal` string, `ClosePrice` real, `Earnings` real) UNIQUE (`TIDM`, `OpenDate`) ON CONFLICT IGNORE")
+    #scraperwiki.sqlite.execute("drop table if exists trades")
+    #scraperwiki.sqlite.execute("create table trades (`TIDM` string, `OpenDate` date, `OpenSignal` string, `OpenPrice` real, `Stake` string, `LastPrice` real, `LastDate` date, `LastChange` real, `LastSignal` string, `Position` string, `CloseDate` Date, `CloseSignal` string, `ClosePrice` real, `Earnings` real) UNIQUE (`TIDM`, `OpenDate`) ON CONFLICT IGNORE")
     
-    openlist = scraperwiki.sqlite.execute("select `TIDM`, `OpenPrice`, `OpenSignal`, `Direction` from Trades where Position = 'Open'")
+    lastchange = None
+
+    openlist = scraperwiki.sqlite.execute("select `TIDM`, `OpenDate`, `OpenPrice`, `OpenSignal` from Trades where CloseDate is null")
     
     for x in openlist["data"]:
         
         tidm = x[0]
-        openprice = x[1]
-        opensignal = x[2]
-        direction = x[3]
+        opendate = datetime.datetime.strptime(x[1], "%d/%m/%y").date()
+        openprice = x[2]
+        opensignal = x[3]
 
-        siglist = scraperwiki.sqlite.execute("select `TIDM`, `Signal` from Signal_History where tidm = '%s' and Date in (select max(`Date`) from Signal_History where tidm = '%s')" % (tidm, tidm))
+        print "tidm: %s open price %f open signal: %s" % (tidm, openprice, opensignal)
+        print "tidm length: %d" % len(tidm)
+
+        siglist = scraperwiki.sqlite.execute("select `TIDM`, `Date`, `Signal` from Signal_History where tidm = '%s' and Date in (select max(`Date`) from Signal_History where tidm = '%s')" % (tidm, tidm))
         
         for y in siglist["data"]:
             currtidm = y[0]
-            currsignal = y[1]
+            currsignaldate = datetime.datetime.strptime(y[1], "%Y-%m-%d").date()
+            currsignal = y[2]
+
+            #if currdate > opendate: 
+
+        print "tidm: %s current date: %s current signal: %s" % (currtidm, currsignaldate, currsignal)
+       
+        currprices = scraperwiki.sqlite.execute("select `Yesterday Price`, `Date` from Company where tidm = '%s'" % (tidm))
+        
+        for z in currprices["data"]:
+            currprice = z[0]
+            currdate = datetime.datetime.strptime(z[1], "%Y-%m-%d").date()
             
-            currprices = scraperwiki.sqlite.execute("select `Yesterday Price`, `Date` from Company where tidm = '%s'") % (tidm)
-            
-            for z in currprices["data"]:
-                currprice = z[0]
-                currdate = datetime.datetime.strptime(z[1], "%Y-%m-%d").date()
-                
-                if direction == 'LONG':
-                    lastchange = round((currprice - openprice) / openprice,3)
-                if direction == 'SHORT':
-                    lastchange = round((openprice - currprice) / openprice,3)
-                scraperwiki.sqlite.execute("update Trades set LastPrice = '%f', LastDate = '%s', LastChange = '%f', LastSignal = '%s' where tidm = '%s'") % (currprice, currdate, lastchange, currsignal, tidm)
-                scraperwiki.sqlite.commit()
-            
-            if tidm==currtidm and opensignal!=currsignal:
-                if (opensignal=='BUY' or opensignal=='STAY LONG') and (currsignal=='SELL' or currsignal=='STAY SHORT' or currsignal=='STAY SHORT' or currsignal=='STAY IN CASH'):
-                    scraperwiki.sqlite.execute("update Trades set Position = 'Closing' where tidm = '%s'") % (tidm)
-                    scraperwiki.sqlite.commit()
-                elif (opensignal=='SELL' or opensignal=='STAY SHORT' or opensignal=='STAY SHORT' or opensignal=='STAY IN CASH') and (currsignal=='BUY' or currsignal=='STAY LONG'):
-                    scraperwiki.sqlite.execute("update Trades set Position = 'Closing' where tidm = '%s'") % (tidm)
-                    scraperwiki.sqlite.commit()
+        if (opensignal=='BUY' or opensignal=='STAY LONG'): #and (currsignal=='SELL' or opensignal=='SHORT' or currsignal=='STAY SHORT' or currsignal=='STAY SHORT' or currsignal=='STAY IN CASH'):
+          lastchange = round((currprice - openprice) / openprice,3)
+        #elif (opensignal=='SELL' or opensignal=='SHORT' or opensignal=='STAY SHORT' or opensignal=='STAY SHORT' or opensignal=='STAY IN CASH') and (currsignal=='BUY' or currsignal=='STAY LONG'):
+        else:  
+          lastchange = round((openprice - currprice) / openprice,3)
+        
+        if currsignaldate <= opendate:
+          scraperwiki.sqlite.execute("update Trades set LastPrice = '%f', LastDate = '%s', LastChange = '%f' where tidm = '%s'" % (currprice, currdate, lastchange, tidm))
+        else:
+          scraperwiki.sqlite.execute("update Trades set LastPrice = '%f', LastDate = '%s', LastChange = '%f', LastSignal = '%s', LastSignalDate = '%s' where tidm = '%s'" % (currprice, currdate, lastchange, currsignal, currsignaldate, tidm))
+          if tidm==currtidm and opensignal!=currsignal:
+            scraperwiki.sqlite.execute("update Trades set Position = 'Closing' where tidm = '%s'" % (tidm))
+        
+        scraperwiki.sqlite.commit()
+
+        currprice = None 
+        currdate = None
+        currsignal = None
+        currsignaldate = None
+    
+            #elif direction=='SELL':
+             #   scraperwiki.sqlite.execute("update Trades set Position = 'Closing' where tidm = '%s'") % (tidm)
+            #    scraperwiki.sqlite.commit()
            
     return;
 
@@ -389,9 +408,13 @@ def ScrapeUserInput():
   
   #scraperwiki.sqlite.execute("create table Trades (`TIDM` string, `3D` real, `10D` real, `30D` real, `90D` real, `180D` real, `6mthProfit` real, `6mthProfit_Rank` integer, `StdDev` real, `StdDev_Rank` integer, `SignalAccuracy` real, `SignalAccuracy_Rank` integer, `Overall_Score` integer, `Overall_Rank` integer, `Date` date) UNIQUE (col_name1, col_name2) ON CONFLICT IGNORE")
 
-  scraperwiki.sqlite.execute("drop table if exists trades")
-  scraperwiki.sqlite.execute("create table trades (`TXID` integer PRIMARY KEY, `TIDM` string, `OpenDate` date, `OpenSignal` string, `OpenPrice` real, `Stake` string, `LastPrice` real, `LastDate` date, `LastChange` real, `LastSignal` string, `Position` string, `CloseDate` Date, `CloseSignal` string, `ClosePrice` real, `Earnings` real)")
-    
+  #scraperwiki.sqlite.execute("drop table if exists trades")
+  #scraperwiki.sqlite.execute("create table trades (`TXID` integer PRIMARY KEY, `TIDM` string, `OpenDate` date, `OpenSignal` string, `OpenPrice` real, `Stake` string, `LastDate` date, `LastPrice` real, `LastChange` real, `LastSignal` string, `LastSignalDate` date, `Position` string, `CloseDate` Date, `CloseSignal` string, `ClosePrice` real, `Earnings` real)")
+  
+  maxTXID = scraperwiki.sqlite.execute("select max(TXID) from trades")
+
+  #for x in complist["data"]:
+  #    signalscore = x[0]  
 
   br = mechanize.Browser()
   br.set_handle_robots(False)
@@ -423,27 +446,30 @@ def ScrapeUserInput():
         if cnt==1:
           txid=test3.pop(0)
         if cnt==2:
-          tidm=test3.pop(0)
+          tidm=test3.pop(0).strip()
         if cnt==3:
-          OpenDate=test3.pop(0)
+          OpenDate=test3.pop(0).strip()
         if cnt==4:
-          OpenSignal=test3.pop(0)
+          OpenSignal=test3.pop(0).strip().upper()
         if cnt==5:
           OpenPrice=test3.pop(0)
         if cnt==6:
           Stake=test3.pop(0)
         if cnt==7:
-          CloseDate=test3.pop(0)
+          CloseDate=test3.pop(0).strip()
         if cnt==8:
-          CloseSignal=test3.pop(0)
+          CloseSignal=test3.pop(0).strip().upper()
         if cnt==9:
           ClosePrice=test3.pop(0)  
         if cnt==10:
           Earnings=test3.pop(0)
         cnt+=1
-      scraperwiki.sqlite.execute("insert or replace into trades values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",  [txid, tidm, OpenDate, OpenSignal, OpenPrice, Stake, None, None, None, None, None, CloseDate, CloseSignal, ClosePrice, Earnings])  
+      if txid > maxTXID:
+        scraperwiki.sqlite.execute("insert or replace into trades values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",  [txid, tidm, OpenDate, OpenSignal, OpenPrice, Stake, None, None, None, None, None, None, CloseDate, CloseSignal, ClosePrice, Earnings])  
+      
       test3.pop(0)
       cnt=1
+
     scraperwiki.sqlite.commit()
  
   return;
@@ -674,9 +700,10 @@ if __name__ == '__main__':
     #ScrapeLivePrices()
     #ScrapeBritishMain()
     #ScrapeSignalHistory()
-    #UpdateOpenTrades()
-    #NewLivePrices()
     ScrapeUserInput()
+    UpdateOpenTrades()
+    #NewLivePrices()
+    
     
     #SignalPerformance()
     #Notify()
