@@ -17,10 +17,10 @@ from email.MIMEText import MIMEText
 ##################################################
 #
 
-def ScrapeLivePrices(sleeptime):
+def ScrapeLivePrices(rerunflag):
 
     #Sleep the process while day is still open
-    time.sleep(sleeptime)
+    #time.sleep(sleeptime)
     
     scraperwiki.sqlite.execute("delete from company")  
     #scraperwiki.sqlite.execute("drop table if exists company")
@@ -45,15 +45,20 @@ def ScrapeLivePrices(sleeptime):
       #print now
       ftseopen = now.replace(hour=8, minute=1, second=0, microsecond=0)
       ftseclosed = now.replace(hour=16, minute=31, second=0, microsecond=0)
+      timetilclose = (ftseclosed - now).seconds + 5
+    
+      if rerunflag = 1:
+        time.sleep(timetilclose + 5)
+        rerunflag = 0
       
       if now >= ftseopen and now <= ftseclosed:
          tradingopen = "Y"
-         timetilclose = (ftseclosed - now).seconds + 5
+         rerunflag = 1
          #print "ftse open"
       else:
          #print "ftse closed"
          tradingopen = "N"
-         timetilclose = 0
+         rerunflag = 0
 
       ftses = ['FTSE 100', 'FTSE 250',  'FTSE Small Cap']
     
@@ -125,7 +130,7 @@ def ScrapeLivePrices(sleeptime):
                #    return;
               #print "%s ftse records were loaded" % (count)
     
-    return timetilclose;
+    return rerunflag;
 
 ####################################################
 #Load Main Page from British Bulls
@@ -649,31 +654,64 @@ def SignalPerformance():
        scraperwiki.sqlite.execute("Update Company_Performance SET Overall_Rank = (select rank from tmptbl_rank where tidm = Company_Performance.tidm)")
        scraperwiki.sqlite.commit()
 
+#-----------------------------#
+#-----------------------------#
+def Notify(rerunflag):
 
-def Notify(Performance_Out):
-
-    ranklist = scraperwiki.sqlite.execute("select tidm, `3d`, `10d`, `30d`, `90d`, `180d`, `6mthProfit`, `6mthProfit_Rank`, StdDev, StdDev_Rank, SignalAccuracy, SignalAccuracy_Rank, Overall_Score, Overall_Rank from Company_Performance where `6mthProfit_Rank` < 150 and StdDev_Rank < 150 and SignalAccuracy >= .6 order by Overall_Rank")
+    if rerunflag = 0:  
     
+      openlist = scraperwiki.sqlite.execute("select TXID, TIDM, OpenDate, OpenSignal, OpenPrice, Stake, LastDate, LastPrice, LastChange, LastSignal, LastSignalDate, Position, CloseDate, CloseSignal, ClosePrice, Earnings from Trades where CloseDate is null")
 
-    Performance_Out = "  TIDM     3D    10D    30D    90D   180D   6MthProfit   Rank    Stddev   Rank    Sig Accuracy   Rank    Overall Score   Rank<br>"
-    Performance_Out = Performance_Out + "-----------------------------------------------------------------------------------------------------------------------------<br>"
+      Performance_Out = " TXID     TIDM     OpenDate     OpenSignal     OpenPrice     Stake     LastDate     LastPrice     LastChange     LastSignal     LastSignalDate     Position     CloseDate     CloseSignal     ClosePrice     Earnings<br>"
+      Performance_Out = Performance_Out + "-----------------------------------------------------------------------------------------------------------------------------<br>"
 
-    for x in ranklist["data"]:
-       tidm = x[0]
-       d3 = x[1]
-       d10 = x[2]
-       d30 = x[3]
-       d90 = x[4]
-       d180 = x[5]
-       profit6mth = x[6]
-       profit6mth_rank = x[7]
-       stddev = x[8]
-       stddev_rank = x[9]
-       signalaccuracy = x[10]
-       signalaccuracy_rank = x[11]
-       overall_score = x[12]
-       overall_rank = x[13]
-       Performance_Out = Performance_Out + '{:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>10} {:>6} {:>9} {:>6} {:>10} {:>6} {:>12} {:>6}<br>'.format(tidm, d3, d10, d30, d90, d180, profit6mth, profit6mth_rank, stddev, stddev_rank, signalaccuracy, signalaccuracy_rank, overall_score, overall_rank)
+      for x in openlist["data"]:
+         txid = x[0]
+         tidm = x[1]
+         opendate = x[2]
+         opensignal = x[3]
+         openprice = x[4]
+         stake = x[5]
+         lastdate = x[6]
+         lastprice = x[7]
+         lastchange = x[8]
+         lastsignal = x[9]
+         lastsignaldate = x[10]
+         position = x[11]
+         closedate = x[12]
+         closesignal = x[13]
+         closeprice = x[14]
+         earnings = x[15]       
+         Performance_Out = Performance_Out + '{:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6}<br>'.format(txid, tidm, opendate, opensignal, openprice, stake, lastdate, lastprice, lastchange, lastsignal, lastsignaldate, position, closedate, closesignal, closeprice, earnings)
+    
+    closecnt = scraperwiki.sqlite.execute("select count(*) from Trades where position = 'Closing'")
+    
+    if closecnt > 0:
+      
+      Performance_Out = "<br><br>Please close off the required trades. Here are your options for new trades:<br><br>"
+    
+      # New Options
+      ranklist = scraperwiki.sqlite.execute("select tidm, `3d`, `10d`, `30d`, `90d`, `180d`, `6mthProfit`, `6mthProfit_Rank`, StdDev, StdDev_Rank, SignalAccuracy, SignalAccuracy_Rank, Overall_Score, Overall_Rank from Company_Performance where `6mthProfit_Rank` < 150 and StdDev_Rank < 150 and SignalAccuracy >= .6 order by Overall_Rank")
+
+      Performance_Out = Performance_Out + "  TIDM     3D    10D    30D    90D   180D   6MthProfit   Rank    Stddev   Rank    Sig Accuracy   Rank    Overall Score   Rank<br>"
+      Performance_Out = Performance_Out + "-----------------------------------------------------------------------------------------------------------------------------<br>"
+
+      for x in ranklist["data"]:
+         tidm = x[0]
+         d3 = x[1]
+         d10 = x[2]
+         d30 = x[3]
+         d90 = x[4]
+         d180 = x[5]
+         profit6mth = x[6]
+         profit6mth_rank = x[7]
+         stddev = x[8]
+         stddev_rank = x[9]
+         signalaccuracy = x[10]
+         signalaccuracy_rank = x[11]
+         overall_score = x[12]
+         overall_rank = x[13]
+         Performance_Out = Performance_Out + '{:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>10} {:>6} {:>9} {:>6} {:>10} {:>6} {:>12} {:>6}<br>'.format(tidm, d3, d10, d30, d90, d180, profit6mth, profit6mth_rank, stddev, stddev_rank, signalaccuracy, signalaccuracy_rank, overall_score, overall_rank)
 
     
 
@@ -703,12 +741,12 @@ if __name__ == '__main__':
     
     #
     run = 1
-    sleeptime = 0
+    rerunflag = 0
     
     while run = 1:
       gvars()
-      sleeptime = ScrapeLivePrices(sleeptime)
-      if sleeptime = 0:
+      rerunflag = ScrapeLivePrices(rerunflag)
+      if rerunflag = 0:
         run = 0
       #ScrapeBritishMain()
       #ScrapeSignalHistory()
@@ -716,7 +754,7 @@ if __name__ == '__main__':
       UpdateOpenTrades()
       #NewLivePrices()
       #SignalPerformance()
-      #Notify()
+      #Notify(rerunflag)
 
     #`6mthProfit` real, `6mthProfit_Rank` integer, `StdDev` real, `StdDev_Rank` integer, `SignalAccuracy`
     #scraperwiki.sqlite.execute("create table tmptbl_rank (`TIDM` string, `Rank` integer)")
