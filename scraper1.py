@@ -10,6 +10,7 @@ import datetime, base64
 import smtplib
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
+import inspect
 
 
 ##################################################      
@@ -129,6 +130,8 @@ def ScrapeLivePrices(rerunflag):
               #if overallcnt > 9:
                #    return;
               #print "%s ftse records were loaded" % (count)
+    
+    Logger(inspect.stack()[0][3])
     
     return rerunflag;
 
@@ -731,6 +734,16 @@ def Notify(rerunflag):
     server.sendmail(cGFyc3vdcmF, cPFyc4dvcvF, text)
     server.quit()
 
+    return;
+
+#-----------------------------#
+#-----------------------------#
+def Logger(fname):
+    
+    scraperwiki.sqlite.execute("create table RunLog (`Rundate` date, `ScrapeUserInput` integer, `ScrapeLivePrices` integer, `ScrapeSignalHistory` integer, `UpdateOpenTrades` integer, `SignalPerformance` integer, `Notify` integer)")
+    
+    
+    
     return;
 
             
