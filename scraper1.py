@@ -17,9 +17,11 @@ from email.MIMEText import MIMEText
 ##################################################
 #
 
-def ScrapeLivePrices():
+def ScrapeLivePrices(sleeptime):
 
-
+    #Sleep the process while day is still open
+    time.sleep(sleeptime)
+    
     scraperwiki.sqlite.execute("delete from company")  
     #scraperwiki.sqlite.execute("drop table if exists company")
     #scraperwiki.sqlite.execute("create table company (`TIDM` string, `Company` string, `Yesterday Price` real, `FTSE` string, `Date` date NOT NULL)")
@@ -42,12 +44,16 @@ def ScrapeLivePrices():
       now = datetime.datetime.utcnow()
       #print now
       ftseopen = now.replace(hour=8, minute=1, second=0, microsecond=0)
-      if now >= ftseopen:
-         daystarted = "Y"
+      ftseclosed = now.replace(hour=16, minute=31, second=0, microsecond=0)
+      
+      if now >= ftseopen and now <= ftseclosed:
+         tradingopen = "Y"
+         timetilclose = (ftseclosed - now).seconds + 5
          #print "ftse open"
       else:
          #print "ftse closed"
-         daystarted = "N" 
+         tradingopen = "N"
+         timetilclose = 0
 
       ftses = ['FTSE 100', 'FTSE 250',  'FTSE Small Cap']
     
@@ -95,7 +101,7 @@ def ScrapeLivePrices():
                       if tuple[1][-2:] == 'up':
                           change = change * -1
                   if poscnt == 4:
-                      if daystarted == "Y":
+                      if tradingopen == "Y":
                           "Trading Started"
                           price = price+change
                           #if tidm == "3IN":
@@ -119,7 +125,7 @@ def ScrapeLivePrices():
                #    return;
               #print "%s ftse records were loaded" % (count)
     
-    return;
+    return timetilclose;
 
 ####################################################
 #Load Main Page from British Bulls
@@ -696,17 +702,21 @@ def Notify(Performance_Out):
 if __name__ == '__main__':
     
     #
-    gvars()
-    #ScrapeLivePrices()
-    #ScrapeBritishMain()
-    #ScrapeSignalHistory()
-    ScrapeUserInput()
-    UpdateOpenTrades()
-    #NewLivePrices()
+    run = 1
+    sleeptime = 0
     
-    
-    #SignalPerformance()
-    #Notify()
+    while run = 1:
+      gvars()
+      sleeptime = ScrapeLivePrices(sleeptime)
+      if sleeptime = 0:
+        run = 0
+      #ScrapeBritishMain()
+      #ScrapeSignalHistory()
+      ScrapeUserInput()
+      UpdateOpenTrades()
+      #NewLivePrices()
+      #SignalPerformance()
+      #Notify()
 
     #`6mthProfit` real, `6mthProfit_Rank` integer, `StdDev` real, `StdDev_Rank` integer, `SignalAccuracy`
     #scraperwiki.sqlite.execute("create table tmptbl_rank (`TIDM` string, `Rank` integer)")
