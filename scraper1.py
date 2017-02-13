@@ -684,9 +684,9 @@ def Notify(rerunflag):
          earnings = x[15]       
          Performance_Out = Performance_Out + '{:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6}<br>'.format(txid, tidm, opendate, opensignal, openprice, stake, lastdate, lastprice, lastchange, lastsignal, lastsignaldate, position, closedate, closesignal, closeprice, earnings)
     
-    closecnt = scraperwiki.sqlite.execute("select count(*) from Trades where position = 'Closing'")
+    #closecnt = scraperwiki.sqlite.execute("select count(*) from Trades where position = 'Closing'")
     
-    if closecnt > 0:
+    #if closecnt > 0:
       
       Performance_Out = "<br><br>Please close off the required trades. Here are your options for new trades:<br><br>"
     
@@ -745,13 +745,18 @@ if __name__ == '__main__':
     
     while run = 1:
       gvars()
+      ScrapeUserInput()
       rerunflag = ScrapeLivePrices(rerunflag)
       if rerunflag = 0:
         run = 0
-      #ScrapeBritishMain()
-      #ScrapeSignalHistory()
-      ScrapeUserInput()
+      ScrapeSignalHistory()
       UpdateOpenTrades()
+        
+      Notify(rerunflag)
+      
+      
+      #ScrapeBritishMain()
+      
       #NewLivePrices()
       #SignalPerformance()
       #Notify(rerunflag)
