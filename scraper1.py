@@ -738,11 +738,16 @@ def Notify(rerunflag):
 
 #-----------------------------#
 #-----------------------------#
-def Logger(fname):
+def Logger(rundt, fname):
     
-    scraperwiki.sqlite.execute("create table RunLog (`Rundate` date, `ScrapeUserInput` integer, `ScrapeLivePrices` integer, `ScrapeSignalHistory` integer, `UpdateOpenTrades` integer, `SignalPerformance` integer, `Notify` integer)")
+    scraperwiki.sqlite.execute("create table RunLog (`Rundate` date, `RunDateTime` date, `Proc` string, `status` string)") 
     
-    
+    if fname is None:
+      scraperwiki.sqlite.execute("insert into trades (?,?,?,?)", [datetime.datetime.rundt.date(),rundt, 'Main', 'Started'])
+    elif fname = 'Complete':
+      scraperwiki.sqlite.execute("update trades set proc = '%s', status = '%s' where rundatetime = %s" % ('Main', fname, rundt)
+   else:
+      scraperwiki.sqlite.execute("update trades set proc = '%s', status = '%s' where rundatetime = %s" % (fname, 'Incomplete', rundt)                      
     
     return;
 
@@ -754,15 +759,20 @@ if __name__ == '__main__':
     
     #
     run = 1
-    rerunflag = 0
-    
+    rerunflag = 0                        
+    rundt = datetime.datetime.utcnow()
+                               
     while run = 1:
       gvars()
+                               
       ScrapeUserInput()
+                               
       rerunflag = ScrapeLivePrices(rerunflag)
       if rerunflag = 0:
         run = 0
+      
       ScrapeSignalHistory()
+      
       UpdateOpenTrades()
         
       Notify(rerunflag)
