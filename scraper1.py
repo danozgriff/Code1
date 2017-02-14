@@ -10,7 +10,6 @@ import datetime, base64
 import smtplib
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
-import inspect
 
 
 ##################################################      
@@ -130,8 +129,6 @@ def ScrapeLivePrices(rerunflag):
               #if overallcnt > 9:
                #    return;
               #print "%s ftse records were loaded" % (count)
-    
-    Logger(inspect.stack()[0][3])
     
     return rerunflag;
 
@@ -738,15 +735,15 @@ def Notify(rerunflag):
 
 #-----------------------------#
 #-----------------------------#
-def Logger(rundt, fname):
+def Logger(rundt, fname, status):
     
     scraperwiki.sqlite.execute("create table RunLog (`Rundate` date, `RunDateTime` date, `Proc` string, `status` string)") 
     
-    if fname is None:
-      scraperwiki.sqlite.execute("insert into trades (?,?,?,?)", [datetime.datetime.rundt.date(),rundt, 'Main', 'Started'])
-    elif fname = 'Complete':
-      scraperwiki.sqlite.execute("update trades set proc = '%s', status = '%s' where rundatetime = %s" % ('Main', fname, rundt)
-   else:
+    if status = 'Starting':
+      scraperwiki.sqlite.execute("insert into trades (?,?,?,?)", [datetime.datetime.rundt.date(),rundt, fname, status])
+    elif status = 'Complete':
+      scraperwiki.sqlite.execute("update trades set proc = '%s', status = '%s' where rundatetime = %s" % (fname, status, rundt)
+    else:
       scraperwiki.sqlite.execute("update trades set proc = '%s', status = '%s' where rundatetime = %s" % (fname, 'Incomplete', rundt)                      
     
     return;
@@ -761,22 +758,33 @@ if __name__ == '__main__':
     run = 1
     rerunflag = 0                        
     rundt = datetime.datetime.utcnow()
+                                 
+    Logger(rundt, 'Main', 'Starting')
                                
     while run = 1:
       gvars()
-                               
+      
+      Logger(rundt, 'ScrapeUserInput', None)
       ScrapeUserInput()
                                
+      Logger(rundt, 'ScrapeLivePrices', None)
       rerunflag = ScrapeLivePrices(rerunflag)
       if rerunflag = 0:
         run = 0
       
+      Logger(rundt, 'ScrapeSignalHistory', None)
       ScrapeSignalHistory()
       
+      Logger(rundt, 'UpdateOpenTrades', None)
       UpdateOpenTrades()
-        
+                                 
+      Logger(rundt, 'SignalPerformance', None)                            
+      SignalPerformance()
+                                 
+      Logger(rundt, 'Notify', None)
       Notify(rerunflag)
-      
+                      
+      Logger(rundt, 'Main', 'Complete')
       
       #ScrapeBritishMain()
       
