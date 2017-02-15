@@ -292,15 +292,40 @@ def FindNewTrades():
 #Load Signal History from British Bulls
 ####################################################
 
-def ScrapeSignalHistory():
-
-    url = 'https://www.britishbulls.com/SignalPage.aspx?lang=en&Ticker='
+def ScrapeSignalHistory(runno):
+    
+    CoreSQL = "select distinct `TIDM` from Trades where CloseDate is null UNION select * from (select distinct `tidm` from Company_Performance where 6mthProfit_Rank < 150 and StdDev_Rank < 150 and SignalAccuracy >= .6 limit 20)"
+    weekday = datetime.datetime.today().weekday()
+    rundate = datetime.datetime.now().date()
     
     
-    scraperwiki.sqlite.execute("drop table if exists Signal_History")  
-    scraperwiki.sqlite.execute("create table Signal_History (`TIDM` varchar2(8) NOT NULL, `Date` date NOT NULL, `Price` real NOT NULL, `Signal` varchar2(15) NOT NULL, `Confirmation` char(1) NOT NULL, `GBP 100` real NOT NULL, UNIQUE (`TIDM`, `Date`))")
+    #Determine how much history to scan for, based on the day of week and the run number
+    # 0=Monday, 6=Sunday
+    if runno == 1:
+        # May need to centralise this ranking logic somewhere
+        lselist = scraperwiki.sqlite.execute(CoreSQL)
+    elif runno == 2:
+      if weekday == 0:
+        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('A', 'H', 'O') and tidm not in ('%s')" % (CoreSQL))
+      elif weekday == 1:
+        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('B', 'I', 'P', 'W') and tidm not in ('%s')" % (CoreSQL))        
+      elif weekday == 2:
+        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('C', 'J', 'L', 'Q', 'X') and tidm not in ('%s')" % (CoreSQL))  
+      elif weekday == 3:
+        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('D', 'K', 'R', 'Y') and tidm not in ('%s')" % (CoreSQL))  
+      elif weekday == 4:
+        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('E', 'S', 'Z') and tidm not in ('%s')" % (CoreSQL))  
+      elif weekday == 5:
+        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('1', '2', '3', '4', '5', '6', '7', '8', '9', 'F', 'M', 'T') and tidm not in ('%s')" % (CoreSQL))  
+      #Must be Sunday..
+      else:
+        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('G', 'N', 'U', 'V') and tidm not in ('%s')" % (CoreSQL))  
+        
+        
+    #scraperwiki.sqlite.execute("drop table if exists Signal_History")  
+    #scraperwiki.sqlite.execute("create table Signal_History (`TIDM` varchar2(8) NOT NULL, `Date` date NOT NULL, `Price` real NOT NULL, `Signal` varchar2(15) NOT NULL, `Confirmation` char(1) NOT NULL, `GBP 100` real NOT NULL, `Last Updated` date NOT NULL,  UNIQUE (`TIDM`, `Date`))")
     
-    
+     url = 'https://www.britishbulls.com/SignalPage.aspx?lang=en&Ticker='
     lselist = scraperwiki.sqlite.execute("select distinct `TIDM` from company")
     
     for x in lselist["data"]:
@@ -335,7 +360,7 @@ def ScrapeSignalHistory():
                     sh_Confirmation = ((re.search("[Uncheck|Check]", str(test3.pop(0)).replace(" ", "")).group(0).lower()).replace("u","N")).replace("c", "Y")
                     sh_GBP100 = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
                     
-                    scraperwiki.sqlite.execute("insert or ignore into Signal_History values (?, ?, ?, ?, ?, ?)",  [tidm, sh_Date, sh_Price, sh_Signal, sh_Confirmation, sh_GBP100]) 
+                    scraperwiki.sqlite.execute("insert or ignore into Signal_History values (?, ?, ?, ?, ?, ?, ?)",  [tidm, sh_Date, sh_Price, sh_Signal, sh_Confirmation, sh_GBP100, rundate]) 
     
                     scraperwiki.sqlite.commit()
                     
@@ -772,8 +797,8 @@ if __name__ == '__main__':
       if rerunflag = 0:
         run = 0
       
-      Logger(rundt, 'ScrapeSignalHistory', None)
-      ScrapeSignalHistory()
+      Logger(rundt, 'ScrapeSignalHistory_Core', None)
+      ScrapeSignalHistory(1)
       
       Logger(rundt, 'UpdateOpenTrades', None)
       UpdateOpenTrades()
@@ -783,6 +808,9 @@ if __name__ == '__main__':
                                  
       Logger(rundt, 'Notify', None)
       Notify(rerunflag)
+                                 
+      Logger(rundt, 'ScrapeSignalHistory_Ext', None)
+      ScrapeSignalHistory(2)
                       
       Logger(rundt, 'Main', 'Complete')
       
