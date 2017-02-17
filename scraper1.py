@@ -232,48 +232,46 @@ def UpdateOpenTrades():
 
         print "tidm: %s open price %f open signal: %s" % (tidm, openprice, opensignal)
         print "tidm length: %d" % len(tidm)
+        
+        currprices = scraperwiki.sqlite.execute("select `Yesterday Price`, `Date` from Company where tidm = '%s'" % (tidm))
 
-        siglist = scraperwiki.sqlite.execute("select `TIDM`, `Date`, `Signal` from Signal_History where tidm = '%s' and Date in (select max(`Date`) from Signal_History where tidm = '%s')" % (tidm, tidm))
+        for z in currprices["data"]:
+          currprice = z[0]
+          currdate = datetime.datetime.strptime(z[1], "%Y-%m-%d").date()
+            
+        if (opensignal=='BUY' or opensignal=='STAY LONG'):
+          lastchange = round((currprice - openprice) / openprice,3)
+        else:  
+          lastchange = round((openprice - currprice) / openprice,3)
+
+        #siglist = scraperwiki.sqlite.execute("select `TIDM`, `Date`, `Signal` from Signal_History where tidm = '%s' and Date in (select max(`Date`) from Signal_History where tidm = '%s')" % (tidm, tidm))
+        siglist = scraperwiki.sqlite.execute("select `TIDM`, `Date`, `Signal` from Signal_History where tidm = '%s' and Date > '%s' order by date" % (tidm, opendate))
         
         for y in siglist["data"]:
             currtidm = y[0]
             currsignaldate = datetime.datetime.strptime(y[1], "%Y-%m-%d").date()
             currsignal = y[2]
-
-            #if currdate > opendate: 
-
-        print "tidm: %s current date: %s current signal: %s" % (currtidm, currsignaldate, currsignal)
-       
-        currprices = scraperwiki.sqlite.execute("select `Yesterday Price`, `Date` from Company where tidm = '%s'" % (tidm))
-        
-        for z in currprices["data"]:
-            currprice = z[0]
-            currdate = datetime.datetime.strptime(z[1], "%Y-%m-%d").date()
             
-        if (opensignal=='BUY' or opensignal=='STAY LONG'): #and (currsignal=='SELL' or opensignal=='SHORT' or currsignal=='STAY SHORT' or currsignal=='STAY SHORT' or currsignal=='STAY IN CASH'):
-          lastchange = round((currprice - openprice) / openprice,3)
-        #elif (opensignal=='SELL' or opensignal=='SHORT' or opensignal=='STAY SHORT' or opensignal=='STAY SHORT' or opensignal=='STAY IN CASH') and (currsignal=='BUY' or currsignal=='STAY LONG'):
-        else:  
-          lastchange = round((openprice - currprice) / openprice,3)
-        
-        if currsignaldate <= opendate:
-          scraperwiki.sqlite.execute("update Trades set LastPrice = '%f', LastDate = '%s', LastChange = '%f' where tidm = '%s'" % (currprice, currdate, lastchange, tidm))
-        else:
-          scraperwiki.sqlite.execute("update Trades set LastPrice = '%f', LastDate = '%s', LastChange = '%f', LastSignal = '%s', LastSignalDate = '%s' where tidm = '%s'" % (currprice, currdate, lastchange, currsignal, currsignaldate, tidm))
-          if tidm==currtidm and opensignal!=currsignal:
-            scraperwiki.sqlite.execute("update Trades set Position = 'Closing' where tidm = '%s'" % (tidm))
-        
-        scraperwiki.sqlite.commit()
+            print "tidm: %s current date: %s current signal: %s" % (currtidm, currsignaldate, currsignal)
 
-        currprice = None 
-        currdate = None
-        currsignal = None
-        currsignaldate = None
+            if currsignaldate <= opendate:
+              scraperwiki.sqlite.execute("update Trades set LastPrice = '%f', LastDate = '%s', LastChange = '%f' where tidm = '%s'" % (currprice, currdate, lastchange, tidm))
+            else:
+              scraperwiki.sqlite.execute("update Trades set LastPrice = '%f', LastDate = '%s', LastChange = '%f', LastSignal = '%s', LastSignalDate = '%s' where tidm = '%s'" % (currprice, currdate, lastchange, currsignal, currsignaldate, tidm))
+              if tidm==currtidm and opensignal!=currsignal:
+                scraperwiki.sqlite.execute("update Trades set Position = 'CLOSE OUT' where tidm = '%s'" % (tidm))
+
+            currprice = None 
+            currdate = None
+            currsignal = None
+            currsignaldate = None
     
             #elif direction=='SELL':
              #   scraperwiki.sqlite.execute("update Trades set Position = 'Closing' where tidm = '%s'") % (tidm)
             #    scraperwiki.sqlite.commit()
            
+    scraperwiki.sqlite.commit()
+    
     return;
 
 ####################################################
