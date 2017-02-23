@@ -897,16 +897,16 @@ if __name__ == '__main__':
     rundt = datetime.datetime.utcnow()
     gvars()
 
-    #scraperwiki.sqlite.execute("create table RunLog (`Rundate` date, `RunDateTime` date, `Proc` string, `status` string)") 
-    #scraperwiki.sqlite.execute("create table Company_History (`TIDM` varchar2(8) NOT NULL, `Date` date NOT NULL, `Open` real NOT NULL, `High` real NOT NULL, `Low` real NOT NULL, `Close` real NOT NULL, `Volume` integer NOT NULL, UNIQUE (`TIDM`, `Date`))")
-    #scraperwiki.sqlite.execute("create table tmptbl_rank (`TIDM` string, `Rank` integer)")
-    #scraperwiki.sqlite.execute("create table trades (`TXID` integer PRIMARY KEY, `TIDM` string, `OpenDate` date, `OpenSignal` string, `OpenPrice` real, `Stake` string, `LastDate` date, `LastPrice` real, `LastChange` real, `LastSignal` string, `LastSignalDate` date, `Position` string, `CloseDate` Date, `CloseSignal` string, `ClosePrice` real, `Earnings` real)")
+    scraperwiki.sqlite.execute("create table RunLog (`Rundate` date, `RunDateTime` date, `Proc` string, `status` string)") 
+    scraperwiki.sqlite.execute("create table Company_History (`TIDM` varchar2(8) NOT NULL, `Date` date NOT NULL, `Open` real NOT NULL, `High` real NOT NULL, `Low` real NOT NULL, `Close` real NOT NULL, `Volume` integer NOT NULL, UNIQUE (`TIDM`, `Date`))")
+    scraperwiki.sqlite.execute("create table tmptbl_rank (`TIDM` string, `Rank` integer)")
+    scraperwiki.sqlite.execute("create table trades (`TXID` integer PRIMARY KEY, `TIDM` string, `OpenDate` date, `OpenSignal` string, `OpenPrice` real, `Stake` string, `LastDate` date, `LastPrice` real, `LastChange` real, `LastSignal` string, `LastSignalDate` date, `Position` string, `CloseDate` Date, `CloseSignal` string, `ClosePrice` real, `Earnings` real)")
 
     scraperwiki.sqlite.execute("drop table if exists Signal_History")  
     scraperwiki.sqlite.execute("create table Signal_History (`TIDM` varchar2(8) NOT NULL, `Date` date NOT NULL, `Price` real NOT NULL, `Signal` varchar2(15) NOT NULL, `Confirmation` char(1) NOT NULL, `GBP 100` real NOT NULL, `Last Updated` date NOT NULL,  UNIQUE (`TIDM`, `Date`))")
     
-    #scraperwiki.sqlite.execute("drop table company_recommendations")
-    #scraperwiki.sqlite.execute("drop table company1")
+    scraperwiki.sqlite.execute("drop table company_recommendations")
+    scraperwiki.sqlite.execute("drop table company1")
                                              
     Logger(rundt, 'Main', 'Starting')
 
