@@ -318,39 +318,46 @@ def ScrapePriceHistory(tidm):
 
   #scraperwiki.sqlite.execute("create table Company_History (`TIDM` varchar2(8) NOT NULL, `Date` date NOT NULL, `Open` real NOT NULL, `High` real NOT NULL, `Low` real NOT NULL, `Close` real NOT NULL, `Volume` integer NOT NULL, UNIQUE (`TIDM`, `Date`))")
 
-  ####p_enddate = datetime.date.today()
-  ####p_startdate = p_enddate - datetime.timedelta(days=365)
+  pricehistidm = 'z'
+  pricehiscnt = 0
+    
+  p_enddate = datetime.date.today()
+  p_startdate = p_enddate - datetime.timedelta(days=365)
 
-  ####csvurl = "http://chart.finance.yahoo.com/table.csv?s=%s&a=%d&b=%s&c=%s&d=%d&e=%s&f=%s&g=d&ignore=.csv" % (tidm, int(p_startdate.strftime("%-m"))-1, p_startdate.strftime("%d"), p_startdate.strftime("%Y"), int(p_enddate.strftime("%-m"))-1, p_enddate.strftime("%d"), p_enddate.strftime("%Y"))  
-
-  ####headercnt = 0
+  csvurl = "http://chart.finance.yahoo.com/table.csv?s=%s&a=%d&b=%s&c=%s&d=%d&e=%s&f=%s&g=d&ignore=.csv" % (tidm, int(p_startdate.strftime("%-m"))-1, p_startdate.strftime("%d"), p_startdate.strftime("%Y"), int(p_enddate.strftime("%-m"))-1, p_enddate.strftime("%d"), p_enddate.strftime("%Y"))  
+  if pricehistidm == tidm:
+    pricehistcnt = pricehiscnt + 1
+    print "Signal History TIDM: %s Count: %d" % (pricehistidm, pricehiscnt)
+  elif pricehistidm != tidm:
+    pricehistidm = tidm
+    pricehiscnt = 0
+  headercnt = 0
 
   try:
     print tidm
-    ####data = scraperwiki.scrape(csvurl)
-    ####reader = csv.reader(data.splitlines()) 
+    data = scraperwiki.scrape(csvurl)
+    reader = csv.reader(data.splitlines()) 
 
-    ####for row in reader:     
-      ####if headercnt > 0:      
-        ####cdate = row[0]
-        ####copen = float(row[1])
-        ####chigh = float(row[2])
-        ####clow = float(row[3])
-        ####cclose = float(row[4])
-        ####cvolume = row[5]
+    for row in reader:     
+      if headercnt > 0:      
+        cdate = row[0]
+        copen = float(row[1])
+        chigh = float(row[2])
+        clow = float(row[3])
+        cclose = float(row[4])
+        cvolume = row[5]
         
         #if headercnt == 2:  
         #  print "tidm: %s, cdate: %s, copen: %f, chigh: %f, clow: %f, cclose: %f, cvolume: %s" % (tidm, cdate, copen, chigh, clow, cclose, cvolume)
 
-        ####scraperwiki.sqlite.execute("insert or ignore into Company_History values (?, ?, ?, ?, ?, ?, ?)",  [tidm, cdate, copen, chigh, clow, cclose, cvolume])   
+        scraperwiki.sqlite.execute("insert or ignore into Company_History values (?, ?, ?, ?, ?, ?, ?)",  [tidm, cdate, copen, chigh, clow, cclose, cvolume])   
 
-      ####headercnt+=1
+      headercnt+=1
  
   except HTTPError, e:
-    print "ERROR"
-    ####print "%s HTTPError: " % (tidm), e.code
+    print "%s HTTPError: " % (tidm), e.code
 
-  ####scraperwiki.sqlite.commit()
+  scraperwiki.sqlite.commit()
 
   return;  
 
@@ -390,7 +397,7 @@ def ScrapeSignalHistory(runno):
         lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('C', 'J', 'L', 'Q', 'X') and tidm not in ('%s')" % (CoreSQL))  
       elif weekday == 3:
         #lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('D', 'K', 'R', 'Y') and tidm not in ('%s')" % (CoreSQL))  
-        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('A', 'B', 'C')")
+        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('D')")
       elif weekday == 4:
         lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('E', 'S', 'Z') and tidm not in ('%s')" % (CoreSQL))  
       elif weekday == 5:
@@ -423,42 +430,50 @@ def ScrapeSignalHistory(runno):
         if runno == 1:
           time.sleep(random.uniform(5, 15))
         elif runno == 2:
-          ####time.sleep(random.uniform(25, 45))
-          time.sleep(2)
+          time.sleep(random.uniform(25, 45))
           ### CALL PRICE HISTORY FUNCTION ####
           ScrapePriceHistory(tidm)
 
-        ####response = br.open(url + tidm)
+        sighistidm = 'z'
+        sighistcnt = 0
+
+        response = br.open(url + tidm)
+        if sighistidm == tidm:
+          sighistcnt = sighiscnt + 1
+          print "Price History TIDM: %s Count: %d" % (sighistidm, sighiscnt)
+        elif sighistidm != tidm:
+          sighistidm = tidm
+          sighiscnt = 0
         #debugcnt = debugcnt + 1
     
     #for pagenum in range(1):
-        ####html = response.read()
+        html = response.read()
 
-        ####test1 = re.search(r'MainContent_signalpagehistory_PatternHistory24_DXDataRow0((.|\n)+)MainContent_signalpagehistory_PatternHistory24_IADD', html)
+        test1 = re.search(r'MainContent_signalpagehistory_PatternHistory24_DXDataRow0((.|\n)+)MainContent_signalpagehistory_PatternHistory24_IADD', html)
 
-        ####if test1:
-            ####test1 = test1.group(0)
+        if test1:
+            test1 = test1.group(0)
 
-            ####test3 = re.findall('(\">|img\/)(.*?)(<\/|\.gif)', test1.replace("\B", ""))
+            test3 = re.findall('(\">|img\/)(.*?)(<\/|\.gif)', test1.replace("\B", ""))
 
-            ####while len(test3) >= 5:
+            while len(test3) >= 5:
 
-                ####sh_Date = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "")).group(0)
-                ####sh_Date = date(int(sh_Date[6:10]),int(sh_Date[3:5]),int(sh_Date[:2]))
+                sh_Date = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "")).group(0)
+                sh_Date = date(int(sh_Date[6:10]),int(sh_Date[3:5]),int(sh_Date[:2]))
                 #print "Date: %s" % (sh_Date)
-                ####sh_Price = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
+                sh_Price = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
                 #print "Price: %s" % (sh_Price)
-                ####sh_Signal = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "")).group(0)
+                sh_Signal = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "")).group(0)
                 #print "Signal: %s" % (sh_Signal)
-                ####sh_Confirmation = ((re.search("[Uncheck|Check]", str(test3.pop(0)).replace(" ", "")).group(0).lower()).replace("u","N")).replace("c", "Y")
+                sh_Confirmation = ((re.search("[Uncheck|Check]", str(test3.pop(0)).replace(" ", "")).group(0).lower()).replace("u","N")).replace("c", "Y")
                 #print "Confirmation: %s" % (sh_Confirmation)
-                ####sh_GBP100 = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
+                sh_GBP100 = re.search("(\w|\d)(.*)(\w|\d)", str(test3.pop(0)).replace(" ", "").replace(",", "")).group(0)
                 #print "GDP100: %s" % (sh_GBP100)
                 #print "Rundate: %s" % rundate
 
-                ####scraperwiki.sqlite.execute("insert or ignore into Signal_History values (?, ?, ?, ?, ?, ?, ?)",  [tidm, sh_Date, sh_Price, sh_Signal, sh_Confirmation, sh_GBP100, rundate]) 
+                scraperwiki.sqlite.execute("insert or ignore into Signal_History values (?, ?, ?, ?, ?, ?, ?)",  [tidm, sh_Date, sh_Price, sh_Signal, sh_Confirmation, sh_GBP100, rundate]) 
 
-                ####scraperwiki.sqlite.commit()
+                scraperwiki.sqlite.commit()
                     
     #print "debugcnt: %d" % (debugcnt)
     return;
