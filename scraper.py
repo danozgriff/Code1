@@ -334,7 +334,7 @@ def ScrapePriceHistory(tidm):
   headercnt = 0
 
   try:
-    print tidm
+    #print tidm
     data = scraperwiki.scrape(csvurl)
     reader = csv.reader(data.splitlines()) 
 
@@ -928,39 +928,26 @@ if __name__ == '__main__':
                                              
     Logger(rundt, 'Main', 'Starting')
     
-    CoreSQL = "select distinct `TIDM` from Trades where CloseDate is null UNION select `tidm` from (select distinct `tidm` from Company_Performance where `6mthProfit_Rank` < 150 and StdDev_Rank < 150 and SignalAccuracy >= .6 limit 20)"
-    
-    lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) not in ('A', 'B', 'C', 'E', 'S', 'Z') and tidm not in ('%s')" % (CoreSQL))
+    Logger(rundt, 'ScrapeUserInput', None)
+    ScrapeUserInput()
 
-    random.shuffle(lselist["data"])
-    
-    for x in lselist["data"]:
-        
-        tidm = str(x)[3:-2]
-        print tidm
-    
-    #Logger(rundt, 'ScrapeUserInput', None)
-    #ScrapeUserInput()
+    Logger(rundt, 'ScrapeLivePrices', None)
+    ScrapeLivePrices()
 
-    #Logger(rundt, 'ScrapeLivePrices', None)
-    #ScrapeLivePrices()
+    Logger(rundt, 'ScrapeSignalHistory_Core', None)
+    ScrapeSignalHistory(1)
 
-    #Logger(rundt, 'ScrapeSignalHistory_Core', None)
-    #ScrapeSignalHistory(1)
+    Logger(rundt, 'UpdateOpenTrades', None)
+    UpdateOpenTrades()
 
-    #Logger(rundt, 'UpdateOpenTrades', None)
-    #UpdateOpenTrades()
-
-    #Logger(rundt, 'SignalPerformance', None)
-    #SignalPerformance()
+    Logger(rundt, 'SignalPerformance', None)
+    SignalPerformance()
 
     #Logger(rundt, 'Notify', None)
     #Notify(rerunflag, rundt)
 
     #Logger(rundt, 'ScrapeSignalHistory_Ext', None)
     #ScrapeSignalHistory(2)
-    
-    #ScrapePriceHistory('LGL.L')
 
     Logger(rundt, 'Main', 'Complete')
 
