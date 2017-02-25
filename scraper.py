@@ -938,8 +938,8 @@ if __name__ == '__main__':
     #Logger(rundt, 'ScrapeLivePrices', None)
     #ScrapeLivePrices()
 
-    Logger(rundt, 'ScrapeSignalHistory_Core', None)
-    ScrapeSignalHistory(1)
+    #Logger(rundt, 'ScrapeSignalHistory_Core', None)
+    #ScrapeSignalHistory(1)
 
     Logger(rundt, 'UpdateOpenTrades', None)
     UpdateOpenTrades()
