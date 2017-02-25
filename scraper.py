@@ -932,6 +932,8 @@ if __name__ == '__main__':
     
     lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) not in ('A', 'B', 'C', 'E', 'S', 'Z') and tidm not in ('%s')" % (CoreSQL))
 
+    random.shuffle(lselist["data"])
+    
     for x in lselist["data"]:
         
         tidm = str(x)[3:-2]
