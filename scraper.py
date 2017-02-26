@@ -744,6 +744,8 @@ def SignalPerformance():
                Belowdelta = d1date - MinDate
                
                MinMaxDelta = MaxDate - MinDate
+               print "maxPrice: %s" % (maxprice) 
+               print "minPrice: %s" % (minprice) 
                PriceDelta = MaxPrice - MinPrice
                if PriceDelta == 0:
                    PriceInterval=0
