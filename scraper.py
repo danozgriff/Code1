@@ -668,7 +668,7 @@ def SignalPerformance():
            
        else:
         
-           ldata = scraperwiki.sqlite.execute("select `Date`, `GBP 100`, `Price`, `Signal` from Signal_History where tidm = '%s' and Date in (select max(`Date`) from Signal_History where tidm = '%s')" % (tidm, tidm))
+           ldata = scraperwiki.sqlite.execute("select `GBP 100`, `Price`, `Signal` from Signal_History where tidm = '%s' and Date in (select max(`Date`) from Signal_History where tidm = '%s')" % (tidm, tidm))
            if len(ldata["data"]) == 0:
                tprice = 0
     
