@@ -674,9 +674,9 @@ def SignalPerformance():
     
            else: 
                for b in ldata["data"]:
-                   LatestGDP100 = b[1]
-                   LatestPrice = b[2]
-                   LatestSignal = b[3]
+                   LatestGDP100 = b[0]
+                   LatestPrice = b[0]
+                   LatestSignal = b[0]
        
                    ldiff = (nprice - LatestPrice) / LatestPrice
            
