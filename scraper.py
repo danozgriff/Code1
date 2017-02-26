@@ -664,7 +664,9 @@ def SignalPerformance():
        ldata = scraperwiki.sqlite.execute("select `Price` from Signal_History where tidm = '%s' and Date = '%s'" % (tidm, tdate))
        if len(ldata["data"]) != 0:
            for c in d1mindate["data"]:
-               tprice = c[0]
+              print "first tprice: %s" % (tprice) 
+              tprice = c[0]
+              print "second tprice: %s" % (tprice) 
            
        else:
         
