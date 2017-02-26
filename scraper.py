@@ -727,7 +727,6 @@ def SignalPerformance():
                    d1maxdate = scraperwiki.sqlite.execute("select `Date`, `GBP 100` from Signal_History where tidm = '%s' and Date in (select min(`Date`) from Signal_History where tidm = '%s' and Date > '%s')" % (tidm, tidm, d1date))
                    
                    if len(d1maxdate["data"]) == 0:
-                        print "Length zero"
                         MaxDate=tdate
                         MaxPrice=tprice
 
@@ -740,6 +739,7 @@ def SignalPerformance():
                        #print "d1date: %d" , (d1date)                       
                        for z in d1maxdate["data"]:
                             MaxDate = datetime.datetime.strptime(z[0], "%Y-%m-%d").date()
+                            print "z1 is :%s" % (z[1]) 
                             MaxPrice = z[1]
                Abovedelta = MaxDate - d1date
                Belowdelta = d1date - MinDate
