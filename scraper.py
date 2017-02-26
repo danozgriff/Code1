@@ -728,6 +728,7 @@ def SignalPerformance():
                    
                    if len(d1maxdate["data"]) == 0:
                         print "in first"
+                        print "tprice: %s" % (tprice)
                         MaxDate=tdate
                         MaxPrice=tprice
 
