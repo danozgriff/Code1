@@ -724,45 +724,46 @@ def SignalPerformance():
                         #print "MinDate: %d" , (MinDate)
                         #print "MinPrice: %f" , (MinPrice)
                
-                   d1maxdate = scraperwiki.sqlite.execute("select `Date`, `GBP 100` from Signal_History where tidm = '%s' and Date in (select min(`Date`) from Signal_History where tidm = '%s' and Date > '%s')" % (tidm, tidm, d1date))
+           d1maxdate = scraperwiki.sqlite.execute("select `Date`, `GBP 100` from Signal_History where tidm = '%s' and Date in (select min(`Date`) from Signal_History where tidm = '%s' and Date > '%s')" % (tidm, tidm, d1date))
                    
-                  print "tprice: %s" % (tprice)
+           print "tprice: %s" % (tprice)
                 
-                  if len(d1maxdate["data"]) == 0:
-                        print "in first"
-                        MaxDate=tdate
-                        MaxPrice=tprice
+           if len(d1maxdate["data"]) == 0:
+                print "in first"
+                MaxDate=tdate
+                MaxPrice=tprice
 
                        #print "MaxDate: %d" , (MaxDate)
                        #print "MaxPrice: %f" , (MaxPrice)
 
-                   else:
-                       print "in second"
-                       #print "MaxDate: %d" , (MaxDate)
-                       #print "d1date: %d" , (d1date)                       
-                       for z in d1maxdate["data"]:
-                            print "in secondp2"
-                            MaxDate = datetime.datetime.strptime(z[0], "%Y-%m-%d").date()
-                            print "z1 is :%s" % (z[1]) 
-                            MaxPrice = z[1]
-               Abovedelta = MaxDate - d1date
-               Belowdelta = d1date - MinDate
-               
-               MinMaxDelta = MaxDate - MinDate
-               print "tidm: %s" % (tidm)
-               print "timeint: %s" % (timeint)
-               print "maxPrice: %s" % (MaxPrice) 
-               print "minPrice: %s" % (MinPrice) 
-               PriceDelta = MaxPrice - MinPrice
-               if PriceDelta == 0:
-                   PriceInterval=0
-               else:
-                   PriceInterval = PriceDelta / MinMaxDelta.days
-               
-               if abs(Abovedelta.days) >= Belowdelta.days:
-                   CalcPrice = MinPrice+Belowdelta.days*PriceInterval
-               else:
-                   CalcPrice = MaxPrice-Abovedelta.days*PriceInterval
+           else:
+               print "in second"
+               #print "MaxDate: %d" , (MaxDate)
+               #print "d1date: %d" , (d1date)                       
+               for z in d1maxdate["data"]:
+                    print "in secondp2"
+                    MaxDate = datetime.datetime.strptime(z[0], "%Y-%m-%d").date()
+                    print "z1 is :%s" % (z[1]) 
+                    MaxPrice = z[1]
+          
+           Abovedelta = MaxDate - d1date
+           Belowdelta = d1date - MinDate
+
+           MinMaxDelta = MaxDate - MinDate
+           print "tidm: %s" % (tidm)
+           print "timeint: %s" % (timeint)
+           print "maxPrice: %s" % (MaxPrice) 
+           print "minPrice: %s" % (MinPrice) 
+           PriceDelta = MaxPrice - MinPrice
+           if PriceDelta == 0:
+               PriceInterval=0
+           else:
+               PriceInterval = PriceDelta / MinMaxDelta.days
+
+           if abs(Abovedelta.days) >= Belowdelta.days:
+               CalcPrice = MinPrice+Belowdelta.days*PriceInterval
+           else:
+               CalcPrice = MaxPrice-Abovedelta.days*PriceInterval
                    
            D1PC = (tprice - CalcPrice) / CalcPrice
 
