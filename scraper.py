@@ -663,10 +663,10 @@ def SignalPerformance():
 
        ldata = scraperwiki.sqlite.execute("select `Price` from Signal_History where tidm = '%s' and Date = '%s'" % (tidm, tdate))
        if len(ldata["data"]) != 0:
-           for c in d1mindate["data"]:
-              print "first tprice: %s" % (tprice) 
+           for c in ldata["data"]:
+              #print "first tprice: %s" % (tprice) 
               tprice = c[0]
-              print "second tprice: %s" % (tprice) 
+              #print "second tprice: %s" % (tprice) 
            
        else:
         
@@ -731,7 +731,7 @@ def SignalPerformance():
            print "tprice: %s" % (tprice)
                 
            if len(d1maxdate["data"]) == 0:
-                print "in first"
+                #print "in first"
                 MaxDate=tdate
                 MaxPrice=tprice
 
@@ -739,23 +739,23 @@ def SignalPerformance():
                        #print "MaxPrice: %f" , (MaxPrice)
 
            else:
-               print "in second"
+               #print "in second"
                #print "MaxDate: %d" , (MaxDate)
                #print "d1date: %d" , (d1date)                       
                for z in d1maxdate["data"]:
-                    print "in secondp2"
+                    #print "in secondp2"
                     MaxDate = datetime.datetime.strptime(z[0], "%Y-%m-%d").date()
-                    print "z1 is :%s" % (z[1]) 
+                    #print "z1 is :%s" % (z[1]) 
                     MaxPrice = z[1]
           
            Abovedelta = MaxDate - d1date
            Belowdelta = d1date - MinDate
 
            MinMaxDelta = MaxDate - MinDate
-           print "tidm: %s" % (tidm)
-           print "timeint: %s" % (timeint)
-           print "maxPrice: %s" % (MaxPrice) 
-           print "minPrice: %s" % (MinPrice) 
+           #print "tidm: %s" % (tidm)
+           #print "timeint: %s" % (timeint)
+           #print "maxPrice: %s" % (MaxPrice) 
+           #print "minPrice: %s" % (MinPrice) 
            PriceDelta = MaxPrice - MinPrice
            if PriceDelta == 0:
                PriceInterval=0
