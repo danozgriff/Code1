@@ -956,14 +956,14 @@ if __name__ == '__main__':
     #Logger(rundt, 'UpdateOpenTrades', None)
     #UpdateOpenTrades()
 
-    #Logger(rundt, 'SignalPerformance', None)
-    #SignalPerformance()
+    Logger(rundt, 'SignalPerformance', None)
+    SignalPerformance()
 
     #Logger(rundt, 'Notify', None)
     #Notify(rerunflag, rundt)
 
-    Logger(rundt, 'ScrapeSignalHistory_Ext', None)
-    ScrapeSignalHistory(2)
+    #Logger(rundt, 'ScrapeSignalHistory_Ext', None)
+    #ScrapeSignalHistory(2)
 
     Logger(rundt, 'Main', 'Complete')
 
