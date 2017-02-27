@@ -643,7 +643,7 @@ def ScrapeUserInput():
 def SignalPerformance(): 
            
    
-   complist = scraperwiki.sqlite.execute("select `TIDM`, `Yesterday Price`, `Date` from company where TIDM in (select distinct TIDM from Signal_History)")
+   complist = scraperwiki.sqlite.execute("select `TIDM`, `Yesterday Price`, `Date` from company where TIDM in (select distinct TIDM from Signal_History) and Date in (select max(`Date`) from company)")
    #complist = scraperwiki.sqlite.execute("select `TIDM`, `Yesterday Price`, `Date` from company where tidm = 'III.L'")
 
    #scraperwiki.sqlite.execute("drop table if exists Company_Performance")   
