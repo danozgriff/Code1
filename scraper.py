@@ -947,8 +947,8 @@ if __name__ == '__main__':
     #Logger(rundt, 'ScrapeUserInput', None)
     #ScrapeUserInput()
 
-    #Logger(rundt, 'ScrapeLivePrices', None)
-    #ScrapeLivePrices()
+    Logger(rundt, 'ScrapeLivePrices', None)
+    ScrapeLivePrices()
 
     #Logger(rundt, 'ScrapeSignalHistory_Core', None)
     #ScrapeSignalHistory(1)
