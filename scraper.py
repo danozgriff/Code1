@@ -956,8 +956,8 @@ if __name__ == '__main__':
     #Logger(rundt, 'UpdateOpenTrades', None)
     #UpdateOpenTrades()
 
-    Logger(rundt, 'SignalPerformance', None)
-    SignalPerformance()
+    #Logger(rundt, 'SignalPerformance', None)
+    #SignalPerformance()
 
     #Logger(rundt, 'Notify', None)
     #Notify(rerunflag, rundt)
