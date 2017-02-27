@@ -390,7 +390,8 @@ def ScrapeSignalHistory(runno):
         lselist = scraperwiki.sqlite.execute(CoreSQL)
     elif runno == 2:
       if weekday == 0:
-        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('A', 'H', 'O') and tidm not in ('%s')" % (CoreSQL))
+       #lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('A', 'H', 'O') and tidm not in ('%s')" % (CoreSQL))
+        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) not in ('A', 'B', 'C', 'Z') and tidm not in ('%s')" % (CoreSQL))
       elif weekday == 1:
         lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('B', 'I', 'P', 'W') and tidm not in ('%s')" % (CoreSQL))        
       elif weekday == 2:
@@ -398,8 +399,7 @@ def ScrapeSignalHistory(runno):
       elif weekday == 3:
         lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('D', 'K', 'R', 'Y') and tidm not in ('%s')" % (CoreSQL))  
       elif weekday == 4:
-        #lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('E', 'S', 'Z') and tidm not in ('%s')" % (CoreSQL))  
-        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) not in ('A', 'B', 'C', 'E', 'S', 'Z') and tidm not in ('%s')" % (CoreSQL))  
+        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('E', 'S', 'Z') and tidm not in ('%s')" % (CoreSQL))   
       elif weekday == 5:
         lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('F', 'M', 'T', '1', '2', '3', '4', '5', '6', '7', '8', '9') and tidm not in ('%s')" % (CoreSQL))  
       #Must be Sunday..
@@ -430,7 +430,7 @@ def ScrapeSignalHistory(runno):
         if runno == 1:
           time.sleep(random.uniform(5, 15))
         elif runno == 2:
-          time.sleep(random.uniform(35, 115))
+          time.sleep(random.uniform(15, 30))
           ### CALL PRICE HISTORY FUNCTION ####
           ScrapePriceHistory(tidm)
 
@@ -440,7 +440,7 @@ def ScrapeSignalHistory(runno):
         response = br.open(url + tidm)
         if sighistidm == tidm:
           sighistcnt = sighiscnt + 1
-          print "Price History TIDM: %s Count: %d" % (sighistidm, sighiscnt)
+          #print "Price History TIDM: %s Count: %d" % (sighistidm, sighiscnt)
         elif sighistidm != tidm:
           sighistidm = tidm
           sighiscnt = 0
@@ -956,14 +956,14 @@ if __name__ == '__main__':
     #Logger(rundt, 'UpdateOpenTrades', None)
     #UpdateOpenTrades()
 
-    Logger(rundt, 'SignalPerformance', None)
-    SignalPerformance()
+    #Logger(rundt, 'SignalPerformance', None)
+    #SignalPerformance()
 
     #Logger(rundt, 'Notify', None)
     #Notify(rerunflag, rundt)
 
-    #Logger(rundt, 'ScrapeSignalHistory_Ext', None)
-    #ScrapeSignalHistory(2)
+    Logger(rundt, 'ScrapeSignalHistory_Ext', None)
+    ScrapeSignalHistory(2)
 
     Logger(rundt, 'Main', 'Complete')
 
