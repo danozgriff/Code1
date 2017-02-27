@@ -652,7 +652,7 @@ def SignalPerformance():
     
    for x in complist["data"]:
        tidm=x[0]
-       #print tidm
+       print tidm
        nprice=x[1]
        tdate=datetime.datetime.strptime(x[2], "%Y-%m-%d").date()
        todaydate=datetime.date.today()
