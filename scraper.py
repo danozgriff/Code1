@@ -525,8 +525,9 @@ def signal_accuracy(tidm, d1date, todaydate):
 def standard_deviation(tidm, d1date, todaydate):
     """Calculates the standard deviation for a list of numbers."""
 
-    complist = scraperwiki.sqlite.execute("select `High` - `Low` from Company_History where tidm = '%s' and date between '%s' and '%s'" % (tidm, d1date, todaydate))
-     
+    #print "tidm %s  d1date %s  todaydate %s" % (tidm, d1date, todaydate)
+    complist = scraperwiki.sqlite.execute("select (`High` - `Low`)/`High` from Company_History where tidm = '%s' and date between '%s' and '%s'" % (tidm, d1date, todaydate))
+
     lstlength = len(complist)
     
     if lstlength > 1:
@@ -535,6 +536,7 @@ def standard_deviation(tidm, d1date, todaydate):
 
       for x in complist["data"]:
         lst.append(x[0])
+        #print "high-low: %f" % (x[0])
     
       mean = sum(lst) / lstlength
       differences = [y - mean for y in lst]
@@ -649,12 +651,9 @@ def SignalPerformance():
    #scraperwiki.sqlite.execute("drop table if exists Company_Performance")   
    #scraperwiki.sqlite.execute("create table Company_Performance (`TIDM` string, `3D` real, `10D` real, `30D` real, `90D` real, `180D` real, `6mthProfit` real, `6mthProfit_Rank` integer, `StdDev` real, `StdDev_Rank` integer, `SignalAccuracy` real, `SignalAccuracy_Rank` integer, `Overall_Score` integer, `Overall_Rank` integer, `Date` date)")
    scraperwiki.sqlite.execute("delete from Company_Performance") 
-    
-   print "In SigPerf"
    
    for x in complist["data"]:
        tidm=x[0]
-       print "1"
        nprice=x[1]
        tdate=datetime.datetime.strptime(x[2], "%Y-%m-%d").date()
        todaydate=datetime.date.today()
@@ -663,10 +662,10 @@ def SignalPerformance():
 
 # Find Today GDP100
 
-       ldata = scraperwiki.sqlite.execute("select `Price` from Signal_History where tidm = '%s' and Date = '%s'" % (tidm, tdate))
+       ldata = scraperwiki.sqlite.execute("select `GBP 100` from Signal_History where tidm = '%s' and Date = '%s'" % (tidm, tdate))
        if len(ldata["data"]) != 0:
            for c in ldata["data"]:
-              #print "first tprice: %s" % (tprice) 
+              #print "first tprice: %s tidm: %s date: %s" % (tprice, tidm, tdate) 
               tprice = c[0]
               #print "second tprice: %s" % (tprice) 
            
@@ -679,8 +678,8 @@ def SignalPerformance():
            else: 
                for b in ldata["data"]:
                    LatestGDP100 = b[0]
-                   LatestPrice = b[0]
-                   LatestSignal = b[0]
+                   LatestPrice = b[1]
+                   LatestSignal = b[2]
        
                    ldiff = (nprice - LatestPrice) / LatestPrice
            
@@ -691,9 +690,8 @@ def SignalPerformance():
                    #SELL etc
                    else:
                        tprice = LatestGDP100*.994
-               #print "Latest: %s: $%s" % (tdate, round(tprice,2))
+               #print "Latest: %s: $%s" % (tdate, round(tprice,2))      
        
-       print "2"
 
 #Calculate Performance for the various intervals   
 #-----------------------------------------------
@@ -705,7 +703,6 @@ def SignalPerformance():
           #print "Starting interval: %d" , (timeint)
            d1date=todaydate - datetime.timedelta(days=timeint)
 
-           print "tidm: %s timeint %d" % (tidm, timeint)
            #print "TimeInt: %i" , (timeint)
            #print "d1date: %d" , (d1date)
     
@@ -788,12 +785,14 @@ def SignalPerformance():
                T90D = round(D1PC,3)               
            elif timeint == 180:
                T180D = round(D1PC,3)
-               #print "tidm: %s  todaydate: %s  d1date: %s" % (tidm, todaydate, d1date)
-               stddev = standard_deviation(tidm, todaydate, d1date)
-               sigacc = signal_accuracy(tidm, todaydate, d1date)
+               stddev = standard_deviation(tidm, d1date, todaydate)
+               sigacc = signal_accuracy(tidm, d1date, todaydate)
                total = T3D + T10D + T30D + T90D + T180D
 
                T180Earnings = ((tprice - CalcPrice)/CalcPrice+1)*100
+               if tidm == "KWE.L":
+                 print "tidm: %s  tprice: %f  calc price: %f"  % (tidm, tprice, CalcPrice)
+               tprice=0.0
                scraperwiki.sqlite.execute("insert into Company_Performance values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",  [tidm, round(T3D,3), round(T10D,3), round(T30D,3), round(T90D,3), round(T180D,3), round(T180Earnings,2), 0, round(stddev,3), 0, round(sigacc,3), 0, 0, 0, tdate]) 
                scraperwiki.sqlite.commit()
        #return;
@@ -962,7 +961,6 @@ if __name__ == '__main__':
     #UpdateOpenTrades()
 
     Logger(rundt, 'SignalPerformance', None)
-    print "hi"
     SignalPerformance()
 
     #Logger(rundt, 'Notify', None)
@@ -1045,5 +1043,4 @@ if __name__ == '__main__':
 
     #Notify(Performance_Out)
     #print strftime("%Y-%m-%d %H:%M:%S", gmtime())
-
 
