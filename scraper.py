@@ -702,6 +702,7 @@ def SignalPerformance():
           #print "Starting interval: %d" , (timeint)
            d1date=todaydate - datetime.timedelta(days=timeint)
 
+           print "tidm: %s timeint %d" % (tidm, timeint)
            #print "TimeInt: %i" , (timeint)
            #print "d1date: %d" , (d1date)
     
@@ -784,7 +785,7 @@ def SignalPerformance():
                T90D = round(D1PC,3)               
            elif timeint == 180:
                T180D = round(D1PC,3)
-               print "tidm: %s  todaydate: %s  d1date: %s" % (tidm, todaydate, d1date)
+               #print "tidm: %s  todaydate: %s  d1date: %s" % (tidm, todaydate, d1date)
                stddev = standard_deviation(tidm, todaydate, d1date)
                sigacc = signal_accuracy(tidm, todaydate, d1date)
                total = T3D + T10D + T30D + T90D + T180D
