@@ -757,7 +757,7 @@ def SignalPerformance():
            #print "maxPrice: %s" % (MaxPrice) 
            #print "minPrice: %s" % (MinPrice) 
            PriceDelta = MaxPrice - MinPrice
-           if PriceDelta == 0:
+           if PriceDelta == 0 or MinMaxDelta.days == 0:
                PriceInterval=0
            else:
                PriceInterval = PriceDelta / MinMaxDelta.days
