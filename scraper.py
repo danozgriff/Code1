@@ -652,7 +652,7 @@ def SignalPerformance():
     
    for x in complist["data"]:
        tidm=x[0]
-       print tidm
+       #print tidm
        nprice=x[1]
        tdate=datetime.datetime.strptime(x[2], "%Y-%m-%d").date()
        todaydate=datetime.date.today()
@@ -784,6 +784,7 @@ def SignalPerformance():
                T90D = round(D1PC,3)               
            elif timeint == 180:
                T180D = round(D1PC,3)
+               print "tidm: %s  todaydate: %s  d1date: %s" % (tidm, todaydate, d1date)
                stddev = standard_deviation(tidm, todaydate, d1date)
                sigacc = signal_accuracy(tidm, todaydate, d1date)
                total = T3D + T10D + T30D + T90D + T180D
