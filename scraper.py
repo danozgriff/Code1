@@ -652,7 +652,7 @@ def SignalPerformance():
     
    for x in complist["data"]:
        tidm=x[0]
-       #print tidm
+       print "1"
        nprice=x[1]
        tdate=datetime.datetime.strptime(x[2], "%Y-%m-%d").date()
        todaydate=datetime.date.today()
@@ -690,7 +690,8 @@ def SignalPerformance():
                    else:
                        tprice = LatestGDP100*.994
                #print "Latest: %s: $%s" % (tdate, round(tprice,2))
-
+       
+       print "2"
 
 #Calculate Performance for the various intervals   
 #-----------------------------------------------
