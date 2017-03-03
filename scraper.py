@@ -951,8 +951,8 @@ if __name__ == '__main__':
     #Logger(rundt, 'ScrapeUserInput', None)
     #ScrapeUserInput()
 
-    Logger(rundt, 'ScrapeLivePrices', None)
-    ScrapeLivePrices()
+    #Logger(rundt, 'ScrapeLivePrices', None)
+    #ScrapeLivePrices()
 
     #Logger(rundt, 'ScrapeSignalHistory_Core', None)
     #ScrapeSignalHistory(1)
@@ -960,8 +960,8 @@ if __name__ == '__main__':
     #Logger(rundt, 'UpdateOpenTrades', None)
     #UpdateOpenTrades()
 
-    #Logger(rundt, 'SignalPerformance', None)
-    #SignalPerformance()
+    Logger(rundt, 'SignalPerformance', None)
+    SignalPerformance()
 
     #Logger(rundt, 'Notify', None)
     #Notify(rerunflag, rundt)
