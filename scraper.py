@@ -828,9 +828,9 @@ def SignalPerformance():
 
 #-----------------------------#
 #-----------------------------#
-def Notify(rerunflag, rundt):
+def Notify(rundt):
 
-  if rerunflag == 0:  
+  #if rerunflag == 0:  
     
       openlist = scraperwiki.sqlite.execute("select TXID, TIDM, OpenDate, OpenSignal, OpenPrice, Stake, LastDate, LastPrice, LastChange, LastSignal, LastSignalDate, Position, CloseDate, CloseSignal, ClosePrice, Earnings from Trades where CloseDate is null")
 
@@ -945,38 +945,39 @@ if __name__ == '__main__':
     #scraperwiki.sqlite.execute("drop table company_recommendations")
     #scraperwiki.sqlite.execute("drop table company1")
                                              
-    Logger(rundt, 'Main', 'Starting')
-    print "Started.."
+    #Logger(rundt, 'Main', 'Starting')
+    #print "%s Started.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     
-    Logger(rundt, 'ScrapeUserInput', None)
-    print "Scraping User Input.."
-    ScrapeUserInput()
+    #Logger(rundt, 'ScrapeUserInput', None)
+    #print "%s Scraping User Input.." % (datetime.time.utcnow() + timedelta(hours=8))
+    #ScrapeUserInput()
 
-    Logger(rundt, 'ScrapeLivePrices', None)
-    print "Scraping Live Prices.."
-    ScrapeLivePrices()
+    #Logger(rundt, 'ScrapeLivePrices', None)
+    #print "%s Scraping Live Prices.." % (datetime.time.utcnow() + timedelta(hours=8))
+    #ScrapeLivePrices()
 
-    Logger(rundt, 'ScrapeSignalHistory_Core', None)
-    print "Scraping Signal History (Core).."
-    ScrapeSignalHistory(1)
+    #Logger(rundt, 'ScrapeSignalHistory_Core', None)
+    #print "%s Scraping Signal History (Core).." % (datetime.time.utcnow() + timedelta(hours=8))
+    #ScrapeSignalHistory(1)
 
-    Logger(rundt, 'UpdateOpenTrades', None)
-    print "Updating Open Trades.."
-    UpdateOpenTrades()
+    #Logger(rundt, 'UpdateOpenTrades', None)
+    #print "%s Updating Open Trades.." % (datetime.time.utcnow() + timedelta(hours=8))
+    #UpdateOpenTrades()
 
-    Logger(rundt, 'SignalPerformance', None)
-    print "Calculating Signal Performance.."
-    SignalPerformance()
+    #Logger(rundt, 'SignalPerformance', None)
+    #print "%s Calculating Signal Performance.." % (datetime.time.utcnow() + timedelta(hours=8))
+    #SignalPerformance()
 
     Logger(rundt, 'Notify', None)
-    print "Sending Email Notification.."
+    print "%s Sending Email Notification.." % (datetime.time.utcnow() + timedelta(hours=8))
     Notify(rerunflag, rundt)
 
     #Logger(rundt, 'ScrapeSignalHistory_Ext', None)
+    #print "%s Scraping Signal History Ext.." % (datetime.time.utcnow() + timedelta(hours=8))
     #ScrapeSignalHistory(2)
 
     Logger(rundt, 'Main', 'Complete')
-    print "Complete."
+    print "%s Complete." % (datetime.time.utcnow() + timedelta(hours=8))
 
 
     #`6mthProfit` real, `6mthProfit_Rank` integer, `StdDev` real, `StdDev_Rank` integer, `SignalAccuracy`
