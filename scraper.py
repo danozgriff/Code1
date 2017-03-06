@@ -950,23 +950,23 @@ if __name__ == '__main__':
     #print "%s Started.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     
     #Logger(rundt, 'ScrapeUserInput', None)
-    #print "%s Scraping User Input.." % (datetime.time.utcnow() + timedelta(hours=8))
+    #print "%s Scraping User Input.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     #ScrapeUserInput()
 
     #Logger(rundt, 'ScrapeLivePrices', None)
-    #print "%s Scraping Live Prices.." % (datetime.time.utcnow() + timedelta(hours=8))
+    #print "%s Scraping Live Prices.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     #ScrapeLivePrices()
 
     #Logger(rundt, 'ScrapeSignalHistory_Core', None)
-    #print "%s Scraping Signal History (Core).." % (datetime.time.utcnow() + timedelta(hours=8))
+    #print "%s Scraping Signal History (Core).." % (datetime.datetime.utcnow() + timedelta(hours=8))
     #ScrapeSignalHistory(1)
 
     Logger(rundt, 'UpdateOpenTrades', None)
-    print "%s Updating Open Trades.." % (datetime.time.utcnow() + timedelta(hours=8))
+    print "%s Updating Open Trades.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     UpdateOpenTrades()
 
     #Logger(rundt, 'SignalPerformance', None)
-    #print "%s Calculating Signal Performance.." % (datetime.time.utcnow() + timedelta(hours=8))
+    #print "%s Calculating Signal Performance.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     #SignalPerformance()
 
     #Logger(rundt, 'Notify', None)
@@ -974,7 +974,7 @@ if __name__ == '__main__':
     #Notify(rundt)
 
     #Logger(rundt, 'ScrapeSignalHistory_Ext', None)
-    #print "%s Scraping Signal History Ext.." % (datetime.time.utcnow() + timedelta(hours=8))
+    #print "%s Scraping Signal History Ext.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     #ScrapeSignalHistory(2)
 
     Logger(rundt, 'Main', 'Complete')
