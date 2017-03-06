@@ -250,7 +250,7 @@ def UpdateOpenTrades():
             currprice = z[0]
             currdate = datetime.datetime.strptime(z[1], "%Y-%m-%d").date()
             
-        print "live tidm: %s live date: %s live price: %s" % (tidm, currdate, currprice)
+        #print "live tidm: %s live date: %s live price: %s" % (tidm, currdate, currprice)
             
         if (opensignal=='BUY' or opensignal=='STAY LONG'): #and (currsignal=='SELL' or opensignal=='SHORT' or currsignal=='STAY SHORT' or currsignal=='STAY SHORT' or currsignal=='STAY IN CASH'):
           lastchange = round((currprice - openprice) / openprice,3)
@@ -269,7 +269,7 @@ def UpdateOpenTrades():
 
             #if currdate > opendate: 
 
-            print "open tidm: %s current date: %s current signal: %s" % (currtidm, currsignaldate, currsignal)
+            #print "open tidm: %s current date: %s current signal: %s" % (currtidm, currsignaldate, currsignal)
 
             if currsignaldate <= opendate:
               #print "In FIRST"
@@ -327,7 +327,7 @@ def ScrapePriceHistory(tidm):
   csvurl = "http://chart.finance.yahoo.com/table.csv?s=%s&a=%d&b=%s&c=%s&d=%d&e=%s&f=%s&g=d&ignore=.csv" % (tidm, int(p_startdate.strftime("%-m"))-1, p_startdate.strftime("%d"), p_startdate.strftime("%Y"), int(p_enddate.strftime("%-m"))-1, p_enddate.strftime("%d"), p_enddate.strftime("%Y"))  
   if pricehistidm == tidm:
     pricehistcnt = pricehiscnt + 1
-    print "Signal History TIDM: %s Count: %d" % (pricehistidm, pricehiscnt)
+    #print "Signal History TIDM: %s Count: %d" % (pricehistidm, pricehiscnt)
   elif pricehistidm != tidm:
     pricehistidm = tidm
     pricehiscnt = 0
@@ -390,8 +390,7 @@ def ScrapeSignalHistory(runno):
         lselist = scraperwiki.sqlite.execute(CoreSQL)
     elif runno == 2:
       if weekday == 0:
-       #lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('A', 'H', 'O') and tidm not in ('%s')" % (CoreSQL))
-        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) not in ('A', 'B', 'C', 'Z') and tidm not in ('%s')" % (CoreSQL))
+        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) not in ('A', 'H', 'O') and tidm not in ('%s')" % (CoreSQL))
       elif weekday == 1:
         lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('B', 'I', 'P', 'W') and tidm not in ('%s')" % (CoreSQL))        
       elif weekday == 2:
