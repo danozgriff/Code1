@@ -946,29 +946,37 @@ if __name__ == '__main__':
     #scraperwiki.sqlite.execute("drop table company1")
                                              
     Logger(rundt, 'Main', 'Starting')
+    print "Started.."
     
     Logger(rundt, 'ScrapeUserInput', None)
+    print "Scraping User Input.."
     ScrapeUserInput()
 
     Logger(rundt, 'ScrapeLivePrices', None)
+    print "Scraping Live Prices.."
     ScrapeLivePrices()
 
     Logger(rundt, 'ScrapeSignalHistory_Core', None)
+    print "Scraping Signal History (Core).."
     ScrapeSignalHistory(1)
 
     Logger(rundt, 'UpdateOpenTrades', None)
+    print "Updating Open Trades.."
     UpdateOpenTrades()
 
     Logger(rundt, 'SignalPerformance', None)
+    print "Calculating Signal Performance.."
     SignalPerformance()
 
     Logger(rundt, 'Notify', None)
+    print "Sending Email Notification.."
     Notify(rerunflag, rundt)
 
     #Logger(rundt, 'ScrapeSignalHistory_Ext', None)
     #ScrapeSignalHistory(2)
 
     Logger(rundt, 'Main', 'Complete')
+    print "Complete."
 
 
     #`6mthProfit` real, `6mthProfit_Rank` integer, `StdDev` real, `StdDev_Rank` integer, `SignalAccuracy`
