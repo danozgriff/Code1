@@ -969,7 +969,7 @@ if __name__ == '__main__':
     #SignalPerformance()
 
     Logger(rundt, 'Notify', None)
-    print "%s Sending Email Notification.." % (datetime.time.utcnow() + timedelta(hours=8))
+    print "%s Sending Email Notification.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     Notify(rerunflag, rundt)
 
     #Logger(rundt, 'ScrapeSignalHistory_Ext', None)
@@ -977,7 +977,7 @@ if __name__ == '__main__':
     #ScrapeSignalHistory(2)
 
     Logger(rundt, 'Main', 'Complete')
-    print "%s Complete." % (datetime.time.utcnow() + timedelta(hours=8))
+    print "%s Complete." % (datetime.datetime.utcnow() + timedelta(hours=8))
 
 
     #`6mthProfit` real, `6mthProfit_Rank` integer, `StdDev` real, `StdDev_Rank` integer, `SignalAccuracy`
