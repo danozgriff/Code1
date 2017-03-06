@@ -969,8 +969,8 @@ if __name__ == '__main__':
     #SignalPerformance()
 
     Logger(rundt, 'Notify', None)
-    print "%s Sending Email Notification.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    Notify(rerunflag, rundt)
+    print "%s Sending Email Notification.." % (datetime.strptime(datetime.datetime.utcnow(), "%Y-%m-%d %H:%M:%S") + timedelta(hours=8))
+    Notify(rundt)
 
     #Logger(rundt, 'ScrapeSignalHistory_Ext', None)
     #print "%s Scraping Signal History Ext.." % (datetime.time.utcnow() + timedelta(hours=8))
