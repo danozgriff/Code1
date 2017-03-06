@@ -790,8 +790,8 @@ def SignalPerformance():
                total = T3D + T10D + T30D + T90D + T180D
 
                T180Earnings = ((tprice - CalcPrice)/CalcPrice+1)*100
-               if tidm == "KWE.L":
-                 print "tidm: %s  tprice: %f  calc price: %f"  % (tidm, tprice, CalcPrice)
+               #if tidm == "KWE.L":
+               #  print "tidm: %s  tprice: %f  calc price: %f"  % (tidm, tprice, CalcPrice)
                tprice=0.0
                scraperwiki.sqlite.execute("insert into Company_Performance values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",  [tidm, round(T3D,3), round(T10D,3), round(T30D,3), round(T90D,3), round(T180D,3), round(T180Earnings,2), 0, round(stddev,3), 0, round(sigacc,3), 0, 0, 0, tdate]) 
                scraperwiki.sqlite.commit()
@@ -946,25 +946,25 @@ if __name__ == '__main__':
     #scraperwiki.sqlite.execute("drop table company_recommendations")
     #scraperwiki.sqlite.execute("drop table company1")
                                              
-    #Logger(rundt, 'Main', 'Starting')
+    Logger(rundt, 'Main', 'Starting')
     
-    #Logger(rundt, 'ScrapeUserInput', None)
-    #ScrapeUserInput()
+    Logger(rundt, 'ScrapeUserInput', None)
+    ScrapeUserInput()
 
-    #Logger(rundt, 'ScrapeLivePrices', None)
-    #ScrapeLivePrices()
+    Logger(rundt, 'ScrapeLivePrices', None)
+    ScrapeLivePrices()
 
-    #Logger(rundt, 'ScrapeSignalHistory_Core', None)
-    #ScrapeSignalHistory(1)
+    Logger(rundt, 'ScrapeSignalHistory_Core', None)
+    ScrapeSignalHistory(1)
 
-    #Logger(rundt, 'UpdateOpenTrades', None)
-    #UpdateOpenTrades()
+    Logger(rundt, 'UpdateOpenTrades', None)
+    UpdateOpenTrades()
 
     Logger(rundt, 'SignalPerformance', None)
     SignalPerformance()
 
-    #Logger(rundt, 'Notify', None)
-    #Notify(rerunflag, rundt)
+    Logger(rundt, 'Notify', None)
+    Notify(rerunflag, rundt)
 
     #Logger(rundt, 'ScrapeSignalHistory_Ext', None)
     #ScrapeSignalHistory(2)
