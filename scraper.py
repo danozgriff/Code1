@@ -865,8 +865,8 @@ def Notify(rundt):
     
       # New Options
       #ranklist = scraperwiki.sqlite.execute("select tidm, `3d`, `10d`, `30d`, `90d`, `180d`, `6mthProfit`, `6mthProfit_Rank`, StdDev, StdDev_Rank, SignalAccuracy, SignalAccuracy_Rank, Overall_Score, Overall_Rank from Company_Performance where `6mthProfit_Rank` < 150 and StdDev_Rank < 150 and SignalAccuracy >= .6 and tidm not in (select distinct tidm from Trades where CloseDate is null) and tidm not in (select distinct tidm from (select tidm, count(*) from Signal_History group by tidm having count(*) < 10)) order by Overall_Rank LIMIT 20")
-      ranklist = scraperwiki.sqlite.execute("select tidm, `3d`, `10d`, `30d`, `90d`, `180d`, `6mthProfit`, `6mthProfit_Rank`, StdDev, StdDev_Rank, SignalAccuracy, SignalAccuracy_Rank, Overall_Score, Overall_Rank from Company_Performance order by Overall_Rank LIMIT 20")
-
+      ranklist = scraperwiki.sqlite.execute("select tidm, `3d`, `10d`, `30d`, `90d`, `180d`, `6mthProfit`, `6mthProfit_Rank`, StdDev, StdDev_Rank, SignalAccuracy, SignalAccuracy_Rank, Overall_Score, Overall_Rank from (select tidm, `3d`, `10d`, `30d`, `90d`, `180d`, `6mthProfit`, `6mthProfit_Rank`, StdDev, StdDev_Rank, SignalAccuracy, SignalAccuracy_Rank, Overall_Score, Overall_Rank from Company_Performance order by StdDev_Rank limit 50 intersect select tidm, `3d`, `10d`, `30d`, `90d`, `180d`, `6mthProfit`, `6mthProfit_Rank`, StdDev, StdDev_Rank, SignalAccuracy, SignalAccuracy_Rank, Overall_Score, Overall_Rank from Company_Performance order by SignalAccuracy_Rank limit 50) order by Overall_Rank")
+        
       Performance_Out = Performance_Out + "  TIDM     3D    10D    30D    90D   180D   6MthProfit   Rank    Stddev   Rank    Sig Accuracy   Rank    Overall Score   Rank<br>"
       Performance_Out = Performance_Out + "-----------------------------------------------------------------------------------------------------------------------------<br>"
 
@@ -947,39 +947,39 @@ if __name__ == '__main__':
     #scraperwiki.sqlite.execute("drop table company_recommendations")
     #scraperwiki.sqlite.execute("drop table company1")
                                              
-    Logger(rundt, 'Main', 'Starting')
-    print "%s Started.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #Logger(rundt, 'Main', 'Starting')
+    #print "%s Started.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     
-    Logger(rundt, 'ScrapeUserInput', None)
-    print "%s Scraping User Input.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    ScrapeUserInput()
+    #Logger(rundt, 'ScrapeUserInput', None)
+    #print "%s Scraping User Input.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #ScrapeUserInput()
 
-    Logger(rundt, 'ScrapeLivePrices', None)
-    print "%s Scraping Live Prices.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    ScrapeLivePrices()
+    #Logger(rundt, 'ScrapeLivePrices', None)
+    #print "%s Scraping Live Prices.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #ScrapeLivePrices()
 
-    Logger(rundt, 'ScrapeSignalHistory_Core', None)
-    print "%s Scraping Signal History (Core).." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    ScrapeSignalHistory(1)
+    #Logger(rundt, 'ScrapeSignalHistory_Core', None)
+    #print "%s Scraping Signal History (Core).." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #ScrapeSignalHistory(1)
 
-    Logger(rundt, 'UpdateOpenTrades', None)
-    print "%s Updating Open Trades.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    UpdateOpenTrades()
+    #Logger(rundt, 'UpdateOpenTrades', None)
+    #print "%s Updating Open Trades.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #UpdateOpenTrades()
 
-    Logger(rundt, 'SignalPerformance', None)
-    print "%s Calculating Signal Performance.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    SignalPerformance()
+    #Logger(rundt, 'SignalPerformance', None)
+    #print "%s Calculating Signal Performance.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #SignalPerformance()
 
     Logger(rundt, 'Notify', None)
     print "%s Sending Email Notification.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     Notify(rundt)
 
-    Logger(rundt, 'ScrapeSignalHistory_Ext', None)
-    print "%s Scraping Signal History Ext.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    ScrapeSignalHistory(2)
+    #Logger(rundt, 'ScrapeSignalHistory_Ext', None)
+    #print "%s Scraping Signal History Ext.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #ScrapeSignalHistory(2)
 
-    Logger(rundt, 'Main', 'Complete')
-    print "%s Complete." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #Logger(rundt, 'Main', 'Complete')
+    #print "%s Complete." % (datetime.datetime.utcnow() + timedelta(hours=8))
 
 
     #`6mthProfit` real, `6mthProfit_Rank` integer, `StdDev` real, `StdDev_Rank` integer, `SignalAccuracy`
