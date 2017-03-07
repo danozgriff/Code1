@@ -878,20 +878,24 @@ def Notify(rundt):
 
       for x in ranklist["data"]:
          tidm = x[0]
-         d3 = x[1]
-         d10 = x[2]
-         d30 = x[3]
-         d90 = x[4]
-         d180 = x[5]
-         profit6mth = x[6]
-         profit6mth_rank = x[7]
-         stddev = x[8]
-         stddev_rank = x[9]
-         signalaccuracy = x[10]
-         signalaccuracy_rank = x[11]
-         overall_score = x[12]
-         overall_rank = x[13]
-         Performance_Out = Performance_Out + '{:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>10} {:>6} {:>9} {:>6} {:>10} {:>6} {:>12} {:>6}<br>'.format(tidm, d3, d10, d30, d90, d180, profit6mth, profit6mth_rank, stddev, stddev_rank, signalaccuracy, signalaccuracy_rank, overall_score, overall_rank)
+	 ftse = x[1]	
+         d3 = x[2]
+         d10 = x[3]
+         d30 = x[4]
+         d90 = x[5]
+         d180 = x[6]
+         profit6mth = x[7]
+         profit6mth_rank = x[8]
+         stddev = x[9]
+         stddev_rank = x[10]
+         signalaccuracy = x[11]
+         signalaccuracy_rank = x[12]
+         overall_score = x[13]
+         overall_rank = x[14]
+	 signal = x[15]
+	 signaldate = x[16]
+	
+         Performance_Out = Performance_Out + '{:>6} {:>8} {:>6} {:>6} {:>6} {:>6} {:>6} {:>10} {:>6} {:>9} {:>6} {:>10} {:>6} {:>12} {:>6} {:>6} {:>6}<br>'.format(tidm, ftse, d3, d10, d30, d90, d180, profit6mth, profit6mth_rank, stddev, stddev_rank, signalaccuracy, signalaccuracy_rank, overall_score, overall_rank, signal, signaldate)
 
     
 
