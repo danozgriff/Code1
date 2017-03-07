@@ -391,7 +391,7 @@ def ScrapeSignalHistory(runno):
         lselist = scraperwiki.sqlite.execute(CoreSQL)
     elif runno == 2:
       if weekday == 0:
-        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) not in ('A', 'H', 'O') and tidm not in ('%s')" % (CoreSQL))
+        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('A', 'H', 'O') and tidm not in ('%s')" % (CoreSQL))
       elif weekday == 1:
         lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('B', 'I', 'P', 'W') and tidm not in ('%s')" % (CoreSQL))        
       elif weekday == 2:
@@ -430,7 +430,7 @@ def ScrapeSignalHistory(runno):
         if runno == 1:
           time.sleep(random.uniform(5, 15))
         elif runno == 2:
-          time.sleep(random.uniform(15, 30))
+          time.sleep(random.uniform(25, 40))
           ### CALL PRICE HISTORY FUNCTION ####
           ScrapePriceHistory(tidm)
 
