@@ -874,7 +874,7 @@ def Notify(rundt):
       #ranklist = scraperwiki.sqlite.execute("select distinct A.tidm, B.FTSE, A.`3d`, A.`10d`, A.`30d`, A.`90d`, A.`180d`, A.`6mthProfit`, A.`6mthProfit_Rank`, A.StdDev, A.StdDev_Rank, A.SignalAccuracy, A.SignalAccuracy_Rank, A.Overall_Score, A.Overall_Rank, C.Signal, C.Date AS "Signal Date" from (select * from Company_Performance where StdDev_Rank <= 50 intersect select * from Company_Performance where SignalAccuracy_Rank <= 50) as A inner join company as B on A.tidm = B.tidm INNER JOIN Signal_History as C on A.tidm = C.tidm where c.date >= %s order by A.Overall_Rank" % (datetime.datetime.strptime(datetime.date.today() - datetime.timedelta(days=7), "%Y-%m-%d").date()))
       #ranklist = scraperwiki.sqlite.execute("select distinct A.tidm, B.FTSE, A.`3d`, A.`10d`, A.`30d`, A.`90d`, A.`180d`, A.`6mthProfit`, A.`6mthProfit_Rank`, A.StdDev, A.StdDev_Rank, A.SignalAccuracy, A.SignalAccuracy_Rank, A.Overall_Score, A.Overall_Rank, C.Signal, C.Date AS "Signal Date" from (select * from Company_Performance where StdDev_Rank <= 50 intersect select * from Company_Performance where SignalAccuracy_Rank <= 50) as A inner join company as B on A.tidm = B.tidm INNER JOIN Signal_History as C on B.tidm = C.tidm where c.date >= %s order by A.Overall_Rank" % (datetime.datetime.strptime(datetime.date.today() - datetime.timedelta(days=7), "%Y-%m-%d").date()))
       SignalDate = datetime.date.today() - datetime.timedelta(days=5)
-      ranklist = scraperwiki.sqlite.execute("select distinct A.tidm, B.FTSE, A.`3d`, A.`10d`, A.`30d`, A.`90d`, A.`180d`, A.`6mthProfit`, A.`6mthProfit_Rank`, A.StdDev, A.StdDev_Rank, A.SignalAccuracy, A.SignalAccuracy_Rank, A.Overall_Score, A.Overall_Rank, C.Signal, C.Date AS 'Signal Date' from (select * from Company_Performance where StdDev_Rank <= 50 intersect select * from Company_Performance where SignalAccuracy_Rank <= 50) as A inner join company as B on A.tidm = B.tidm LEFT JOIN (select IA.tidm, IA.signal, IA.date from Signal_History as IA inner join (select on tidm, max(Date) as Date from Signal_History group by tidm) as IB on IA.tidm = IB.tidm on IA.date = IB.date) as C on A.tidm = C.tidm where C.date >= %s order by A.Overall_Rank LIMIT 50"  % (SignalDate.strftime("%Y-%m-%d")))
+      ranklist = scraperwiki.sqlite.execute("select distinct A.tidm, B.FTSE, A.`3d`, A.`10d`, A.`30d`, A.`90d`, A.`180d`, A.`6mthProfit`, A.`6mthProfit_Rank`, A.StdDev, A.StdDev_Rank, A.SignalAccuracy, A.SignalAccuracy_Rank, A.Overall_Score, A.Overall_Rank, C.Signal, C.Date AS 'Signal Date' from (select * from Company_Performance where StdDev_Rank <= 50 intersect select * from Company_Performance where SignalAccuracy_Rank <= 50) as A inner join company as B on A.tidm = B.tidm LEFT JOIN (select IA.tidm, IA.signal, IA.date from Signal_History as IA inner join (select on tidm, max(date) as date from Signal_History group by tidm) as IB on IA.tidm = IB.tidm and IA.date = IB.date) as C on A.tidm = C.tidm where C.date >= %s order by A.Overall_Rank LIMIT 50"  % (SignalDate.strftime("%Y-%m-%d")))
 	  
       Performance_Out = Performance_Out + "  TIDM     3D    10D    30D    90D   180D   6MthProfit   Rank    Stddev   Rank    Sig Accuracy   Rank    Overall Score   Rank<br>"
       Performance_Out = Performance_Out + "-----------------------------------------------------------------------------------------------------------------------------<br>"
@@ -979,9 +979,9 @@ if __name__ == '__main__':
     #print "%s Updating Open Trades.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     #UpdateOpenTrades()
 
-    Logger(rundt, 'SignalPerformance', None)
-    print "%s Calculating Signal Performance.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    SignalPerformance()
+    #Logger(rundt, 'SignalPerformance', None)
+    #print "%s Calculating Signal Performance.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #SignalPerformance()
 
     Logger(rundt, 'Notify', None)
     print "%s Sending Email Notification.." % (datetime.datetime.utcnow() + timedelta(hours=8))
