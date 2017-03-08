@@ -502,7 +502,7 @@ def signal_accuracy(tidm, d1date, todaydate):
     #num_items = len(complist["data"])
 
     #accuracy = signalscore / num_items
-    if signalscore == 0 or signalscore == None:
+    if signalscore == 0 or signalscore == None or num_items < 10:
       accuracy = 0.0
     else:
       #print ("tidm: %s" % (tidm))
@@ -526,16 +526,19 @@ def standard_deviation(tidm, d1date, todaydate):
     """Calculates the standard deviation for a list of numbers."""
 
     #print "tidm %s  d1date %s  todaydate %s" % (tidm, d1date, todaydate)
-    complist = scraperwiki.sqlite.execute("select (`High` - `Low`)/`High` from Company_History where tidm = '%s' and date between '%s' and '%s'" % (tidm, d1date, todaydate))
+    #complist = scraperwiki.sqlite.execute("select (`High` - `Low`)/`High` from Company_History where tidm = '%s' and date between '%s' and '%s'" % (tidm, d1date, todaydate))
+    complist = scraperwiki.sqlite.execute("select `Open`, `High`, `Low` from Company_History where tidm = '%s' and date between '%s' and '%s'" % (tidm, d1date, todaydate))
 
     lstlength = len(complist)
     
-    if lstlength > 1:
+    if lstlength >= 10:
     
       lst = []
 
       for x in complist["data"]:
         lst.append(x[0])
+	lst.append(x[1])
+	lst.append(x[2])
         #print "high-low: %f" % (x[0])
     
       mean = sum(lst) / lstlength
@@ -957,39 +960,39 @@ if __name__ == '__main__':
     #scraperwiki.sqlite.execute("drop table company_recommendations")
     #scraperwiki.sqlite.execute("drop table company1")
                                              
-    #Logger(rundt, 'Main', 'Starting')
-    #print "%s Started.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    Logger(rundt, 'Main', 'Starting')
+    print "%s Started.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     
-    #Logger(rundt, 'ScrapeUserInput', None)
-    #print "%s Scraping User Input.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    #ScrapeUserInput()
+    Logger(rundt, 'ScrapeUserInput', None)
+    print "%s Scraping User Input.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    ScrapeUserInput()
 
-    #Logger(rundt, 'ScrapeLivePrices', None)
-    #print "%s Scraping Live Prices.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    #ScrapeLivePrices()
+    Logger(rundt, 'ScrapeLivePrices', None)
+    print "%s Scraping Live Prices.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    ScrapeLivePrices()
 
-    #Logger(rundt, 'ScrapeSignalHistory_Core', None)
-    #print "%s Scraping Signal History (Core).." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    #ScrapeSignalHistory(1)
+    Logger(rundt, 'ScrapeSignalHistory_Core', None)
+    print "%s Scraping Signal History (Core).." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    ScrapeSignalHistory(1)
 
-    #Logger(rundt, 'UpdateOpenTrades', None)
-    #print "%s Updating Open Trades.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    #UpdateOpenTrades()
+    Logger(rundt, 'UpdateOpenTrades', None)
+    print "%s Updating Open Trades.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    UpdateOpenTrades()
 
-    #Logger(rundt, 'SignalPerformance', None)
-    #print "%s Calculating Signal Performance.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    #SignalPerformance()
+    Logger(rundt, 'SignalPerformance', None)
+    print "%s Calculating Signal Performance.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    SignalPerformance()
 
     Logger(rundt, 'Notify', None)
     print "%s Sending Email Notification.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     Notify(rundt)
 
-    #Logger(rundt, 'ScrapeSignalHistory_Ext', None)
-    #print "%s Scraping Signal History Ext.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    #ScrapeSignalHistory(2)
+    Logger(rundt, 'ScrapeSignalHistory_Ext', None)
+    print "%s Scraping Signal History Ext.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    ScrapeSignalHistory(2)
 
-    #Logger(rundt, 'Main', 'Complete')
-    #print "%s Complete." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    Logger(rundt, 'Main', 'Complete')
+    print "%s Complete." % (datetime.datetime.utcnow() + timedelta(hours=8))
 
 
     #`6mthProfit` real, `6mthProfit_Rank` integer, `StdDev` real, `StdDev_Rank` integer, `SignalAccuracy`
