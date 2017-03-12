@@ -537,8 +537,8 @@ def standard_deviation(tidm, d1date, todaydate):
 
       for x in complist["data"]:
         lst.append(x[0])
-	lst.append(x[1])
-	lst.append(x[2])
+        lst.append(x[1])
+        lst.append(x[2])
         #print "high-low: %f" % (x[0])
     
       mean = sum(lst) / lstlength
@@ -873,15 +873,25 @@ def Notify(rundt):
       #ranklist = scraperwiki.sqlite.execute("select distinct A.tidm, B.FTSE, A.`3d`, A.`10d`, A.`30d`, A.`90d`, A.`180d`, A.`6mthProfit`, A.`6mthProfit_Rank`, A.StdDev, A.StdDev_Rank, A.SignalAccuracy, A.SignalAccuracy_Rank, A.Overall_Score, A.Overall_Rank from (select * from Company_Performance where StdDev_Rank <= 50 intersect select * from Company_Performance where SignalAccuracy_Rank <= 50) as A inner join company as B on A.tidm = B.tidm order by A.Overall_Rank")
       #ranklist = scraperwiki.sqlite.execute("select distinct A.tidm, B.FTSE, A.`3d`, A.`10d`, A.`30d`, A.`90d`, A.`180d`, A.`6mthProfit`, A.`6mthProfit_Rank`, A.StdDev, A.StdDev_Rank, A.SignalAccuracy, A.SignalAccuracy_Rank, A.Overall_Score, A.Overall_Rank, C.Signal, C.Date AS "Signal Date" from (select * from Company_Performance where StdDev_Rank <= 50 intersect select * from Company_Performance where SignalAccuracy_Rank <= 50) as A inner join company as B on A.tidm = B.tidm INNER JOIN Signal_History as C on A.tidm = C.tidm where c.date >= %s order by A.Overall_Rank" % (datetime.datetime.strptime(datetime.date.today() - datetime.timedelta(days=7), "%Y-%m-%d").date()))
       #ranklist = scraperwiki.sqlite.execute("select distinct A.tidm, B.FTSE, A.`3d`, A.`10d`, A.`30d`, A.`90d`, A.`180d`, A.`6mthProfit`, A.`6mthProfit_Rank`, A.StdDev, A.StdDev_Rank, A.SignalAccuracy, A.SignalAccuracy_Rank, A.Overall_Score, A.Overall_Rank, C.Signal, C.Date AS "Signal Date" from (select * from Company_Performance where StdDev_Rank <= 50 intersect select * from Company_Performance where SignalAccuracy_Rank <= 50) as A inner join company as B on A.tidm = B.tidm INNER JOIN Signal_History as C on B.tidm = C.tidm where c.date >= %s order by A.Overall_Rank" % (datetime.datetime.strptime(datetime.date.today() - datetime.timedelta(days=7), "%Y-%m-%d").date()))
-      SignalDate = datetime.date.today() - datetime.timedelta(days=2)
-      ranklist = scraperwiki.sqlite.execute("select distinct A.tidm, B.FTSE, A.`3d`, A.`10d`, A.`30d`, A.`90d`, A.`180d`, A.`6mthProfit`, A.`6mthProfit_Rank`, A.StdDev, A.StdDev_Rank, A.SignalAccuracy, A.SignalAccuracy_Rank, A.Overall_Score, A.Overall_Rank, C.Signal, C.Date AS 'Signal Date' from (select * from Company_Performance where StdDev_Rank <= 50 intersect select * from Company_Performance where SignalAccuracy_Rank <= 50) as A inner join company as B on A.tidm = B.tidm LEFT JOIN (select distinct IA.tidm, IA.signal, IB.date from Signal_History as IA inner join (select tidm, date from (select tidm, max(date) as date from Signal_History group by tidm) where date >= %s) as IB on IA.tidm = IB.tidm and IA.date = IB.date) as C on A.tidm = C.tidm order by A.Overall_Rank LIMIT 50" % (SignalDate.strftime("%Y-%m-%d")))
-    
-      Performance_Out = Performance_Out + "  TIDM     3D    10D    30D    90D   180D   6MthProfit   Rank    Stddev   Rank    Sig Accuracy   Rank    Overall Score   Rank<br>"
-      Performance_Out = Performance_Out + "-----------------------------------------------------------------------------------------------------------------------------<br>"
+      SignalDate = datetime.date.today() - datetime.timedelta(days=5)
+      #SignalDate = SignalDate.strftime("%Y-%m-%d")
+
+      ranklist = scraperwiki.sqlite.execute("select distinct A.tidm, B.FTSE, A.`3d`, A.`10d`, A.`30d`, A.`90d`, A.`180d`, A.`6mthProfit`, A.`6mthProfit_Rank`, A.StdDev, A.StdDev_Rank, A.SignalAccuracy, A.SignalAccuracy_Rank, A.Overall_Score, A.Overall_Rank, C.Signal, C.Date AS 'Signal Date' from (select * from Company_Performance where StdDev <= 12 intersect select * from Company_Performance where SignalAccuracy >= 0.6) as A inner join company as B on A.tidm = B.tidm LEFT JOIN (select distinct IA.tidm, IA.signal, IB.date from Signal_History as IA inner join (select tidm, max(date) as date from Signal_History where cast(substr(date,1,4) || substr(date,6,2) || substr(date,9,2) as integer) > %i group by tidm) as IB on IA.tidm = IB.tidm and IA.date = IB.date) as C on A.tidm = C.tidm order by A.StdDev_Rank LIMIT 50" % (int(SignalDate.strftime("%Y%m%d"))))
+      #print SignalDate
+      #ranklist = scraperwiki.sqlite.execute("select distinct tidm, max(date) from Signal_History where cast(substr(date,1,4) || substr(date,6,2) || substr(date,9,2) as integer) > %i and tidm = 'FXPO.L'" % (int(SignalDate.strftime("%Y%m%d"))))
+
+      #for x in ranklist["data"]:
+      #   print "%s  %s" % (x[0],x[1]) 
+
+
+      Performance_Out = Performance_Out + "  TIDM  FTSE            3D     10D     30D    90D   180D    6MthProfit   Rank   Stddev    Rank   Sig Accuracy  Rank    Overall Score  Rank     Signal   Date<br>"
+      Performance_Out = Performance_Out + "------------------------------------------------------------------------------------------------------------------------------------------------------------<br>"
+
+        #                                    LWDB.L FTSE Small Cap -0.029 -0.009  0.028  0.062  0.083     108.31       48     7.115     14      0.889        3         2016      5   SELL 2017-02-23
 
       for x in ranklist["data"]:
          tidm = x[0]
-	 ftse = x[1]	
+         ftse = x[1]    
          d3 = x[2]
          d10 = x[3]
          d30 = x[4]
@@ -895,10 +905,10 @@ def Notify(rundt):
          signalaccuracy_rank = x[12]
          overall_score = x[13]
          overall_rank = x[14]
-	 signal = x[15]
-	 signaldate = x[16]
-	
-         Performance_Out = Performance_Out + '{:>6} {:>8} {:>6} {:>6} {:>6} {:>6} {:>6} {:>10} {:>6} {:>9} {:>6} {:>10} {:>6} {:>12} {:>6} {:>6} {:>6}<br>'.format(tidm, ftse, d3, d10, d30, d90, d180, profit6mth, profit6mth_rank, stddev, stddev_rank, signalaccuracy, signalaccuracy_rank, overall_score, overall_rank, signal, signaldate)
+         signal = x[15]
+         signaldate = x[16]
+    
+         Performance_Out = Performance_Out + '{:>6} {:>8} {:>6} {:>6} {:>6} {:>6} {:>6} {:>10} {:>8} {:>9} {:>6} {:>10} {:>8} {:>15} {:>6} {:>11} {:>10}<br>'.format(tidm, ftse.ljust(14), d3, d10, d30, d90, d180, profit6mth, profit6mth_rank, stddev, stddev_rank, signalaccuracy, signalaccuracy_rank, overall_score, overall_rank, signal, signaldate)
 
     
 
@@ -945,6 +955,19 @@ if __name__ == '__main__':
     rundt = datetime.datetime.utcnow()
     gvars()
 
+    #openlist = scraperwiki.sqlite.execute("select `tidm`, `OpenDate` from Trades where CloseDate is null")
+
+    #for x in openlist["data"]:
+        
+    #    tidm = x[0]
+    #    opendate = datetime.datetime.strptime(x[1], "%Y-%m-%d").date()
+        #openprice = x[2]
+
+    #siglist = scraperwiki.sqlite.execute("select `TIDM`, `Date`, `Signal` from Signal_History where Date >= '%s' order by Date" % (opendate))
+
+    #for x in siglist["data"]:
+    #  print "%s  %s  %s" % (x[0],x[1], x[2]) 
+
     #scraperwiki.sqlite.execute("create table RunLog (`Rundate` date, `RunDateTime` date, `Proc` string, `status` string)") 
     #scraperwiki.sqlite.execute("create table Company_History (`TIDM` varchar2(8) NOT NULL, `Date` date NOT NULL, `Open` real NOT NULL, `High` real NOT NULL, `Low` real NOT NULL, `Close` real NOT NULL, `Volume` integer NOT NULL, UNIQUE (`TIDM`, `Date`))")
     #scraperwiki.sqlite.execute("create table tmptbl_rank (`TIDM` string, `Rank` integer)")
@@ -983,9 +1006,9 @@ if __name__ == '__main__':
     print "%s Calculating Signal Performance.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     SignalPerformance()
 
-    #Logger(rundt, 'Notify', None)
-    #print "%s Sending Email Notification.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    #Notify(rundt)
+    Logger(rundt, 'Notify', None)
+    print "%s Sending Email Notification.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    Notify(rundt)
 
     Logger(rundt, 'ScrapeSignalHistory_Ext', None)
     print "%s Scraping Signal History Ext.." % (datetime.datetime.utcnow() + timedelta(hours=8))
