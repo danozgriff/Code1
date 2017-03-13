@@ -391,7 +391,8 @@ def ScrapeSignalHistory(runno):
         lselist = scraperwiki.sqlite.execute(CoreSQL)
     elif runno == 2:
       if weekday == 0:
-        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('A', 'H', 'O') and tidm not in ('%s')" % (CoreSQL))
+        #lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('A', 'H', 'O') and tidm not in ('%s')" % (CoreSQL))
+         lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('A', 'H', 'O', 'D', 'K', 'R', 'Y', 'F', 'M', 'T', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'G', 'N', 'U', 'V') and tidm not in ('%s')" % (CoreSQL))
       elif weekday == 1:
         lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('B', 'I', 'P', 'W') and tidm not in ('%s')" % (CoreSQL))        
       elif weekday == 2:
@@ -430,7 +431,7 @@ def ScrapeSignalHistory(runno):
         if runno == 1:
           time.sleep(random.uniform(5, 15))
         elif runno == 2:
-          time.sleep(random.uniform(25, 40))
+          time.sleep(random.uniform(10, 55))
           ### CALL PRICE HISTORY FUNCTION ####
           ScrapePriceHistory(tidm)
 
@@ -1006,9 +1007,9 @@ if __name__ == '__main__':
     print "%s Calculating Signal Performance.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     SignalPerformance()
 
-    Logger(rundt, 'Notify', None)
-    print "%s Sending Email Notification.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    Notify(rundt)
+    #Logger(rundt, 'Notify', None)
+    #print "%s Sending Email Notification.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #Notify(rundt)
 
     Logger(rundt, 'ScrapeSignalHistory_Ext', None)
     print "%s Scraping Signal History Ext.." % (datetime.datetime.utcnow() + timedelta(hours=8))
