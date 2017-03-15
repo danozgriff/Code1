@@ -375,7 +375,7 @@ def ScrapeSignalHistory(runno):
     #scraperwiki.sqlite.execute("create table Company_History (`TIDM` varchar2(8) NOT NULL, `Date` date NOT NULL, `Open` real NOT NULL, `High` real NOT NULL, `Low` real NOT NULL, `Close` real NOT NULL, `Volume` integer NOT NULL, UNIQUE (`TIDM`, `Date`))")
 
 
-    CoreSQL = "select distinct `TIDM` from Trades where CloseDate is null UNION select `tidm` from (select distinct `tidm` from Company_Performance where StdDev =< 12 and SignalAccuracy >= .6 limit 30)"
+    CoreSQL = "select distinct `TIDM` from Trades where CloseDate is null UNION select `tidm` from (select distinct `tidm` from Company_Performance where StdDev <= 12 and SignalAccuracy >= .6 limit 30)"
     url = 'https://www.britishbulls.com/SignalPage.aspx?lang=en&Ticker='
     weekday = datetime.datetime.today().weekday()
     rundate = datetime.datetime.now().date()
