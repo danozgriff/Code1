@@ -405,7 +405,9 @@ def ScrapeSignalHistory(runno):
         lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('F', 'M', 'T', '1', '2', '3', '4', '5', '6', '7', '8', '9') and tidm not in ('%s')" % (CoreSQL))  
       #Must be Sunday..
       else:
-        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('G', 'N', 'U', 'V') and tidm not in ('%s')" % (CoreSQL))  
+        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('G', 'N', 'U', 'V', 'F', 'M', 'T', '1', '2', '3', '4', '5', '6', '7', '8', '9') and tidm not in ('%s')" % (CoreSQL))  
+   
+        #lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('G', 'N', 'U', 'V') and tidm not in ('%s')" % (CoreSQL))  
         
         
    
