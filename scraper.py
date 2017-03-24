@@ -612,8 +612,10 @@ def ScrapeUserInput():
       while test3[0] != "":
         if cnt==1:
           txid=test3.pop(0)
+          print txid
         if cnt==2:
           tidm=test3.pop(0).strip()
+          print tidm
           print " "
         if cnt==3:
           OpenDate=datetime.datetime.strptime(test3.pop(0).strip(), "%d/%m/%y")
