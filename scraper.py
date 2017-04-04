@@ -586,7 +586,7 @@ def ScrapeUserInput():
   #br.set_handle_robots(False)
   br.set_handle_equiv(True)
         
-  csvurl = 'https://drive.google.com/open?id=1HehMfkCV3uVEu4dgsVl1MTpZ891MGTTJaSNErxKIaiE&amp;output=csv'
+  csvurl = 'https://www.dropbox.com/s/6nl8ptdyrc86vvp/TXLog.xlsx?dl=0'
   #csvurl = 'https://drive.google.com/open?id=0B5StQm74mIseeE9pb09Qb1lPNDQ'
         
     # sometimes the server is sensitive to this information
@@ -595,11 +595,12 @@ def ScrapeUserInput():
         
         
   for pagenum in range(1):
-    #html = response.read()
-    html = urllib2.urlopen(csvurl)
-    reader = csv.DictReader(html)
-    for record  in reader:
-      print record
+    html = response.read()
+    #html = urllib2.urlopen(csvurl)
+    #reader = csv.DictReader(html)
+    #for record  in reader:
+    #  print record
+    print html
     #test1 = re.search(r'content=\"Sheet1(.*?)\"><meta name=\"google\" content=\"notranslate\">', html).group()
     #test1 = re.search(r'Earnings((.|\n)+)\"><meta name=\"google\"', html).group()
     test1 = re.search(r'ltr\">EOF((.|\n)+)TX_LOCALE', html).group()
