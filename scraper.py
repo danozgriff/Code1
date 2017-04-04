@@ -604,10 +604,10 @@ def ScrapeUserInput():
     #test1 = re.search(r'content=\"Sheet1(.*?)\"><meta name=\"google\" content=\"notranslate\">', html).group()
     #test1 = re.search(r'Earnings((.|\n)+)\"><meta name=\"google\"', html).group()
     #test1 = re.search(r'ltr\">EOF((.|\n)+)TX_LOCALE', html).group()
-    test2 = re.search(r'EOF((.|\n)+),', test1).group()
+    test2 = re.search(r'EOF((.|\n)+),', html).group()
     #test2a = test2.replace(". ", ".").replace("/ ", "/")
     #print test2a
-    test3 = re.findall(r'(.*?)\,', test2a)
+    test3 = re.findall(r'(.*?)\,', test2)
 
     print test3.pop(0)
     print "len: %i" % (len(test3)) 
