@@ -594,11 +594,11 @@ def ScrapeUserInput():
         
   for pagenum in range(1):
     html = response.read()
-    #print html
+    print html
     #test1 = re.search(r'content=\"Sheet1(.*?)\"><meta name=\"google\" content=\"notranslate\">', html).group()
     test1 = re.search(r'Earnings((.|\n)+)\"><meta name=\"google\"', html).group()
     test2 = test1.replace(". ", ".").replace("/ ", "/")
-    print test2
+    #print test2
     test3 = re.findall(r'(.*?)\,', test2)
 
     print test3.pop(0)
