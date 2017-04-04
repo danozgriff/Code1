@@ -586,7 +586,7 @@ def ScrapeUserInput():
   #br.set_handle_robots(False)
   br.set_handle_equiv(True)
         
-  csvurl = 'https://www.dropbox.com/s/6nl8ptdyrc86vvp/TXLog.xlsx?dl=0'
+  csvurl = 'https://drive.google.com/open?id=1HehMfkCV3uVEu4dgsVl1MTpZ891MGTTJaSNErxKIaiE&output=csv'
   #csvurl = 'https://drive.google.com/open?id=0B5StQm74mIseeE9pb09Qb1lPNDQ'
         
     # sometimes the server is sensitive to this information
