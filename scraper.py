@@ -585,8 +585,8 @@ def ScrapeUserInput():
   #br.set_handle_robots(False)
   br.set_handle_equiv(True)
         
-  #csvurl = 'http://drive.google.com/open?id=1HehMfkCV3uVEu4dgsVl1MTpZ891MGTTJaSNErxKIaiE'
-  csvurl = 'https://drive.google.com/open?id=0B5StQm74mIseeE9pb09Qb1lPNDQ'
+  csvurl = 'https://drive.google.com/open?id=1HehMfkCV3uVEu4dgsVl1MTpZ891MGTTJaSNErxKIaiE&amp;output=csv'
+  #csvurl = 'https://drive.google.com/open?id=0B5StQm74mIseeE9pb09Qb1lPNDQ'
         
     # sometimes the server is sensitive to this information
   br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.149 Safari/537.36')]
