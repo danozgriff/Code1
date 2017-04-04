@@ -585,7 +585,8 @@ def ScrapeUserInput():
   #br.set_handle_robots(False)
   br.set_handle_equiv(True)
         
-  csvurl = 'http://drive.google.com/open?id=1HehMfkCV3uVEu4dgsVl1MTpZ891MGTTJaSNErxKIaiE'
+  #csvurl = 'http://drive.google.com/open?id=1HehMfkCV3uVEu4dgsVl1MTpZ891MGTTJaSNErxKIaiE'
+  csvurl = 'https://drive.google.com/open?id=1yUhBgCeX6rN4SjU8Lgxr1_IWotXXIPh1byzoWtiQtQ4'
         
     # sometimes the server is sensitive to this information
   br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.149 Safari/537.36')]
@@ -594,13 +595,13 @@ def ScrapeUserInput():
         
   for pagenum in range(1):
     html = response.read()
-    #print html
+    print html
     #test1 = re.search(r'content=\"Sheet1(.*?)\"><meta name=\"google\" content=\"notranslate\">', html).group()
     #test1 = re.search(r'Earnings((.|\n)+)\"><meta name=\"google\"', html).group()
     test1 = re.search(r'ltr\">EOF((.|\n)+)TX_LOCALE', html).group()
     test2 = re.search(r'ltr">((.|\n)+)</td>', test1).group()
     test2a = test2.replace(". ", ".").replace("/ ", "/")
-    print test2a
+    #print test2a
     test3 = re.findall(r'(.*?)\,', test2a)
 
     print test3.pop(0)
