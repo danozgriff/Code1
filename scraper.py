@@ -609,7 +609,7 @@ def ScrapeUserInput():
     #print test2a
     test3 = re.findall(r'(.*?)\,', test2)
 
-    print test3.pop(0)
+    #print test3.pop(0)
     print "len: %i" % (len(test3)) 
 
     cnt=1
