@@ -594,8 +594,11 @@ def ScrapeUserInput():
         
         
   for pagenum in range(1):
-    html = response.read()
-    print html
+    #html = response.read()
+    html = urllib2.urlopen(csvurl)
+    reader = csv.DictReader(html)
+    for record  in reader:
+      print record
     #test1 = re.search(r'content=\"Sheet1(.*?)\"><meta name=\"google\" content=\"notranslate\">', html).group()
     #test1 = re.search(r'Earnings((.|\n)+)\"><meta name=\"google\"', html).group()
     test1 = re.search(r'ltr\">EOF((.|\n)+)TX_LOCALE', html).group()
