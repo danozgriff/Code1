@@ -598,7 +598,7 @@ def ScrapeUserInput():
     #test1 = re.search(r'content=\"Sheet1(.*?)\"><meta name=\"google\" content=\"notranslate\">', html).group()
     ltr">
     #test1 = re.search(r'Earnings((.|\n)+)\"><meta name=\"google\"', html).group()
-    test1 = re.search(r'ltr\"\>((.|\n)+)\<\\td\>', html).group()
+    test1 = re.search('ltr\">((.|\n)+)<\\td>', html).group()
     test2 = test1.replace(". ", ".").replace("/ ", "/")
     print test2
     test3 = re.findall(r'(.*?)\,', test2)
