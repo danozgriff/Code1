@@ -233,7 +233,7 @@ def UpdateOpenTrades():
     
     lastchange = None
 
-    openlist = scraperwiki.sqlite.execute("select `TIDM`, `OpenDate`, `OpenPrice`, `OpenSignal` from Trades where CloseDate is null")
+    openlist = scraperwiki.sqlite.execute("select `TIDM`, `EntryDate`, `EntryPrice`, `AlertSignal` from Trades where CloseDate is null")
     
     for x in openlist["data"]:
         
@@ -622,20 +622,21 @@ def ScrapeUserInput():
     
       txid=words[0]
       tidm=words[1]
-      OpenDate=words[2]
-      OpenSignal=words[3]
-      EntryDate=words[4]
-      EntryPrice=words[5]
-      Size=words[6]
-      if len(words[7]) == 0:
+      AlertDate=words[2]
+      AlertSignal=words[3]
+      AlertPrice=words[4]
+      EntryDate=words[5]
+      EntryPrice=words[6]
+      Size=words[7]
+      if len(words[8]) == 0:
         CloseDate = None
       else:
-        CloseDate=words[7]
-      CloseSignal=words[8]
-      ClosePrice=words[9]
-      Earnings=words[10]
+        CloseDate=words[8]
+      CloseSignal=words[9]
+      ClosePrice=words[10]
+      Earnings=words[11]
     
-      scraperwiki.sqlite.execute("insert or replace into trades values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",  [txid, tidm, OpenDate, OpenSignal, EntryDate, EntryPrice, Size, None, None, None, None, None, None, CloseDate, CloseSignal, ClosePrice, Earnings])  
+      scraperwiki.sqlite.execute("insert or replace into trades values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",  [txid, tidm, AlertDate, AlertSignal, AlertPrice, EntryDate, EntryPrice, Size, None, None, None, None, None, None, CloseDate, CloseSignal, ClosePrice, Earnings])  
    
     scraperwiki.sqlite.commit()
     #      print txid
@@ -904,30 +905,31 @@ def Notify(rundt):
 
   #if rerunflag == 0:  
     
-      openlist = scraperwiki.sqlite.execute("select TXID, TIDM, OpenDate, OpenSignal, Entry Date, EntryPrice, Size, LastDate, LastPrice, LastChange, LastSignal, LastSignalDate, Position, CloseDate, CloseSignal, ClosePrice, Earnings from Trades where CloseDate is null")
+      openlist = scraperwiki.sqlite.execute("select TXID, TIDM, AlertDate, AlertSignal, AlertPrice, EntryDate, EntryPrice, Size, LastDate, LastPrice, LastChange, LastSignal, LastSignalDate, Position, CloseDate, CloseSignal, ClosePrice, Earnings from Trades where CloseDate is null")
 
-      Performance_Out = " TXID     TIDM     OpenDate     OpenSignal     EntryDate     EntryPrice     Size      LastDate     LastPrice     LastChange     LastSignal     LastSignalDate     Position     CloseDate     CloseSignal     ClosePrice     Earnings<br>"
+      Performance_Out = " TXID     TIDM     AlertDate    AlertSignal     AlertPrice     EntryDate     EntryPrice     Size      LastDate     LastPrice     LastChange     LastSignal     LastSignalDate     Position     CloseDate     CloseSignal     ClosePrice     Earnings<br>"
       Performance_Out = Performance_Out + "-----------------------------------------------------------------------------------------------------------------------------<br>"
 
       for x in openlist["data"]:
          txid = x[0]
          tidm = x[1]
-         opendate = x[2]
-         opensignal = x[3]
-         entrydate = x[4]
-         entryprice = x[5]
-         size = x[6]
-         lastdate = x[7]
-         lastprice = x[8]
-         lastchange = x[9]
-         lastsignal = x[10]
-         lastsignaldate = x[11]
-         position = x[12]
-         closedate = x[13]
-         closesignal = x[14]
-         closeprice = x[15]
-         earnings = x[16]       
-         Performance_Out = Performance_Out + '{:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6}<br>'.format(txid, tidm, opendate, opensignal, entrydate, entryprice, size, lastdate, lastprice, lastchange, lastsignal, lastsignaldate, position, closedate, closesignal, closeprice, earnings)
+         entrydate = x[2]
+         entrysignal = x[3]
+         entryprice = x[4]
+         entrydate = x[5]
+         entryprice = x[6]
+         size = x[7]
+         lastdate = x[8]
+         lastprice = x[9]
+         lastchange = x[10]
+         lastsignal = x[11]
+         lastsignaldate = x[12]
+         position = x[13]
+         closedate = x[14]
+         closesignal = x[15]
+         closeprice = x[16]
+         earnings = x[17]       
+         Performance_Out = Performance_Out + '{:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6}<br>'.format(txid, tidm, alertdate, alertsignal, alertprice, entrydate, entryprice, size, lastdate, lastprice, lastchange, lastsignal, lastsignaldate, position, closedate, closesignal, closeprice, earnings)
     
     #closecnt = scraperwiki.sqlite.execute("select count(*) from Trades where position = 'Closing'")
     
@@ -1053,7 +1055,7 @@ if __name__ == '__main__':
     #scraperwiki.sqlite.execute("drop table company1")
     
     scraperwiki.sqlite.execute("drop table if exists trades")
-    scraperwiki.sqlite.execute("create table trades (`TXID` integer PRIMARY KEY, `TIDM` string, `OpenDate` date, `OpenSignal` string, `EntryDate` date, `EntryPrice` real, `Size` real, `LastDate` date, `LastPrice` real, `LastChange` real, `LastSignal` string, `LastSignalDate` date, `Position` string, `CloseDate` Date, `CloseSignal` string, `ClosePrice` real, `Earnings` real)")
+    scraperwiki.sqlite.execute("create table trades (`TXID` integer PRIMARY KEY, `TIDM` string, `AlertDate` date, `AlertSignal` string, `AlertPrice` real, `EntryDate` date, `EntryPrice` real, `Size` real, `LastDate` date, `LastPrice` real, `LastChange` real, `LastSignal` string, `LastSignalDate` date, `Position` string, `CloseDate` Date, `CloseSignal` string, `ClosePrice` real, `Earnings` real)")
     #scraperwiki.sqlite.execute("create table trades (`TIDM` string, `OpenDate` date, `OpenSignal` string, `EntryDate` date, `EntryPrice` real, `Size` real, `LastPrice` real, `LastDate` date, `LastChange` real, `LastSignal` string, `Position` string, `CloseDate` Date, `CloseSignal` string, `ClosePrice` real, `Earnings` real) UNIQUE (`TIDM`, `OpenDate`) ON CONFLICT IGNORE")
     
                                              
