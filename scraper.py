@@ -606,7 +606,7 @@ def ScrapeUserInput():
     #test1 = re.search(r'ltr\">EOF((.|\n)+)TX_LOCALE', html).group()
     test2 = re.search(r'EOF((.|\n)+),', html).group()
     #test2a = test2.replace(". ", ".").replace("/ ", "/")
-    #print test2a
+    print test
     test3 = re.findall(r'(.*?)\,', test2)
 
     #print test3.pop(0)
