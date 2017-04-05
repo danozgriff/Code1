@@ -396,8 +396,8 @@ def ScrapeSignalHistory(runno):
       elif weekday == 1:
         lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('B', 'I', 'P', 'W') and tidm not in ('%s')" % (CoreSQL))        
       elif weekday == 2:
-        #lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('C', 'J', 'L', 'Q', 'X') and tidm not in ('%s')" % (CoreSQL))  
-        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where tidm not in ('%s')" % (CoreSQL))    
+        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('C', 'J', 'L', 'Q', 'X') and tidm not in ('%s')" % (CoreSQL))  
+        #lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where tidm not in ('%s')" % (CoreSQL))    
       elif weekday == 3:
         lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('D', 'K', 'R', 'Y') and tidm not in ('%s')" % (CoreSQL))  
       elif weekday == 4:
@@ -626,7 +626,10 @@ def ScrapeUserInput():
       OpenSignal=words[3]
       OpenPrice=words[4]
       Stake=words[5]
-      CloseDate=words[6]
+      if len(words[6]) = 0:
+        CloseDate = None
+      else:
+        CloseDate=words[6]
       CloseSignal=words[7]
       ClosePrice=words[8]
       Earnings=words[9]
@@ -1074,9 +1077,9 @@ if __name__ == '__main__':
     print "%s Sending Email Notification.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     Notify(rundt)
 
-    Logger(rundt, 'ScrapeSignalHistory_Ext', None)
-    print "%s Scraping Signal History Ext.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    ScrapeSignalHistory(2)
+    #Logger(rundt, 'ScrapeSignalHistory_Ext', None)
+    #print "%s Scraping Signal History Ext.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #ScrapeSignalHistory(2)
 
     Logger(rundt, 'Main', 'Complete')
     print "%s Complete." % (datetime.datetime.utcnow() + timedelta(hours=8))
