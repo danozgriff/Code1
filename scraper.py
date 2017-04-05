@@ -610,18 +610,22 @@ def ScrapeUserInput():
     test3 = re.findall(r'(.*?)","', test2)
     #print test3
 
-    print test3.pop(0)
-    print test3.pop(0)
+    #print test3.pop(0)
+    #print test3.pop(0)
     #print "len: %i" % (len(test3)) 
     
     #words = test3.pop(0).split(',',1)
     words = test3.pop(0).split(",")
+    
+    print words[0]
+    print words[1]
+    print words[2]
 
     # for each word in the line:
-    for word in words:
+    #for word in words:
 
         # print the word
-        print(word)
+        #print(word)
 
     #cnt=1
     #while len(test3) > 0:
