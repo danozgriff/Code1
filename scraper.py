@@ -398,7 +398,7 @@ def ScrapeSignalHistory(runno):
       elif weekday == 2:
         #lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('C', 'J', 'L', 'Q', 'X') and tidm not in ('%s')" % (CoreSQL))  
         lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where tidm not in ('%s')" % (CoreSQL))    
-    elif weekday == 3:
+      elif weekday == 3:
         lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('D', 'K', 'R', 'Y') and tidm not in ('%s')" % (CoreSQL))  
       elif weekday == 4:
         lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('E', 'S', 'Z') and tidm not in ('%s')" % (CoreSQL))  
