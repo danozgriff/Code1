@@ -238,7 +238,7 @@ def UpdateOpenTrades():
     for x in openlist["data"]:
         
         tidm = x[0]
-        entrydate = datetime.datetime.strptime(x[1], "%d/%m/%y").date()
+        entrydate = datetime.datetime.strptime(x[1], "%Y-%m-%d").date()
         entryprice = x[2] 
         entrysignal = x[3]
 
@@ -621,18 +621,21 @@ def ScrapeUserInput():
       words = test3.pop(0).split(",")
     
       txid=words[0]
-      tidm=words[1]
-      AlertDate=words[2]
-      AlertSignal=words[3]
+      tidm=words[1].strip()
+      AlertDate=datetime.datetime.strptime(words[2].strip(), "%d/%m/%y")
+      AlertDate=AlertDate.strftime("%Y-%m-%d") 
+      AlertSignal=words[3].strip().upper()
       AlertPrice=words[4]
-      EntryDate=words[5]
+      EntryDate=datetime.datetime.strptime(words[5].strip(), "%d/%m/%y")
+      EntryDate=EntryDate.strftime("%Y-%m-%d") 
       EntryPrice=words[6]
       Size=words[7]
-      if len(words[8]) == 0:
+      if len(words[8].strip()) == 0:
         CloseDate = None
       else:
-        CloseDate=words[8]
-      CloseSignal=words[9]
+        CloseDate=datetime.datetime.strptime(words[8].strip(), "%d/%m/%y")
+        CloseDate=CloseDate.strftime("%Y-%m-%d") 
+      CloseSignal=words[9].strip().upper()
       ClosePrice=words[10]
       Earnings=words[11]
     
