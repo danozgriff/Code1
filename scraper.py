@@ -613,7 +613,8 @@ def ScrapeUserInput():
     #print test3.pop(0)
     #print "len: %i" % (len(test3)) 
     
-    words = test3.pop(0).split(',',1)
+    #words = test3.pop(0).split(',',1)
+    words = test3.pop(0).split(",")
 
     # for each word in the line:
     for word in words:
