@@ -627,7 +627,7 @@ def ScrapeUserInput():
       EntryDate=words[4]
       EntryPrice=words[5]
       Size=words[6]
-      if len(words[7]) = 0:
+      if len(words[7]) == 0:
         CloseDate = None
       else:
         CloseDate=words[7]
