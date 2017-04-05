@@ -432,7 +432,7 @@ def ScrapeSignalHistory(runno):
         if runno == 1:
           time.sleep(random.uniform(5, 15))
         elif runno == 2:
-          time.sleep(random.uniform(10, 45)
+          time.sleep(random.uniform(10, 45))
           ### CALL PRICE HISTORY FUNCTION ####
           ScrapePriceHistory(tidm)
 
