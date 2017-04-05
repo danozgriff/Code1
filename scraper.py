@@ -228,8 +228,8 @@ def gvars():
 def UpdateOpenTrades():
 
     #scraperwiki.sqlite.execute("delete from trades")  
-    #scraperwiki.sqlite.execute("drop table if exists trades")
-    #scraperwiki.sqlite.execute("create table trades (`TIDM` string, `OpenDate` date, `OpenSignal` string, `OpenPrice` real, `Stake` string, `LastPrice` real, `LastDate` date, `LastChange` real, `LastSignal` string, `Position` string, `CloseDate` Date, `CloseSignal` string, `ClosePrice` real, `Earnings` real) UNIQUE (`TIDM`, `OpenDate`) ON CONFLICT IGNORE")
+    scraperwiki.sqlite.execute("drop table if exists trades")
+    scraperwiki.sqlite.execute("create table trades (`TIDM` string, `OpenDate` date, `OpenSignal` string, `EntryDate` date, `EntryPrice` real, `Size` real, `LastPrice` real, `LastDate` date, `LastChange` real, `LastSignal` string, `Position` string, `CloseDate` Date, `CloseSignal` string, `ClosePrice` real, `Earnings` real) UNIQUE (`TIDM`, `OpenDate`) ON CONFLICT IGNORE")
     
     lastchange = None
 
@@ -624,17 +624,18 @@ def ScrapeUserInput():
       tidm=words[1]
       OpenDate=words[2]
       OpenSignal=words[3]
-      OpenPrice=words[4]
-      Stake=words[5]
-      if len(words[6]) = 0:
+      EntryDate=words[4]
+      EntryPrice=words[5]
+      Size=words[6]
+      if len(words[7]) = 0:
         CloseDate = None
       else:
-        CloseDate=words[6]
-      CloseSignal=words[7]
-      ClosePrice=words[8]
-      Earnings=words[9]
+        CloseDate=words[7]
+      CloseSignal=words[8]
+      ClosePrice=words[9]
+      Earnings=words[10]
     
-      scraperwiki.sqlite.execute("insert or replace into trades values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",  [txid, tidm, OpenDate, OpenSignal, OpenPrice, Stake, None, None, None, None, None, None, CloseDate, CloseSignal, ClosePrice, Earnings])  
+      scraperwiki.sqlite.execute("insert or replace into trades values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",  [txid, tidm, OpenDate, OpenSignal, EntryDate, EntryPrice, Size, None, None, None, None, None, None, CloseDate, CloseSignal, ClosePrice, Earnings])  
    
     scraperwiki.sqlite.commit()
     #      print txid
@@ -903,9 +904,9 @@ def Notify(rundt):
 
   #if rerunflag == 0:  
     
-      openlist = scraperwiki.sqlite.execute("select TXID, TIDM, OpenDate, OpenSignal, OpenPrice, Stake, LastDate, LastPrice, LastChange, LastSignal, LastSignalDate, Position, CloseDate, CloseSignal, ClosePrice, Earnings from Trades where CloseDate is null")
+      openlist = scraperwiki.sqlite.execute("select TXID, TIDM, OpenDate, OpenSignal, Entry Date, EntryPrice, Size, LastDate, LastPrice, LastChange, LastSignal, LastSignalDate, Position, CloseDate, CloseSignal, ClosePrice, Earnings from Trades where CloseDate is null")
 
-      Performance_Out = " TXID     TIDM     OpenDate     OpenSignal     OpenPrice     Stake     LastDate     LastPrice     LastChange     LastSignal     LastSignalDate     Position     CloseDate     CloseSignal     ClosePrice     Earnings<br>"
+      Performance_Out = " TXID     TIDM     OpenDate     OpenSignal     EntryDate     EntryPrice     Size      LastDate     LastPrice     LastChange     LastSignal     LastSignalDate     Position     CloseDate     CloseSignal     ClosePrice     Earnings<br>"
       Performance_Out = Performance_Out + "-----------------------------------------------------------------------------------------------------------------------------<br>"
 
       for x in openlist["data"]:
@@ -913,19 +914,20 @@ def Notify(rundt):
          tidm = x[1]
          opendate = x[2]
          opensignal = x[3]
-         openprice = x[4]
-         stake = x[5]
-         lastdate = x[6]
-         lastprice = x[7]
-         lastchange = x[8]
-         lastsignal = x[9]
-         lastsignaldate = x[10]
-         position = x[11]
-         closedate = x[12]
-         closesignal = x[13]
-         closeprice = x[14]
-         earnings = x[15]       
-         Performance_Out = Performance_Out + '{:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6}<br>'.format(txid, tidm, opendate, opensignal, openprice, stake, lastdate, lastprice, lastchange, lastsignal, lastsignaldate, position, closedate, closesignal, closeprice, earnings)
+         entrydate = x[4]
+         entryprice = x[5]
+         size = x[6]
+         lastdate = x[7]
+         lastprice = x[8]
+         lastchange = x[9]
+         lastsignal = x[10]
+         lastsignaldate = x[11]
+         position = x[12]
+         closedate = x[13]
+         closesignal = x[14]
+         closeprice = x[15]
+         earnings = x[16]       
+         Performance_Out = Performance_Out + '{:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6}<br>'.format(txid, tidm, opendate, opensignal, entrydate, entryprice, size, lastdate, lastprice, lastchange, lastsignal, lastsignaldate, position, closedate, closesignal, closeprice, earnings)
     
     #closecnt = scraperwiki.sqlite.execute("select count(*) from Trades where position = 'Closing'")
     
@@ -1061,9 +1063,9 @@ if __name__ == '__main__':
     print "%s Scraping Live Prices.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     ScrapeLivePrices()
 
-    Logger(rundt, 'ScrapeSignalHistory_Core', None)
-    print "%s Scraping Signal History (Core).." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    ScrapeSignalHistory(1)
+    #Logger(rundt, 'ScrapeSignalHistory_Core', None)
+    #print "%s Scraping Signal History (Core).." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #ScrapeSignalHistory(1)
 
     Logger(rundt, 'UpdateOpenTrades', None)
     print "%s Updating Open Trades.." % (datetime.datetime.utcnow() + timedelta(hours=8))
