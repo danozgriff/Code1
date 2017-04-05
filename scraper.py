@@ -228,8 +228,8 @@ def gvars():
 def UpdateOpenTrades():
 
     #scraperwiki.sqlite.execute("delete from trades")  
-    scraperwiki.sqlite.execute("drop table if exists trades")
-    scraperwiki.sqlite.execute("create table trades (`TIDM` string, `OpenDate` date, `OpenSignal` string, `EntryDate` date, `EntryPrice` real, `Size` real, `LastPrice` real, `LastDate` date, `LastChange` real, `LastSignal` string, `Position` string, `CloseDate` Date, `CloseSignal` string, `ClosePrice` real, `Earnings` real) UNIQUE (`TIDM`, `OpenDate`) ON CONFLICT IGNORE")
+    #scraperwiki.sqlite.execute("drop table if exists trades")
+    #scraperwiki.sqlite.execute("create table trades (`TIDM` string, `OpenDate` date, `OpenSignal` string, `EntryDate` date, `EntryPrice` real, `Size` real, `LastPrice` real, `LastDate` date, `LastChange` real, `LastSignal` string, `Position` string, `CloseDate` Date, `CloseSignal` string, `ClosePrice` real, `Earnings` real) UNIQUE (`TIDM`, `OpenDate`) ON CONFLICT IGNORE")
     
     lastchange = None
 
@@ -1051,6 +1051,10 @@ if __name__ == '__main__':
     
     #scraperwiki.sqlite.execute("drop table company_recommendations")
     #scraperwiki.sqlite.execute("drop table company1")
+    
+    scraperwiki.sqlite.execute("drop table if exists trades")
+    scraperwiki.sqlite.execute("create table trades (`TIDM` string, `OpenDate` date, `OpenSignal` string, `EntryDate` date, `EntryPrice` real, `Size` real, `LastPrice` real, `LastDate` date, `LastChange` real, `LastSignal` string, `Position` string, `CloseDate` Date, `CloseSignal` string, `ClosePrice` real, `Earnings` real) UNIQUE (`TIDM`, `OpenDate`) ON CONFLICT IGNORE")
+    
                                              
     Logger(rundt, 'Main', 'Starting')
     print "%s Started.." % (datetime.datetime.utcnow() + timedelta(hours=8))
