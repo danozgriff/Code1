@@ -617,7 +617,7 @@ def ScrapeUserInput():
     #words = test3.pop(0).split(',',1)
     
     while len(test3) > 0:   
-    words = test3.pop(0).split(",")
+      words = test3.pop(0).split(",")
     
       txid=words[0]
       tidm=words[1]
