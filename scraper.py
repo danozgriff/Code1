@@ -615,11 +615,46 @@ def ScrapeUserInput():
     #print "len: %i" % (len(test3)) 
     
     #words = test3.pop(0).split(',',1)
+    
+    while len(test3) > 0:   
     words = test3.pop(0).split(",")
     
-    print words[0]
-    print words[1]
-    print words[2]
+      txid=words[0]
+      tidm=words[1]
+      OpenDate=words[2]
+      OpenSignal=words[3]
+      OpenPrice=words[4]
+      Stake=words[5]
+      CloseDate=words[6]
+      CloseSignal=words[7]
+      ClosePrice=words[8]
+      Earnings=words[9]
+    
+      scraperwiki.sqlite.execute("insert or replace into trades values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",  [txid, tidm, OpenDate, OpenSignal, OpenPrice, Stake, None, None, None, None, None, None, CloseDate, CloseSignal, ClosePrice, Earnings])  
+   
+    scraperwiki.sqlite.commit()
+    #      print txid
+    #    if cnt==2:
+    #      tidm=test3.pop(0).strip()
+    #      print tidm
+    #      print " "
+    #    if cnt==3:
+    #      OpenDate=datetime.datetime.strptime(test3.pop(0).strip(), "%d/%m/%y")
+    #      OpenDate=OpenDate.strftime("%Y-%m-%d") 
+    #   if cnt==4:
+    #      OpenSignal=test3.pop(0).strip().upper()
+    #    if cnt==5:
+    #      OpenPrice=test3.pop(0)
+    #    if cnt==6:
+    #      Stake=test3.pop(0)
+    #    if cnt==7:
+    #      CloseDate=test3.pop(0).strip()
+    #    if cnt==8:
+    #      CloseSignal=test3.pop(0).strip().upper()
+    #    if cnt==9:
+    #      ClosePrice=test3.pop(0)  
+    #    if cnt==10:
+    #      Earnings=test3.pop(0)
 
     # for each word in the line:
     #for word in words:
