@@ -620,6 +620,7 @@ def ScrapeUserInput():
 
         # print the word
         print(word)
+        print " "
 
     #cnt=1
     #while len(test3) > 0:
