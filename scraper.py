@@ -606,8 +606,9 @@ def ScrapeUserInput():
     #test1 = re.search(r'ltr\">EOF((.|\n)+)TX_LOCALE', html).group()
     test2 = re.search(r'EOF((.|\n)+),', html).group()
     #test2a = test2.replace(". ", ".").replace("/ ", "/")
-    print test2
+    #print test2
     test3 = re.findall(r'(.*?)\,', test2)
+    print test3
 
     #print test3.pop(0)
     print "len: %i" % (len(test3)) 
@@ -1003,29 +1004,29 @@ if __name__ == '__main__':
     print "%s Scraping User Input.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     ScrapeUserInput()
 
-    Logger(rundt, 'ScrapeLivePrices', None)
-    print "%s Scraping Live Prices.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    ScrapeLivePrices()
+    #Logger(rundt, 'ScrapeLivePrices', None)
+    #print "%s Scraping Live Prices.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #ScrapeLivePrices()
 
-    Logger(rundt, 'ScrapeSignalHistory_Core', None)
-    print "%s Scraping Signal History (Core).." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    ScrapeSignalHistory(1)
+    #Logger(rundt, 'ScrapeSignalHistory_Core', None)
+    #print "%s Scraping Signal History (Core).." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #ScrapeSignalHistory(1)
 
-    Logger(rundt, 'UpdateOpenTrades', None)
-    print "%s Updating Open Trades.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    UpdateOpenTrades()
+    #Logger(rundt, 'UpdateOpenTrades', None)
+    #print "%s Updating Open Trades.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #UpdateOpenTrades()
 
-    Logger(rundt, 'SignalPerformance', None)
-    print "%s Calculating Signal Performance.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    SignalPerformance()
+    #Logger(rundt, 'SignalPerformance', None)
+    #print "%s Calculating Signal Performance.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #SignalPerformance()
 
-    Logger(rundt, 'Notify', None)
-    print "%s Sending Email Notification.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    Notify(rundt)
+    #Logger(rundt, 'Notify', None)
+    #print "%s Sending Email Notification.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #Notify(rundt)
 
-    Logger(rundt, 'ScrapeSignalHistory_Ext', None)
-    print "%s Scraping Signal History Ext.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    ScrapeSignalHistory(2)
+    #Logger(rundt, 'ScrapeSignalHistory_Ext', None)
+    #print "%s Scraping Signal History Ext.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #ScrapeSignalHistory(2)
 
     Logger(rundt, 'Main', 'Complete')
     print "%s Complete." % (datetime.datetime.utcnow() + timedelta(hours=8))
