@@ -606,51 +606,51 @@ def ScrapeUserInput():
     #test1 = re.search(r'ltr\">EOF((.|\n)+)TX_LOCALE', html).group()
     test2 = re.search(r'EOF((.|\n)+),', html).group()
     #test2a = test2.replace(". ", ".").replace("/ ", "/")
-    print test
+    print test2
     test3 = re.findall(r'(.*?)\,', test2)
 
     #print test3.pop(0)
     print "len: %i" % (len(test3)) 
 
-    cnt=1
-    while len(test3) > 0:
-      CloseDate=None
-      CloseSignal=None
-      ClosePrice=None
-      Earnings=None
-      while test3[0] != "":
-        if cnt==1:
-          txid=test3.pop(0)
-          print txid
-        if cnt==2:
-          tidm=test3.pop(0).strip()
-          print tidm
-          print " "
-        if cnt==3:
-          OpenDate=datetime.datetime.strptime(test3.pop(0).strip(), "%d/%m/%y")
-          OpenDate=OpenDate.strftime("%Y-%m-%d") 
-        if cnt==4:
-          OpenSignal=test3.pop(0).strip().upper()
-        if cnt==5:
-          OpenPrice=test3.pop(0)
-        if cnt==6:
-          Stake=test3.pop(0)
-        if cnt==7:
-          CloseDate=test3.pop(0).strip()
-        if cnt==8:
-          CloseSignal=test3.pop(0).strip().upper()
-        if cnt==9:
-          ClosePrice=test3.pop(0)  
-        if cnt==10:
-          Earnings=test3.pop(0)
-        cnt+=1
-      if txid > maxTXID:
-        scraperwiki.sqlite.execute("insert or replace into trades values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",  [txid, tidm, OpenDate, OpenSignal, OpenPrice, Stake, None, None, None, None, None, None, CloseDate, CloseSignal, ClosePrice, Earnings])  
+    #cnt=1
+    #while len(test3) > 0:
+    #  CloseDate=None
+    #  CloseSignal=None
+    #  ClosePrice=None
+    #  Earnings=None
+    #  while test3[0] != "":
+    #    if cnt==1:
+    #      txid=test3.pop(0)
+    #      print txid
+    #    if cnt==2:
+    #      tidm=test3.pop(0).strip()
+    #      print tidm
+    #      print " "
+    #    if cnt==3:
+    #      OpenDate=datetime.datetime.strptime(test3.pop(0).strip(), "%d/%m/%y")
+    #      OpenDate=OpenDate.strftime("%Y-%m-%d") 
+    #   if cnt==4:
+    #      OpenSignal=test3.pop(0).strip().upper()
+    #    if cnt==5:
+    #      OpenPrice=test3.pop(0)
+    #    if cnt==6:
+    #      Stake=test3.pop(0)
+    #    if cnt==7:
+    #      CloseDate=test3.pop(0).strip()
+    #    if cnt==8:
+    #      CloseSignal=test3.pop(0).strip().upper()
+    #    if cnt==9:
+    #      ClosePrice=test3.pop(0)  
+    #    if cnt==10:
+    #      Earnings=test3.pop(0)
+    #    cnt+=1
+    #  if txid > maxTXID:
+    #    scraperwiki.sqlite.execute("insert or replace into trades values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",  [txid, tidm, OpenDate, OpenSignal, OpenPrice, Stake, None, None, None, None, None, None, CloseDate, CloseSignal, ClosePrice, Earnings])  
       
-      test3.pop(0)
-      cnt=1
+    #  test3.pop(0)
+    #  cnt=1
 
-    scraperwiki.sqlite.commit()
+    #scraperwiki.sqlite.commit()
  
   return;
 
