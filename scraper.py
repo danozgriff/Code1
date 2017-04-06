@@ -916,9 +916,9 @@ def Notify(rundt):
       for x in openlist["data"]:
          txid = x[0]
          tidm = x[1]
-         entrydate = x[2]
-         entrysignal = x[3]
-         entryprice = x[4]
+         alertdate = x[2]
+         alertsignal = x[3]
+         alertprice = x[4]
          entrydate = x[5]
          entryprice = x[6]
          size = x[7]
