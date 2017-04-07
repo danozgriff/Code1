@@ -908,7 +908,7 @@ def Notify(rundt):
 
   #if rerunflag == 0:  
     
-      openlist = scraperwiki.sqlite.execute("select TXID, TIDM, AlertDate, AlertSignal, AlertPrice, EntryDate, EntryPrice, Size, LastDate, LastPrice, LastChange, LastSignal, LastSignalDate, Position, CloseDate, CloseSignal, ClosePrice, Earnings from Trades where CloseDate is null")
+      openlist = scraperwiki.sqlite.execute("select TXID, TIDM, AlertDate, AlertSignal, AlertPrice, EntryDate, EntryPrice, Size, LastDate, LastPrice, LastChange, LastSignal, LastSignalDate, Position, CloseDate, CloseSignal, ClosePrice, Earnings from Trades where (length(CloseDate) < 1 or CloseDate is null)")
 
       Performance_Out = " TXID     TIDM     AlertDate    AlertSignal     AlertPrice     EntryDate     EntryPrice     Size      LastDate     LastPrice     LastChange     LastSignal     LastSignalDate     Position     CloseDate     CloseSignal     ClosePrice     Earnings<br>"
       Performance_Out = Performance_Out + "-----------------------------------------------------------------------------------------------------------------------------<br>"
@@ -1057,41 +1057,41 @@ if __name__ == '__main__':
     #scraperwiki.sqlite.execute("drop table company_recommendations")
     #scraperwiki.sqlite.execute("drop table company1")
     
-    scraperwiki.sqlite.execute("drop table if exists trades")
-    scraperwiki.sqlite.execute("create table trades (`TXID` integer PRIMARY KEY, `TIDM` string, `AlertDate` date, `AlertSignal` string, `AlertPrice` real, `EntryDate` date, `EntryPrice` real, `Size` real, `LastDate` date, `LastPrice` real, `LastChange` real, `LastSignal` string, `LastSignalDate` date, `Position` string, `CloseDate` Date, `CloseSignal` string, `ClosePrice` real, `Earnings` real)")
+    #scraperwiki.sqlite.execute("drop table if exists trades")
+    #scraperwiki.sqlite.execute("create table trades (`TXID` integer PRIMARY KEY, `TIDM` string, `AlertDate` date, `AlertSignal` string, `AlertPrice` real, `EntryDate` date, `EntryPrice` real, `Size` real, `LastDate` date, `LastPrice` real, `LastChange` real, `LastSignal` string, `LastSignalDate` date, `Position` string, `CloseDate` Date, `CloseSignal` string, `ClosePrice` real, `Earnings` real)")
     #scraperwiki.sqlite.execute("create table trades (`TIDM` string, `OpenDate` date, `OpenSignal` string, `EntryDate` date, `EntryPrice` real, `Size` real, `LastPrice` real, `LastDate` date, `LastChange` real, `LastSignal` string, `Position` string, `CloseDate` Date, `CloseSignal` string, `ClosePrice` real, `Earnings` real) UNIQUE (`TIDM`, `OpenDate`) ON CONFLICT IGNORE")
     
                                              
     Logger(rundt, 'Main', 'Starting')
     print "%s Started.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     
-    #Logger(rundt, 'ScrapeUserInput', None)
-    #print "%s Scraping User Input.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    #ScrapeUserInput()
+    Logger(rundt, 'ScrapeUserInput', None)
+    print "%s Scraping User Input.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    ScrapeUserInput()
 
-    #Logger(rundt, 'ScrapeLivePrices', None)
-    #print "%s Scraping Live Prices.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    #ScrapeLivePrices()
+    Logger(rundt, 'ScrapeLivePrices', None)
+    print "%s Scraping Live Prices.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    ScrapeLivePrices()
 
-    #Logger(rundt, 'ScrapeSignalHistory_Core', None)
-    #print "%s Scraping Signal History (Core).." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    #ScrapeSignalHistory(1)
+    Logger(rundt, 'ScrapeSignalHistory_Core', None)
+    print "%s Scraping Signal History (Core).." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    ScrapeSignalHistory(1)
 
-    #Logger(rundt, 'UpdateOpenTrades', None)
-    #print "%s Updating Open Trades.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    #UpdateOpenTrades()
+    Logger(rundt, 'UpdateOpenTrades', None)
+    print "%s Updating Open Trades.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    UpdateOpenTrades()
 
-    #Logger(rundt, 'SignalPerformance', None)
-    #print "%s Calculating Signal Performance.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    #SignalPerformance()
+    Logger(rundt, 'SignalPerformance', None)
+    print "%s Calculating Signal Performance.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    SignalPerformance()
 
     Logger(rundt, 'Notify', None)
     print "%s Sending Email Notification.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     Notify(rundt)
 
-    #Logger(rundt, 'ScrapeSignalHistory_Ext', None)
-    #print "%s Scraping Signal History Ext.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    #ScrapeSignalHistory(2)
+    Logger(rundt, 'ScrapeSignalHistory_Ext', None)
+    print "%s Scraping Signal History Ext.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    ScrapeSignalHistory(2)
 
     Logger(rundt, 'Main', 'Complete')
     print "%s Complete." % (datetime.datetime.utcnow() + timedelta(hours=8))
