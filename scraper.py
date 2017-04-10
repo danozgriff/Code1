@@ -909,7 +909,7 @@ def Notify(rundt):
 
   #if rerunflag == 0:  
     
-      openlist = scraperwiki.sqlite.execute("select TXID, TIDM, AlertDate, AlertSignal, AlertPrice, EntryDate, EntryPrice, Size, LastDate, LastPrice, LastChange, LastSignal, LastSignalDate, Position, CloseDate, CloseSignal, ClosePrice, Earnings from Trades where CloseSignal is null)")
+      openlist = scraperwiki.sqlite.execute("select TXID, TIDM, AlertDate, AlertSignal, AlertPrice, EntryDate, EntryPrice, Size, LastDate, LastPrice, LastChange, LastSignal, LastSignalDate, Position, CloseDate, CloseSignal, ClosePrice, Earnings from Trades where CloseSignal is null")
 
       Performance_Out = " TXID     TIDM     AlertDate    AlertSignal     AlertPrice     EntryDate     EntryPrice     Size      LastDate     LastPrice     LastChange     LastSignal     LastSignalDate     Position     CloseDate     CloseSignal     ClosePrice     Earnings<br>"
       Performance_Out = Performance_Out + "-----------------------------------------------------------------------------------------------------------------------------<br>"
