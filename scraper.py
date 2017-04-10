@@ -233,7 +233,7 @@ def UpdateOpenTrades():
     
     lastchange = None
 
-    openlist = scraperwiki.sqlite.execute("select `TIDM`, `EntryDate`, `EntryPrice`, `AlertSignal` from Trades where CloseDate is null")
+    openlist = scraperwiki.sqlite.execute("select `TIDM`, `EntryDate`, `EntryPrice`, `AlertSignal` from Trades where CloseSignal is null")
     
     for x in openlist["data"]:
         
@@ -392,7 +392,8 @@ def ScrapeSignalHistory(runno):
         lselist = scraperwiki.sqlite.execute(CoreSQL)
     elif runno == 2:
       if weekday == 0:
-        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('A', 'H', 'O') and tidm not in ('%s')" % (CoreSQL))
+        #lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('A', 'H', 'O') and tidm not in ('%s')" % (CoreSQL))
+        lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('F', 'M', 'T', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'G', 'N', 'U', 'V', 'A', 'H', 'O') and tidm not in ('%s')" % (CoreSQL))
       elif weekday == 1:
         lselist = scraperwiki.sqlite.execute("select distinct `tidm` from company where substr(tidm,1,1) in ('B', 'I', 'P', 'W') and tidm not in ('%s')" % (CoreSQL))        
       elif weekday == 2:
@@ -908,7 +909,7 @@ def Notify(rundt):
 
   #if rerunflag == 0:  
     
-      openlist = scraperwiki.sqlite.execute("select TXID, TIDM, AlertDate, AlertSignal, AlertPrice, EntryDate, EntryPrice, Size, LastDate, LastPrice, LastChange, LastSignal, LastSignalDate, Position, CloseDate, CloseSignal, ClosePrice, Earnings from Trades where (length(CloseDate) < 1 or CloseDate is null)")
+      openlist = scraperwiki.sqlite.execute("select TXID, TIDM, AlertDate, AlertSignal, AlertPrice, EntryDate, EntryPrice, Size, LastDate, LastPrice, LastChange, LastSignal, LastSignalDate, Position, CloseDate, CloseSignal, ClosePrice, Earnings from Trades where CloseSignal is null)")
 
       Performance_Out = " TXID     TIDM     AlertDate    AlertSignal     AlertPrice     EntryDate     EntryPrice     Size      LastDate     LastPrice     LastChange     LastSignal     LastSignalDate     Position     CloseDate     CloseSignal     ClosePrice     Earnings<br>"
       Performance_Out = Performance_Out + "-----------------------------------------------------------------------------------------------------------------------------<br>"
