@@ -909,7 +909,7 @@ def Notify(rundt):
 
   #if rerunflag == 0:  
     
-      openlist = scraperwiki.sqlite.execute("select TXID, TIDM, AlertDate, AlertSignal, AlertPrice, EntryDate, EntryPrice, Size, LastDate, LastPrice, LastChange, LastSignal, LastSignalDate, Position, CloseDate, CloseSignal, ClosePrice, Earnings from Trades where CloseSignal is null")
+      openlist = scraperwiki.sqlite.execute("select TXID, TIDM, AlertDate, AlertSignal, AlertPrice, EntryDate, EntryPrice, Size, LastDate, LastPrice, LastChange, LastSignal, LastSignalDate, Position, CloseDate, CloseSignal, ClosePrice, Earnings from Trades")
 
       Performance_Out = " TXID     TIDM     AlertDate    AlertSignal     AlertPrice     EntryDate     EntryPrice     Size      LastDate     LastPrice     LastChange     LastSignal     LastSignalDate     Position     CloseDate     CloseSignal     ClosePrice     Earnings<br>"
       Performance_Out = Performance_Out + "-----------------------------------------------------------------------------------------------------------------------------<br>"
@@ -951,7 +951,7 @@ def Notify(rundt):
       SignalDate = datetime.date.today() - datetime.timedelta(days=8)
       #SignalDate = SignalDate.strftime("%Y-%m-%d")
 
-      ranklist = scraperwiki.sqlite.execute("select distinct A.tidm, B.FTSE, A.`3d`, A.`10d`, A.`30d`, A.`90d`, A.`180d`, A.`6mthProfit`, A.`6mthProfit_Rank`, A.StdDev, A.StdDev_Rank, A.SignalAccuracy, A.SignalAccuracy_Rank, A.Overall_Score, A.Overall_Rank, C.Signal, C.Date AS 'Signal Date' from (select * from Company_Performance where StdDev <= 12 intersect select * from Company_Performance where SignalAccuracy >= 0.6) as A inner join company as B on A.tidm = B.tidm LEFT JOIN (select distinct IA.tidm, IA.signal, IB.date from Signal_History as IA inner join (select tidm, max(date) as date from Signal_History where cast(substr(date,1,4) || substr(date,6,2) || substr(date,9,2) as integer) > %i group by tidm) as IB on IA.tidm = IB.tidm and IA.date = IB.date) as C on A.tidm = C.tidm order by A.StdDev_Rank LIMIT 50" % (int(SignalDate.strftime("%Y%m%d"))))
+      ranklist = scraperwiki.sqlite.execute("select distinct A.tidm, B.FTSE, A.`3d`, A.`10d`, A.`30d`, A.`90d`, A.`180d`, A.`6mthProfit`, A.`6mthProfit_Rank`, A.StdDev, A.StdDev_Rank, A.SignalAccuracy, A.SignalAccuracy_Rank, A.Overall_Score, A.Overall_Rank, C.Signal, C.Date AS 'Signal Date' from (select * from Company_Performance where StdDev <= 50 intersect select * from Company_Performance where SignalAccuracy >= 0.6) as A inner join company as B on A.tidm = B.tidm LEFT JOIN (select distinct IA.tidm, IA.signal, IB.date from Signal_History as IA inner join (select tidm, max(date) as date from Signal_History where cast(substr(date,1,4) || substr(date,6,2) || substr(date,9,2) as integer) > %i group by tidm) as IB on IA.tidm = IB.tidm and IA.date = IB.date) as C on A.tidm = C.tidm where B.FTSE in ('FTSE 100', 'FTSE 250') order by A.Overall_Rank LIMIT 50" % (int(SignalDate.strftime("%Y%m%d"))))
       #print SignalDate
       #ranklist = scraperwiki.sqlite.execute("select distinct tidm, max(date) from Signal_History where cast(substr(date,1,4) || substr(date,6,2) || substr(date,9,2) as integer) > %i and tidm = 'FXPO.L'" % (int(SignalDate.strftime("%Y%m%d"))))
 
@@ -1086,13 +1086,13 @@ if __name__ == '__main__':
     #print "%s Calculating Signal Performance.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     #SignalPerformance()
 
-    #Logger(rundt, 'Notify', None)
-    #print "%s Sending Email Notification.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    #Notify(rundt)
+    Logger(rundt, 'Notify', None)
+    print "%s Sending Email Notification.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    Notify(rundt)
 
-    Logger(rundt, 'ScrapeSignalHistory_Ext', None)
-    print "%s Scraping Signal History Ext.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    ScrapeSignalHistory(2)
+    #Logger(rundt, 'ScrapeSignalHistory_Ext', None)
+    #print "%s Scraping Signal History Ext.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #ScrapeSignalHistory(2)
 
     #Logger(rundt, 'Main', 'Complete')
     #print "%s Complete." % (datetime.datetime.utcnow() + timedelta(hours=8))
