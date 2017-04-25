@@ -74,16 +74,17 @@ def ScrapeLivePrices():
         
     #print "mid rerunflag: %d" % (rerunflag)
 
-    ftses = ['FTSE 100', 'FTSE 250',  'FTSE Small Cap']
+    #ftses = ['FTSE 100', 'FTSE 250',  'FTSE Small Cap']
+    ftses = ['FTSE 100']
 
     for ftse in ftses:        
 
         if ftse == 'FTSE 100':
             url = 'http://shareprices.com/ftse100'
-        elif ftse == 'FTSE 250':
-            url = 'http://shareprices.com/ftse250'
-        elif ftse == 'FTSE Small Cap':
-            url = 'http://shareprices.com/ftsesmallcap'
+        ##elif ftse == 'FTSE 250':
+        ##    url = 'http://shareprices.com/ftse250'
+        ##elif ftse == 'FTSE Small Cap':
+        ##    url = 'http://shareprices.com/ftsesmallcap'
 
         br = mechanize.Browser()
         br.set_handle_robots(False)
@@ -146,7 +147,7 @@ def ScrapeLivePrices():
     return;
 
 ####################################################
-#Load Main Page from British Bulls
+#Load Main Page from British Bulls ===NOT USED===
 ####################################################
 
 def ScrapeBritishMain():
@@ -299,7 +300,7 @@ def UpdateOpenTrades():
     return;
 
 ####################################################
-#Find New Stocks
+#Find New Stocks ===NOT USED===
 ####################################################
 
 def FindNewTrades():
@@ -376,7 +377,10 @@ def ScrapeSignalHistory(runno):
     #scraperwiki.sqlite.execute("create table Company_History (`TIDM` varchar2(8) NOT NULL, `Date` date NOT NULL, `Open` real NOT NULL, `High` real NOT NULL, `Low` real NOT NULL, `Close` real NOT NULL, `Volume` integer NOT NULL, UNIQUE (`TIDM`, `Date`))")
 
 
-    CoreSQL = "select distinct `TIDM` from Trades where CloseDate is null UNION select `tidm` from (select distinct `tidm` from Company_Performance where StdDev <= 12 and SignalAccuracy >= .6 limit 30)"
+    #CoreSQL = "select distinct `TIDM` from Trades where CloseDate is null UNION select `tidm` from (select distinct `tidm` from Company_Performance where StdDev <= 12 and SignalAccuracy >= .6 limit 30)"
+    AllSQL = "select distinct `TIDM` from company"
+    CoreSQL = "select distinct `TIDM` from Trades where CloseDate is null"
+    
     url = 'https://www.britishbulls.com/SignalPage.aspx?lang=en&Ticker='
     weekday = datetime.datetime.today().weekday()
     rundate = datetime.datetime.now().date()
@@ -387,8 +391,11 @@ def ScrapeSignalHistory(runno):
     
     #Determine how much history to scan for, based on the day of week and the run number
     # 0=Monday, 6=Sunday
+    if runno == 0:
+        # All Companies
+        lselist = scraperwiki.sqlite.execute(AllSQL)
     if runno == 1:
-        # May need to centralise this ranking logic somewhere
+        # Trades Only
         lselist = scraperwiki.sqlite.execute(CoreSQL)
     elif runno == 2:
       if weekday == 0:
@@ -430,8 +437,8 @@ def ScrapeSignalHistory(runno):
         br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
 
         #pause before calling the URL
-        if runno == 1:
-          time.sleep(random.uniform(5, 15))
+        if runno <= 1:
+          time.sleep(random.uniform(5, 10))
         elif runno == 2:
           time.sleep(random.uniform(10, 45))
           ### CALL PRICE HISTORY FUNCTION ####
@@ -585,14 +592,14 @@ def ScrapeUserInput():
   #    signalscore = x[0]  
 
   br = mechanize.Browser()
-  #br.set_handle_robots(False)
-  br.set_handle_equiv(True)
+  br.set_handle_robots(False)
+  br.set_handle_equiv(False)
         
   csvurl = 'https://docs.google.com/spreadsheets/d/1HehMfkCV3uVEu4dgsVl1MTpZ891MGTTJaSNErxKIaiE/export?format=csv'
   #csvurl = 'https://drive.google.com/open?id=0B5StQm74mIseeE9pb09Qb1lPNDQ'
         
     # sometimes the server is sensitive to this information
-  br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.149 Safari/537.36')]
+  br.addheaders = [('User-agent', 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.3; AskTB5.6)')]
   response = br.open(csvurl, timeout=120.0)
         
         
@@ -951,7 +958,9 @@ def Notify(rundt):
       SignalDate = datetime.date.today() - datetime.timedelta(days=7)
       #SignalDate = SignalDate.strftime("%Y-%m-%d")
 
-      ranklist = scraperwiki.sqlite.execute("select distinct A.tidm, B.FTSE, A.`3d`, A.`10d`, A.`30d`, A.`90d`, A.`180d`, A.`6mthProfit`, A.`6mthProfit_Rank`, A.StdDev, A.StdDev_Rank, A.SignalAccuracy, A.SignalAccuracy_Rank, A.Overall_Score, A.Overall_Rank, C.Signal, C.Date AS 'Signal Date' from (select * from Company_Performance intersect select * from Company_Performance ) as A inner join company as B on A.tidm = B.tidm LEFT JOIN (select distinct IA.tidm, IA.signal, IB.date from Signal_History as IA inner join (select tidm, max(date) as date from Signal_History where cast(substr(date,1,4) || substr(date,6,2) || substr(date,9,2) as integer) > %i group by tidm) as IB on IA.tidm = IB.tidm and IA.date = IB.date) as C on A.tidm = C.tidm where B.FTSE in ('FTSE 100') and C.Date is not null order by A.Overall_Rank LIMIT 50" % (int(SignalDate.strftime("%Y%m%d"))))
+      #ranklist = scraperwiki.sqlite.execute("select distinct A.tidm, B.FTSE, A.`3d`, A.`10d`, A.`30d`, A.`90d`, A.`180d`, A.`6mthProfit`, A.`6mthProfit_Rank`, A.StdDev, A.StdDev_Rank, A.SignalAccuracy, A.SignalAccuracy_Rank, A.Overall_Score, A.Overall_Rank, C.Signal, C.Date AS 'Signal Date' from (select * from Company_Performance intersect select * from Company_Performance ) as A inner join company as B on A.tidm = B.tidm LEFT JOIN (select distinct IA.tidm, IA.signal, IB.date from Signal_History as IA inner join (select tidm, max(date) as date from Signal_History where cast(substr(date,1,4) || substr(date,6,2) || substr(date,9,2) as integer) > %i group by tidm) as IB on IA.tidm = IB.tidm and IA.date = IB.date) as C on A.tidm = C.tidm where B.FTSE in ('FTSE 100') and C.Date is not null order by A.Overall_Rank LIMIT 50" % (int(SignalDate.strftime("%Y%m%d"))))
+      ranklist = scraperwiki.sqlite.execute("select distinct A.tidm, B.FTSE, A.`3d`, A.`10d`, A.`30d`, A.`90d`, A.`180d`, A.`6mthProfit`, A.`6mthProfit_Rank`, A.StdDev, A.StdDev_Rank, A.SignalAccuracy, A.SignalAccuracy_Rank, A.Overall_Score, A.Overall_Rank, C.Signal, C.Date AS 'Signal Date' from (select * from Company_Performance) as A inner join company as B on A.tidm = B.tidm LEFT JOIN (select distinct IA.tidm, IA.signal, IB.date from Signal_History as IA inner join (select tidm, max(date) as date from Signal_History where cast(substr(date,1,4) || substr(date,6,2) || substr(date,9,2) as integer) > %i group by tidm) as IB on IA.tidm = IB.tidm and IA.date = IB.date) as C on A.tidm = C.tidm where B.FTSE in ('FTSE 100') and C.Date is not null order by C.Date desc, A.SignalAccuracy desc" % (int(SignalDate.strftime("%Y%m%d"))))
+      
       #print SignalDate
       #ranklist = scraperwiki.sqlite.execute("select distinct tidm, max(date) from Signal_History where cast(substr(date,1,4) || substr(date,6,2) || substr(date,9,2) as integer) > %i and tidm = 'FXPO.L'" % (int(SignalDate.strftime("%Y%m%d"))))
 
@@ -1030,6 +1039,9 @@ if __name__ == '__main__':
     rundt = datetime.datetime.utcnow()
     gvars()
 
+    scraperwiki.sqlite.execute("delete from company")
+    scraperwiki.sqlite.execute("delete from Signal_History")
+
     #openlist = scraperwiki.sqlite.execute("select `tidm`, `OpenDate` from Trades where CloseDate is null")
 
     #for x in openlist["data"]:
@@ -1063,39 +1075,39 @@ if __name__ == '__main__':
     #scraperwiki.sqlite.execute("create table trades (`TIDM` string, `OpenDate` date, `OpenSignal` string, `EntryDate` date, `EntryPrice` real, `Size` real, `LastPrice` real, `LastDate` date, `LastChange` real, `LastSignal` string, `Position` string, `CloseDate` Date, `CloseSignal` string, `ClosePrice` real, `Earnings` real) UNIQUE (`TIDM`, `OpenDate`) ON CONFLICT IGNORE")
     
                                              
-    #Logger(rundt, 'Main', 'Starting')
-    #print "%s Started.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    Logger(rundt, 'Main', 'Starting')
+    print "%s Started.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     
-    #Logger(rundt, 'ScrapeUserInput', None)
-    #print "%s Scraping User Input.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    #ScrapeUserInput()
+    Logger(rundt, 'ScrapeUserInput', None)
+    print "%s Scraping User Input.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    ScrapeUserInput()
 
-    #Logger(rundt, 'ScrapeLivePrices', None)
-    #print "%s Scraping Live Prices.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    #ScrapeLivePrices()
+    Logger(rundt, 'ScrapeLivePrices', None)
+    print "%s Scraping Live Prices.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    ScrapeLivePrices()
 
-    #Logger(rundt, 'ScrapeSignalHistory_Core', None)
-    #print "%s Scraping Signal History (Core).." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    #ScrapeSignalHistory(1)
+    Logger(rundt, 'ScrapeSignalHistory_Core', None)
+    print "%s Scraping Signal History (Core).." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    ScrapeSignalHistory(0)
 
-    #Logger(rundt, 'UpdateOpenTrades', None)
-    #print "%s Updating Open Trades.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    #UpdateOpenTrades()
+    Logger(rundt, 'UpdateOpenTrades', None)
+    print "%s Updating Open Trades.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    UpdateOpenTrades()
 
-    #Logger(rundt, 'SignalPerformance', None)
-    #print "%s Calculating Signal Performance.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    #SignalPerformance()
+    Logger(rundt, 'SignalPerformance', None)
+    print "%s Calculating Signal Performance.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    SignalPerformance()
 
     Logger(rundt, 'Notify', None)
     print "%s Sending Email Notification.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     Notify(rundt)
 
-    #Logger(rundt, 'ScrapeSignalHistory_Ext', None)
-    #print "%s Scraping Signal History Ext.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    #ScrapeSignalHistory(2)
+    ##Logger(rundt, 'ScrapeSignalHistory_Ext', None)
+    ##print "%s Scraping Signal History Ext.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    ##ScrapeSignalHistory(1)
 
-    #Logger(rundt, 'Main', 'Complete')
-    #print "%s Complete." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    Logger(rundt, 'Main', 'Complete')
+    print "%s Complete." % (datetime.datetime.utcnow() + timedelta(hours=8))
 
 
     #`6mthProfit` real, `6mthProfit_Rank` integer, `StdDev` real, `StdDev_Rank` integer, `SignalAccuracy`
