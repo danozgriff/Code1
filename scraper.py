@@ -572,7 +572,7 @@ def standard_deviation(tidm, d1date, todaydate):
       mean = 0
     # You could `return sd` here.
 
-    return sd
+    return mean
  
     #print('The mean of {} is {}.'.format(lst, mean))
     #print('The differences are {}.'.format(differences))
@@ -1045,8 +1045,8 @@ if __name__ == '__main__':
     rundt = datetime.datetime.utcnow()
     gvars()
 
-    scraperwiki.sqlite.execute("delete from company")
-    scraperwiki.sqlite.execute("delete from Signal_History")
+    ###scraperwiki.sqlite.execute("delete from company")
+    ###scraperwiki.sqlite.execute("delete from Signal_History")
 
     #openlist = scraperwiki.sqlite.execute("select `tidm`, `OpenDate` from Trades where CloseDate is null")
 
@@ -1081,24 +1081,24 @@ if __name__ == '__main__':
     #scraperwiki.sqlite.execute("create table trades (`TIDM` string, `OpenDate` date, `OpenSignal` string, `EntryDate` date, `EntryPrice` real, `Size` real, `LastPrice` real, `LastDate` date, `LastChange` real, `LastSignal` string, `Position` string, `CloseDate` Date, `CloseSignal` string, `ClosePrice` real, `Earnings` real) UNIQUE (`TIDM`, `OpenDate`) ON CONFLICT IGNORE")
     
                                              
-    Logger(rundt, 'Main', 'Starting')
-    print "%s Started.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #Logger(rundt, 'Main', 'Starting')
+    #print "%s Started.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     
-    Logger(rundt, 'ScrapeUserInput', None)
-    print "%s Scraping User Input.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    ScrapeUserInput()
+    #Logger(rundt, 'ScrapeUserInput', None)
+    #print "%s Scraping User Input.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #ScrapeUserInput()
 
-    Logger(rundt, 'ScrapeLivePrices', None)
-    print "%s Scraping Live Prices.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    ScrapeLivePrices()
+    #Logger(rundt, 'ScrapeLivePrices', None)
+    #print "%s Scraping Live Prices.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #ScrapeLivePrices()
 
-    Logger(rundt, 'ScrapeSignalHistory_Core', None)
-    print "%s Scraping Signal History (Core).." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    ScrapeSignalHistory(0)
+    #Logger(rundt, 'ScrapeSignalHistory_Core', None)
+    #print "%s Scraping Signal History (Core).." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #ScrapeSignalHistory(0)
 
-    Logger(rundt, 'UpdateOpenTrades', None)
-    print "%s Updating Open Trades.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    UpdateOpenTrades()
+    #Logger(rundt, 'UpdateOpenTrades', None)
+    #print "%s Updating Open Trades.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #UpdateOpenTrades()
 
     Logger(rundt, 'SignalPerformance', None)
     print "%s Calculating Signal Performance.." % (datetime.datetime.utcnow() + timedelta(hours=8))
