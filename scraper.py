@@ -537,33 +537,39 @@ def standard_deviation(tidm, d1date, todaydate):
 
     #print "tidm %s  d1date %s  todaydate %s" % (tidm, d1date, todaydate)
     #complist = scraperwiki.sqlite.execute("select (`High` - `Low`)/`High` from Company_History where tidm = '%s' and date between '%s' and '%s'" % (tidm, d1date, todaydate))
-    complist = scraperwiki.sqlite.execute("select `Open`, `High`, `Low` from Company_History where tidm = '%s' and date between '%s' and '%s'" % (tidm, d1date, todaydate))
+    ###complist = scraperwiki.sqlite.execute("select `Open`, `High`, `Low` from Company_History where tidm = '%s' and date between '%s' and '%s'" % (tidm, d1date, todaydate))
+    complist = scraperwiki.sqlite.execute("select `High`-`Low` from Company_History where tidm = '%s' and date between '%s' and '%s'" % (tidm, d1date, todaydate))
 
     lstlength = len(complist["data"])
     
     if lstlength >= 10:
     
       lst = []
-
+        
       for x in complist["data"]:
         lst.append(x[0])
-        lst.append(x[1])
-        lst.append(x[2])
+       
+      mean = sum(lst) / lstlength     
+
+      ###for x in complist["data"]:
+      ###  lst.append(x[0])
+      ###  lst.append(x[1])
+      ###  lst.append(x[2])
         #print "high-low: %f" % (x[0])
     
-      mean = sum(lst) / lstlength
-      differences = [y - mean for y in lst]
-      sq_differences = [d ** 2 for d in differences]
-      ssd = sum(sq_differences)
+      ###mean = sum(lst) / lstlength
+      ###differences = [y - mean for y in lst]
+      ###sq_differences = [d ** 2 for d in differences]
+      ###ssd = sum(sq_differences)
  
       #print('This is SAMPLE standard deviation.')
       #print "tidm: %s  numitems: %d  ssd: %f" % (tidm, num_items, ssd)
     
     
-      variance = ssd / (lstlength - 1)
-      sd = sqrt(variance)
+      ###variance = ssd / (lstlength - 1)
+      ###sd = sqrt(variance)
     else:
-      sd = 999
+      mean = 0
     # You could `return sd` here.
 
     return sd
@@ -865,18 +871,18 @@ def SignalPerformance():
            elif timeint == 30:
                T30D = round(D1PC,3)
            elif timeint == 90:
-               T90D = round(D1PC,3)               
-           elif timeint == 180:
-               T180D = round(D1PC,3)
+               T90D = round(D1PC,3)  
                stddev = standard_deviation(tidm, d1date, todaydate)
                sigacc = signal_accuracy(tidm, d1date, todaydate)
+               T90Earnings = ((tprice - CalcPrice)/CalcPrice+1)*100
+           elif timeint == 180:
+               T180D = round(D1PC,3)
                total = T3D + T10D + T30D + T90D + T180D
-
-               T180Earnings = ((tprice - CalcPrice)/CalcPrice+1)*100
+               #T180Earnings = ((tprice - CalcPrice)/CalcPrice+1)*100
                #if tidm == "KWE.L":
                #  print "tidm: %s  tprice: %f  calc price: %f"  % (tidm, tprice, CalcPrice)
                tprice=0.0
-               scraperwiki.sqlite.execute("insert into Company_Performance values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",  [tidm, round(T3D,3), round(T10D,3), round(T30D,3), round(T90D,3), round(T180D,3), round(T180Earnings,2), 0, round(stddev,3), 0, round(sigacc,3), 0, 0, 0, tdate]) 
+               scraperwiki.sqlite.execute("insert into Company_Performance values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",  [tidm, round(T3D,3), round(T10D,3), round(T30D,3), round(T90D,3), round(T180D,3), round(T90Earnings,2), 0, round(stddev,3), 0, round(sigacc,3), 0, 0, 0, tdate]) 
                scraperwiki.sqlite.commit()
        #return;
  
@@ -1075,24 +1081,24 @@ if __name__ == '__main__':
     #scraperwiki.sqlite.execute("create table trades (`TIDM` string, `OpenDate` date, `OpenSignal` string, `EntryDate` date, `EntryPrice` real, `Size` real, `LastPrice` real, `LastDate` date, `LastChange` real, `LastSignal` string, `Position` string, `CloseDate` Date, `CloseSignal` string, `ClosePrice` real, `Earnings` real) UNIQUE (`TIDM`, `OpenDate`) ON CONFLICT IGNORE")
     
                                              
-    Logger(rundt, 'Main', 'Starting')
-    print "%s Started.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #Logger(rundt, 'Main', 'Starting')
+    #print "%s Started.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     
-    Logger(rundt, 'ScrapeUserInput', None)
-    print "%s Scraping User Input.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    ScrapeUserInput()
+    #Logger(rundt, 'ScrapeUserInput', None)
+    #print "%s Scraping User Input.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #ScrapeUserInput()
 
-    Logger(rundt, 'ScrapeLivePrices', None)
-    print "%s Scraping Live Prices.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    ScrapeLivePrices()
+    #Logger(rundt, 'ScrapeLivePrices', None)
+    #print "%s Scraping Live Prices.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #ScrapeLivePrices()
 
-    Logger(rundt, 'ScrapeSignalHistory_Core', None)
-    print "%s Scraping Signal History (Core).." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    ScrapeSignalHistory(0)
+    #Logger(rundt, 'ScrapeSignalHistory_Core', None)
+    #print "%s Scraping Signal History (Core).." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #ScrapeSignalHistory(0)
 
-    Logger(rundt, 'UpdateOpenTrades', None)
-    print "%s Updating Open Trades.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    UpdateOpenTrades()
+    #Logger(rundt, 'UpdateOpenTrades', None)
+    #print "%s Updating Open Trades.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #UpdateOpenTrades()
 
     Logger(rundt, 'SignalPerformance', None)
     print "%s Calculating Signal Performance.." % (datetime.datetime.utcnow() + timedelta(hours=8))
