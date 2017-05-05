@@ -1017,23 +1017,24 @@ def Notify(rundt):
       for x in ranklist["data"]:
          tidm = x[0]
          ftse = x[1]    
-         d3 = x[2]
-         d10 = x[3]
-         d30 = x[4]
-         d90 = x[5]
-         d180 = x[6]
-         profit6mth = x[7]
-         profit6mth_rank = x[8]
-         stddev = x[9]
-         stddev_rank = x[10]
-         signalaccuracy = x[11]
-         signalaccuracy_rank = x[12]
-         overall_score = x[13]
-         overall_rank = x[14]
-         signal = x[15]
-         signaldate = x[16]
+         ###d3 = x[2]
+         ###d10 = x[3]
+         ###d30 = x[4]
+         ###d90 = x[5]
+         ###d180 = x[6]
+         profit6mth = x[2]
+         ###profit6mth_rank = x[8]
+         stddev = x[3]
+         ###stddev_rank = x[10]
+         signalaccuracy = x[4]
+         ###signalaccuracy_rank = x[12]
+         ###overall_score = x[13]
+         ###overall_rank = x[14]
+         signal = x[5]
+         signaldate = x[6]
     
-         Performance_Out = Performance_Out + '{:>6} {:>8} {:>6} {:>6} {:>6} {:>6} {:>6} {:>10} {:>8} {:>9} {:>6} {:>10} {:>8} {:>15} {:>6} {:>11} {:>10}<br>'.format(tidm, ftse.ljust(14), d3, d10, d30, d90, d180, profit6mth, profit6mth_rank, stddev, stddev_rank, signalaccuracy, signalaccuracy_rank, overall_score, overall_rank, signal, signaldate)
+         ###Performance_Out = Performance_Out + '{:>6} {:>8} {:>6} {:>6} {:>6} {:>6} {:>6} {:>10} {:>8} {:>9} {:>6} {:>10} {:>8} {:>15} {:>6} {:>11} {:>10}<br>'.format(tidm, ftse.ljust(14), d3, d10, d30, d90, d180, profit6mth, profit6mth_rank, stddev, stddev_rank, signalaccuracy, signalaccuracy_rank, overall_score, overall_rank, signal, signaldate)
+         Performance_Out = Performance_Out + '{:>6} {:>8} {:>10} {:>9} {:>6} {:>11} {:>10}<br>'.format(tidm, ftse.ljust(14), profit6mth, stddev, signalaccuracy, signal, signaldate)
 
     
 
@@ -1116,28 +1117,28 @@ if __name__ == '__main__':
     #scraperwiki.sqlite.execute("create table trades (`TIDM` string, `OpenDate` date, `OpenSignal` string, `EntryDate` date, `EntryPrice` real, `Size` real, `LastPrice` real, `LastDate` date, `LastChange` real, `LastSignal` string, `Position` string, `CloseDate` Date, `CloseSignal` string, `ClosePrice` real, `Earnings` real) UNIQUE (`TIDM`, `OpenDate`) ON CONFLICT IGNORE")
     
                                              
-    Logger(rundt, 'Main', 'Starting')
-    print "%s Started.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #Logger(rundt, 'Main', 'Starting')
+    #print "%s Started.." % (datetime.datetime.utcnow() + timedelta(hours=8))
     
-    Logger(rundt, 'ScrapeUserInput', None)
-    print "%s Scraping User Input.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    ScrapeUserInput()
+    #Logger(rundt, 'ScrapeUserInput', None)
+    #print "%s Scraping User Input.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #ScrapeUserInput()
 
-    Logger(rundt, 'ScrapeLivePrices', None)
-    print "%s Scraping Live Prices.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    ScrapeLivePrices()
+    #Logger(rundt, 'ScrapeLivePrices', None)
+    #print "%s Scraping Live Prices.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #ScrapeLivePrices()
 
-    Logger(rundt, 'ScrapeSignalHistory_Core', None)
-    print "%s Scraping Signal History (Core).." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    ScrapeSignalHistory(0)
+    #Logger(rundt, 'ScrapeSignalHistory_Core', None)
+    #print "%s Scraping Signal History (Core).." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #ScrapeSignalHistory(0)
 
-    Logger(rundt, 'UpdateOpenTrades', None)
-    print "%s Updating Open Trades.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    UpdateOpenTrades()
+    #Logger(rundt, 'UpdateOpenTrades', None)
+    #print "%s Updating Open Trades.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #UpdateOpenTrades()
 
-    Logger(rundt, 'SignalPerformance', None)
-    print "%s Calculating Signal Performance.." % (datetime.datetime.utcnow() + timedelta(hours=8))
-    SignalPerformance()
+    #Logger(rundt, 'SignalPerformance', None)
+    #print "%s Calculating Signal Performance.." % (datetime.datetime.utcnow() + timedelta(hours=8))
+    #SignalPerformance()
 
     Logger(rundt, 'Notify', None)
     print "%s Sending Email Notification.." % (datetime.datetime.utcnow() + timedelta(hours=8))
